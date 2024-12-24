@@ -87,4 +87,5 @@ nav:
     - developers/contributing.md
     - developers/testing.md
     - developers/troubleshooting.md
+    - developers/release.md
   - Citation: citation.md

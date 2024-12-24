@@ -84,6 +84,7 @@ nav:
     - developers/index.md
     - developers/environment_setup.md
     - developers/iqtree_submodule.md
+    - developers/contributing.md
     - developers/testing.md
     - developers/troubleshooting.md
   - Citation: citation.md

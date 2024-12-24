@@ -21,3 +21,16 @@ git submodule update --init --recursive
 ```
 
 If the above doesn't work, please re-try the guide on ["Setting up your environment for development"](./environment_setup.md).
+
+## The IQ-TREE library doesn't build
+
+There could be several reasons `piqtree` doesn't build.
+
+### Check your operating system is supported
+
+At this stage, we currently only support x86-64 linux, and x86-64 and ARM macOS.
+
+### Check dependencies have been installed
+
+- If on macOS, try running `./before_all_mac.sh` which will also install dependencies.
+- If on linux, try installing the dependencies listed at the top of `.devcontainer/DockerFile`

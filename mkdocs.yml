@@ -80,7 +80,7 @@ nav:
     - Pairwise JC distances: apps/pairwise_dist.py
     - NJ tree: apps/nj.py
     - Parallel processing across alignments: apps/app_pipeline.py
-  - For developers:
+  - Contributing:
     - developers/index.md
     - developers/environment_setup.md
     - developers/iqtree_submodule.md

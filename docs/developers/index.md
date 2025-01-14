@@ -1,4 +1,4 @@
-# Developer Guide
+# Contributor Guide
 
 This guide in intended for those who wish to work on the `piqtree` project.
 

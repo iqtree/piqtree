@@ -13,6 +13,10 @@ For usage, please refer to the [documentation](https://piqtree.readthedocs.io/) 
 
 If you encounter any problems or have any feature requests feel free to raise an [issue](https://github.com/iqtree/piqtree/issues)!
 
+## Contributing
+
+If you would like to help out by contributing to the piqtree project, please check out our [contributor guide!](https://piqtree.readthedocs.io/en/latest/developers/)
+
 ## Examples
 
 ### Phylogenetic Reconstruction

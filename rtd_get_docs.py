@@ -11,10 +11,18 @@ import requests
 
 def download_and_extract_docs() -> None:
     token = os.environ.get("GITHUB_TOKEN")
+    if token is None:
+        token = os.environ.get("GITHUB_TOKEN_PRIVATE")
+
     headers = {"Authorization": f"token {token}"}
     api_url = "https://api.github.com/repos/iqtree/piqtree/actions/runs"
     response = requests.get(api_url, headers=headers, timeout=10)
     got = response.json()
+
+    if got["status"] == "401":
+        msg = "Request to GitHub API not authorised."
+        raise requests.RequestException(msg)
+
     runs = got["workflow_runs"]
     latest_run = next(
         run

@@ -19,7 +19,7 @@ def download_and_extract_docs() -> None:
     response = requests.get(api_url, headers=headers, timeout=10)
     got = response.json()
 
-    if got["status"] == "401":
+    if got.get("status") == "401":
         msg = "Request to GitHub API not authorised."
         raise requests.RequestException(msg)
 

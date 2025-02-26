@@ -48,10 +48,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache-key: libiqtree-${{ matrix.os }}-${{ needs.build-iqtree.outputs.iqtree2-sha }}
 
-      - name: Update Homebrew
+      - name: Install llvm
         if: matrix.os != 'ubuntu-latest'
         run: |
-          brew update
           brew install llvm
           
       - name: Run Nox Testing

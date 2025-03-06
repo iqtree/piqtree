@@ -312,7 +312,7 @@ def fit_tree(
     return tree
 
 
-def nj_tree(pairwise_distances: c3_types.PairwiseDistanceType) -> cogent3.PhyloNode:
+def nj_tree(pairwise_distances: c3_types.PairwiseDistanceType,*,allow_negative:bool=False) -> cogent3.PhyloNode:
     """Construct a neighbour joining tree from a pairwise distance matrix.
 
     Parameters
@@ -334,4 +334,10 @@ def nj_tree(pairwise_distances: c3_types.PairwiseDistanceType) -> cogent3.PhyloN
         pairwise_distances.keys(),
         np.array(pairwise_distances).flatten(),
     )
-    return make_tree(newick_tree)
+
+    tree = make_tree(newick_tree)
+    if allow_negative is False:
+        for v in tree.get_edge_vector():
+            if v.params["length"] is not None:
+                v.params["length"] = max(v.params["length"], 0)
+    return tree

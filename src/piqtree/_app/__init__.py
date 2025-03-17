@@ -125,7 +125,9 @@ class piqtree_jc_dists:
 @composable.define_app
 @extend_docstring_from(nj_tree)
 def piqtree_nj(dists: c3_types.PairwiseDistanceType) -> cogent3.PhyloNode:
-    return nj_tree(dists)
+    tree = nj_tree(dists)
+    tree.params |= {"provenance": "piqtree"}
+    return tree
 
 
 @composable.define_app

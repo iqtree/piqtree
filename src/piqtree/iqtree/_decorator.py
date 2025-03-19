@@ -84,7 +84,7 @@ def iqtree_func(
             os.close(devnull_fd)
 
             if hide_files:
-                tempdir.cleanup()
                 os.chdir(original_dir)
+                tempdir.cleanup()
 
     return wrapper_iqtree_func

@@ -1,5 +1,18 @@
 """piqtree - access the power of IQ-TREE within Python."""
 
+
+def _add_dll_path() -> None:
+    import os
+
+    if "add_dll_directory" in dir(os):
+        dll_folder = os.path.join(os.path.dirname(__file__), "_libiqtree")
+        os.add_dll_directory(dll_folder)
+
+
+_add_dll_path()
+del _add_dll_path
+
+
 from _piqtree import __iqtree_version__
 
 from piqtree._data import dataset_names, download_dataset

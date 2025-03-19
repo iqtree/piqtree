@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 61.0", "pybind11 >= 2.12"]
+requires = ["setuptools >= 61.0", "pybind11 >= 2.12", "delvewheel >= 1.10"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -151,6 +151,11 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 ]
 "src/piqtree/_app/__init__.py" = [
     "N801", # apps follow function naming convention
+]
+"src/piqtree/__init__.py" = [
+    "E402", # handle DLLs before imports
+    "PTH118", # os operations for DLL path
+    "PTH120", # os operations for DLL path
 ]
 "src/piqtree/model/_substitution_model.py" = ["N815"] # use IQ-TREE naming scheme
 

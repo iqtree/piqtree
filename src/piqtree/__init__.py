@@ -6,7 +6,7 @@ def _add_dll_path() -> None:
 
     if "add_dll_directory" in dir(os):
         dll_folder = os.path.join(os.path.dirname(__file__), "_libiqtree")
-        os.add_dll_directory(dll_folder)
+        os.add_dll_directory(dll_folder)  # type: ignore[attr-defined]
 
 
 _add_dll_path()

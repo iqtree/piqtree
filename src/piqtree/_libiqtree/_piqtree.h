@@ -1,6 +1,8 @@
 #ifndef _PIQTREE_H
 #define _PIQTREE_H
 
+#include <cstddef>
+
 using namespace std;
 
 #ifdef _MSC_VER

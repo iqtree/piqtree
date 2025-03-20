@@ -116,5 +116,5 @@ PYBIND11_MODULE(_piqtree, m) {
         "Construct pairwise distance matrix for alignment.");
   m.def("iq_nj_tree", &build_njtree,
         "Build neighbour-joining tree from distance matrix.");
-  m.def("mine", &mine, "The meaning of life, the universe (and everything) !");
+  m.def("mine", &mine, "The meaning of life, the universe (and everything)!");
 }

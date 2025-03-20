@@ -43,11 +43,9 @@ runs:
         echo "Boost_INCLUDE_DIR=${{ steps.install-boost.outputs.BOOST_ROOT }}/include" >> "$GITHUB_ENV"
         echo "Boost_LIBRARY_DIRS=${{ steps.install-boost.outputs.BOOST_ROOT }}/lib" >> "$GITHUB_ENV"
 
-    - name: Setup Visual Studio Environment
-      shell: cmd
-      run: |
-        "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat"
-        echo "Visual Studio environment configured"
+    - name: Setup MSVC Developer Command Prompt
+      if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'
+      uses: ilammy/msvc-dev-cmd@v1
 
     - name: Verify lib.exe
       if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'

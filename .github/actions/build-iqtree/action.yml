@@ -19,13 +19,36 @@ runs:
         IQ_TREE_2_SHA=$(git rev-parse HEAD)
         echo "iqtree2-sha=${IQ_TREE_2_SHA}" >> "$GITHUB_OUTPUT"
 
-    - uses: actions/cache@v4
-      id: cache
+    - name: Cache IQ-TREE 2 (Windows)
+      if: runner.os == 'Windows'
+      uses: actions/cache@v4
+      id: cache-windows
+      with:
+        key: libiqtree-windows-${{ steps.iqtree2-sha.outputs.iqtree2-sha }}
+        path: |
+          src/piqtree/_libiqtree/iqtree2.lib
+          src/piqtree/_libiqtree/iqtree2.dll
+        lookup-only: true
+
+    - name: Cache IQ-TREE 2 (Linux/macOS)
+      if: runner.os != 'Windows'
+      uses: actions/cache@v4
+      id: cache-unix
       with:
         key: libiqtree-${{ inputs.os }}-${{ steps.iqtree2-sha.outputs.iqtree2-sha }}
         path: |
-          ${{ inputs.os == 'windows-latest' && 'src/piqtree/_libiqtree/iqtree2.lib\nsrc/piqtree/_libiqtree/iqtree2.dll' || 'src/piqtree/_libiqtree/libiqtree2.a' }}
+          src/piqtree/_libiqtree/libiqtree2.a
         lookup-only: true
+
+    - name: Combine Cache Hits
+      id: cache
+      shell: bash
+      run: |
+        if [[ "${{ steps.cache-windows.outputs.cache-hit }}" == 'true' || "${{ steps.cache-unix.outputs.cache-hit }}" == 'true' ]]; then
+          echo "cache-hit=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "cache-hit=false" >> "$GITHUB_OUTPUT"
+        fi
 
     - name: Install Boost
       if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'

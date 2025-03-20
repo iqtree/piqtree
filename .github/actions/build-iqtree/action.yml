@@ -47,12 +47,29 @@ runs:
       if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        MSVC_BIN_PATH="C:\\Program Files\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\MSVC"
-        MSVC_VERSION=$(ls "$MSVC_BIN_PATH" | sort -V | tail -n 1)
-        LIB_PATH="$MSVC_BIN_PATH\\$MSVC_VERSION\\bin\\Hostx64\\x64"
-        
-        echo "Adding $LIB_PATH to PATH"
-        echo "PATH=$LIB_PATH:$PATH" >> "$GITHUB_ENV"
+        # Check default VS installation paths
+        VSWHERE_PATH="/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"
+
+        if [[ -f "$VSWHERE_PATH" ]]; then
+            echo "Finding latest MSVC installation..."
+            
+            MSVC_PATH=$("$VSWHERE_PATH" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath)
+            
+            if [[ -d "$MSVC_PATH" ]]; then
+                MSVC_BIN_PATH="$MSVC_PATH/VC/Tools/MSVC"
+                MSVC_VERSION=$(ls "$MSVC_BIN_PATH" | sort -V | tail -n 1)
+                LIB_PATH="$MSVC_BIN_PATH/$MSVC_VERSION/bin/Hostx64/x64"
+
+                echo "MSVC found at: $LIB_PATH"
+                echo "PATH=$LIB_PATH:$PATH" >> "$GITHUB_ENV"
+            else
+                echo "MSVC installation not found."
+                exit 1
+            fi
+        else
+            echo "vswhere.exe not found, unable to locate MSVC."
+            exit 1
+        fi
 
     - name: Verify lib.exe
       if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'

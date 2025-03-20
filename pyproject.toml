@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "piqtree"
 dependencies = ["cogent3>=2024.11.29a2", "pyyaml", "requests"]
-requires-python = ">=3.10, <3.13"
+requires-python = ">=3.11, <3.14"
 
 authors = [{name="Gavin Huttley"}, {name="Robert McArthur"}, {name="Bui Quang Minh "}, {name="Richard Morris"}, {name="Thomas Wong"}]
 description="Python bindings for IQTree"

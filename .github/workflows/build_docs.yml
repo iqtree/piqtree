@@ -32,7 +32,7 @@ jobs:
 
       - uses: ./.github/actions/setup-piqtree
         with:
-          python-version: "3.12"
+          python-version: "3.13"
           cache-key: libiqtree-ubuntu-latest-${{ needs.build-iqtree.outputs.iqtree2-sha }}
       
       - name: Install Docs Dependencies

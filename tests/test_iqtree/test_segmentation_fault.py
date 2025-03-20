@@ -1,5 +1,7 @@
 """Test combinations of calls which under previous versions resulted in a segmentation fault."""
 
+import platform
+
 import pytest
 from cogent3 import make_aligned_seqs, make_tree
 
@@ -8,6 +10,10 @@ from piqtree.exceptions import IqTreeError
 from piqtree.model import DiscreteGammaModel, DnaModel, FreeRateModel, Model
 
 
+@pytest.mark.skipif(
+    platform.system() == "Windows",
+    reason="IQ-TREE errors can't be caught yet on Windows",
+)
 def test_two_build_random_trees() -> None:
     """
     Calling build tree twice followed by random trees with a bad input
@@ -22,6 +28,10 @@ def test_two_build_random_trees() -> None:
         random_trees(3, 2, TreeGenMode.BALANCED, 1)
 
 
+@pytest.mark.skipif(
+    platform.system() == "Windows",
+    reason="IQ-TREE errors can't be caught yet on Windows",
+)
 def test_two_fit_random_trees() -> None:
     """
     Calling fit tree twice followed by random trees with a bad input
@@ -39,6 +49,10 @@ def test_two_fit_random_trees() -> None:
 
 @pytest.mark.parametrize("rate_model_class", [DiscreteGammaModel, FreeRateModel])
 @pytest.mark.parametrize("categories", [0, -4])
+@pytest.mark.skipif(
+    platform.system() == "Windows",
+    reason="IQ-TREE errors can't be caught yet on Windows",
+)
 def test_two_invalid_models(
     rate_model_class: type[DiscreteGammaModel] | type[FreeRateModel],
     categories: int,

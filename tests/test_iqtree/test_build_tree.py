@@ -1,3 +1,4 @@
+import platform
 import re
 
 import pytest
@@ -87,6 +88,10 @@ def test_rate_model_build_tree(
     )
 
 
+@pytest.mark.skipif(
+    platform.system() == "Windows",
+    reason="IQ-TREE errors can't be caught yet on Windows",
+)
 def test_build_tree_inadequate_bootstrapping(four_otu: ArrayAlignment) -> None:
     with pytest.raises(IqTreeError, match=re.escape("#replicates must be >= 1000")):
         piqtree.build_tree(four_otu, Model(DnaModel.GTR), bootstrap_replicates=10)

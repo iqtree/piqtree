@@ -19,19 +19,68 @@ runs:
         IQ_TREE_2_SHA=$(git rev-parse HEAD)
         echo "iqtree2-sha=${IQ_TREE_2_SHA}" >> "$GITHUB_OUTPUT"
 
-    - uses: actions/cache@v4
-      id: cache
+    - name: Cache IQ-TREE 2 (Windows)
+      if: runner.os == 'Windows'
+      uses: actions/cache@v4
+      id: cache-windows
       with:
         key: libiqtree-${{ inputs.os }}-${{ steps.iqtree2-sha.outputs.iqtree2-sha }}
-        path: src/piqtree/_libiqtree/libiqtree2.a
+        path: |
+          src/piqtree/_libiqtree/iqtree2.lib
+          src/piqtree/_libiqtree/iqtree2.dll
         lookup-only: true
+
+    - name: Cache IQ-TREE 2 (Linux/macOS)
+      if: runner.os != 'Windows'
+      uses: actions/cache@v4
+      id: cache-unix
+      with:
+        key: libiqtree-${{ inputs.os }}-${{ steps.iqtree2-sha.outputs.iqtree2-sha }}
+        path: |
+          src/piqtree/_libiqtree/libiqtree2.a
+        lookup-only: true
+
+    - name: Combine Cache Hits
+      id: cache
+      shell: bash
+      run: |
+        if [[ "${{ steps.cache-windows.outputs.cache-hit }}" == 'true' || "${{ steps.cache-unix.outputs.cache-hit }}" == 'true' ]]; then
+          echo "cache-hit=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "cache-hit=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Install Boost
+      if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'
+      uses: MarkusJx/install-boost@v2.4.5
+      id: install-boost
+      with:
+        boost_version: 1.84.0
+        platform_version: 2022
+        toolset: mingw
+
+    - name: Set Boost Environment Variables
+      if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        echo "Boost_INCLUDE_DIR=${{ steps.install-boost.outputs.BOOST_ROOT }}/include" >> "$GITHUB_ENV"
+        echo "Boost_LIBRARY_DIRS=${{ steps.install-boost.outputs.BOOST_ROOT }}/lib" >> "$GITHUB_ENV"
+
+    - name: Setup MSVC Developer Command Prompt
+      if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'
+      uses: ilammy/msvc-dev-cmd@v1
 
     - name: Build IQ-TREE
       shell: bash
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        if [[ "${{ inputs.os }}" == "ubuntu-latest" ]]; then
-        sudo ./build_tools/before_all_linux.sh
+        if [[ "${{ runner.os }}" == "Linux" ]]; then
+          sudo ./build_tools/before_all_linux.sh
+        elif [[ "${{ runner.os }}" == "macOS" ]]; then
+          ./build_tools/before_all_mac.sh
+        elif [[ "${{ runner.os }}" == "Windows" ]]; then
+          ./build_tools/before_all_windows.sh
         else
-        ./build_tools/before_all_mac.sh
+          echo "Unrecognized OS: '${{ inputs.os }}'."
+          exit 1
         fi

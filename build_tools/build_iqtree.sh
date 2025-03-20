@@ -1,8 +1,3 @@
-echo "BOOST_ROOT=$BOOST_ROOT"
-echo "Boost_INCLUDE_DIR=$Boost_INCLUDE_DIR"
-echo "Boost_LIBRARY_DIRS=$Boost_LIBRARY_DIRS"
-echo "CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH"
-
 cd iqtree2
 rm -rf build
 mkdir build && cd build
@@ -20,6 +15,8 @@ elif [[ "$OSTYPE" == "msys"* || "$OSTYPE" == "cygwin"* ]]; then
         -DCMAKE_C_COMPILER=$CMAKE_C_COMPILER \
         -DCMAKE_CXX_COMPILER=$CMAKE_CXX_COMPILER \
         -DCMAKE_MAKE_PROGRAM=$CMAKE_MAKE_PROGRAM \
+        -DBoost_INCLUDE_DIR=$Boost_INCLUDE_DIR \
+        -DBoost_LIBRARY_DIRS=$Boost_LIBRARY_DIRS \
         -DBUILD_LIB=ON \
         ..
     make -j

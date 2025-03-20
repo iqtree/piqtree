@@ -42,15 +42,6 @@ runs:
       run: |
         echo "Boost_INCLUDE_DIR=${{ steps.install-boost.outputs.BOOST_ROOT }}/include" >> "$GITHUB_ENV"
         echo "Boost_LIBRARY_DIRS=${{ steps.install-boost.outputs.BOOST_ROOT }}/lib" >> "$GITHUB_ENV"
-    
-    - name: Debug Boost Variables
-      if: runner.os == 'Windows'
-      shell: bash
-      run: |
-        echo "BOOST_ROOT=$BOOST_ROOT"
-        echo "Boost_INCLUDE_DIR=$Boost_INCLUDE_DIR"
-        echo "Boost_LIBRARY_DIRS=$Boost_LIBRARY_DIRS"
-        echo "CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH"
 
     - name: Build IQ-TREE
       shell: bash

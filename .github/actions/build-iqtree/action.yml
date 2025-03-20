@@ -43,6 +43,12 @@ runs:
         echo "Boost_INCLUDE_DIR=${{ steps.install-boost.outputs.BOOST_ROOT }}/include" >> "$GITHUB_ENV"
         echo "Boost_LIBRARY_DIRS=${{ steps.install-boost.outputs.BOOST_ROOT }}/lib" >> "$GITHUB_ENV"
 
+    - name: Debug MSVC Installation
+      if: runner.os == 'Windows'
+      shell: cmd
+      run: |
+        "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -all
+        
     - name: Set Up MSVC for lib.exe
       if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'
       shell: bash

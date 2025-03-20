@@ -72,7 +72,7 @@ jobs:
         env: # Can specify per os - e.g. CIBW_BEFORE_ALL_LINUX, CIBW_BEFORE_ALL_MACOS, CIBW_BEFORE_ALL_WINDOWS 
           CIBW_BEFORE_ALL_LINUX: ./build_tools/before_all_linux.sh
           CIBW_BEFORE_ALL_MACOS: ./build_tools/before_all_mac.sh
-          CIBW_BEFORE_ALL_WINDOWS: ./build_tools/before_all_windows.sh
+          CIBW_BEFORE_ALL_WINDOWS: bash ./build_tools/before_all_windows.sh
           CIBW_ARCHS_LINUX: ${{endsWith(matrix.platform_id, '_x86_64') && 'x86_64' || 'aarch64'}} 
           CIBW_ARCHS_MACOS: ${{endsWith(matrix.platform_id, 'universal2') && 'universal2' || 'auto'}} 
           CIBW_ARCHS_WINDOWS: ${{endsWith(matrix.platform_id, '_amd64') && 'AMD64' || 'ARM64'}} 

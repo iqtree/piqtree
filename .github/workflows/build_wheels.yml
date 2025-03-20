@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        # manylinux (x86)
+        # manylinux x86_64
         - os: ubuntu-latest
           platform_id: manylinux_x86_64
         
@@ -21,6 +21,10 @@ jobs:
         # MacOS arm64
         - os: macos-14
           platform_id: macosx_arm64
+
+        # Windows x86_64
+        - os: windows-latest
+          platform_id: win_amd64
 
     steps:
       - uses: "actions/checkout@v4"
@@ -35,7 +39,7 @@ jobs:
           platforms: arm64
       
       - name: Set macOS Deployment Target
-        if: ${{startsWith(matrix.os, 'macos')}}
+        if: runner.os == 'macOS'
         run: |
           if [[ "${{ matrix.os }}" == "macos-13" ]]; then
             echo "MACOSX_DEPLOYMENT_TARGET=13.0" >> $GITHUB_ENV
@@ -43,13 +47,35 @@ jobs:
             echo "MACOSX_DEPLOYMENT_TARGET=14.0" >> $GITHUB_ENV
           fi
 
+      - name: Install Boost
+        if: runner.os == 'Windows'
+        uses: MarkusJx/install-boost@v2.4.5
+        id: install-boost
+        with:
+          boost_version: 1.84.0
+          platform_version: 2022
+          toolset: mingw
+
+      - name: Set Boost Environment Variables
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          echo "Boost_INCLUDE_DIR=${{ steps.install-boost.outputs.BOOST_ROOT }}/include" >> "$GITHUB_ENV"
+          echo "Boost_LIBRARY_DIRS=${{ steps.install-boost.outputs.BOOST_ROOT }}/lib" >> "$GITHUB_ENV"
+
+      - name: Setup MSVC Developer Command Prompt
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.23.0
         env: # Can specify per os - e.g. CIBW_BEFORE_ALL_LINUX, CIBW_BEFORE_ALL_MACOS, CIBW_BEFORE_ALL_WINDOWS 
           CIBW_BEFORE_ALL_LINUX: ./build_tools/before_all_linux.sh
           CIBW_BEFORE_ALL_MACOS: ./build_tools/before_all_mac.sh
+          CIBW_BEFORE_ALL_WINDOWS: ./build_tools/before_all_windows.sh
           CIBW_ARCHS_LINUX: ${{endsWith(matrix.platform_id, '_x86_64') && 'x86_64' || 'aarch64'}} 
           CIBW_ARCHS_MACOS: ${{endsWith(matrix.platform_id, 'universal2') && 'universal2' || 'auto'}} 
+          CIBW_ARCHS_WINDOWS: ${{endsWith(matrix.platform_id, '_amd64') && 'AMD64' || 'ARM64'}} 
           CIBW_BUILD: "*${{matrix.platform_id}}"
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: pytest {package}/tests

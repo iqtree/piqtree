@@ -1,3 +1,8 @@
+echo "BOOST_ROOT=$BOOST_ROOT"
+echo "Boost_INCLUDE_DIR=$Boost_INCLUDE_DIR"
+echo "Boost_LIBRARY_DIRS=$Boost_LIBRARY_DIRS"
+echo "CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH"
+
 cd iqtree2
 rm -rf build
 mkdir build && cd build

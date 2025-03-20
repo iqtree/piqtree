@@ -56,13 +56,6 @@ jobs:
           platform_version: 2022
           toolset: mingw
 
-      - name: Set Boost Environment Variables
-        if: runner.os == 'Windows'
-        shell: bash
-        run: |
-          echo "Boost_INCLUDE_DIR=${{ steps.install-boost.outputs.BOOST_ROOT }}/include" >> "$GITHUB_ENV"
-          echo "Boost_LIBRARY_DIRS=${{ steps.install-boost.outputs.BOOST_ROOT }}/lib" >> "$GITHUB_ENV"
-
       - name: Setup MSVC Developer Command Prompt
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
@@ -73,7 +66,7 @@ jobs:
           CIBW_BEFORE_ALL_LINUX: ./build_tools/before_all_linux.sh
           CIBW_BEFORE_ALL_MACOS: ./build_tools/before_all_mac.sh
           CIBW_BEFORE_ALL_WINDOWS: bash ./build_tools/before_all_windows.sh
-          CIBW_ENVIRONMENT_WINDOWS: Boost_INCLUDE_DIR='D:/a/piqtree/piqtree/boost/boost/include' Boost_LIBRARY_DIRS='D:/a/piqtree/piqtree/boost/boost/lib'
+          CIBW_ENVIRONMENT_WINDOWS: Boost_INCLUDE_DIR='${{ steps.install-boost.outputs.BOOST_ROOT }}/include"' Boost_LIBRARY_DIRS='${{ steps.install-boost.outputs.BOOST_ROOT }}/lib'
           CIBW_ARCHS_LINUX: ${{endsWith(matrix.platform_id, '_x86_64') && 'x86_64' || 'aarch64'}} 
           CIBW_ARCHS_MACOS: ${{endsWith(matrix.platform_id, 'universal2') && 'universal2' || 'auto'}} 
           CIBW_ARCHS_WINDOWS: ${{endsWith(matrix.platform_id, '_amd64') && 'AMD64' || 'ARM64'}} 

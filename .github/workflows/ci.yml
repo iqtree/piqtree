@@ -50,10 +50,15 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache-key: libiqtree-${{ matrix.os }}-${{ needs.build-iqtree.outputs.iqtree2-sha }}
 
-      - name: Install llvm
+      - name: Install llvm (macOS)
         if: runner.os == 'macOS'
         run: |
           brew install llvm
+
+      - name: Install llvm (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install -y llvm --version=14.0.6 --allow-downgrade
           
       - name: Run Nox Testing
         run: |

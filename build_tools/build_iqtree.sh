@@ -11,12 +11,18 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     gmake -j
 elif [[ "$OSTYPE" == "msys"* || "$OSTYPE" == "cygwin"* ]]; then
     echo "Building for Windows."
+
+    if [[ -n "$BOOST_ROOT" ]]; then
+        export Boost_INCLUDE_DIR="${BOOST_ROOT}"
+        export Boost_LIBRARY_DIRS="${BOOST_ROOT}"
+    fi
+
     cmake -G "MinGW Makefiles" \
         -DCMAKE_C_COMPILER=clang \
         -DCMAKE_CXX_COMPILER=clang++ \
         -DCMAKE_C_FLAGS=--target=x86_64-pc-windows-gnu \
         -DCMAKE_CXX_FLAGS=--target=x86_64-pc-windows-gnu \
-        -DCMAKE_MAKE_PROGRAM=mingw32-make \
+        -DCMAKE_MAKE_PROGRAM=make \
         -DBoost_INCLUDE_DIR=$Boost_INCLUDE_DIR \
         -DBoost_LIBRARY_DIRS=$Boost_LIBRARY_DIRS \
         -DIQTREE_FLAGS="cpp14" \

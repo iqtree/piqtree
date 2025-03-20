@@ -43,45 +43,19 @@ runs:
         echo "Boost_INCLUDE_DIR=${{ steps.install-boost.outputs.BOOST_ROOT }}/include" >> "$GITHUB_ENV"
         echo "Boost_LIBRARY_DIRS=${{ steps.install-boost.outputs.BOOST_ROOT }}/lib" >> "$GITHUB_ENV"
 
-    - name: Debug MSVC Installation
-      if: runner.os == 'Windows'
-      shell: cmd
-      run: |
-        "C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -all
-        
-    - name: Set Up MSVC for lib.exe
+    - name: Setup Visual Studio Environment
       if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
-        # Check default VS installation paths
-        VSWHERE_PATH="/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"
-
-        if [[ -f "$VSWHERE_PATH" ]]; then
-            echo "Finding latest MSVC installation..."
-            
-            MSVC_PATH=$("$VSWHERE_PATH" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath)
-            
-            if [[ -d "$MSVC_PATH" ]]; then
-                MSVC_BIN_PATH="$MSVC_PATH/VC/Tools/MSVC"
-                MSVC_VERSION=$(ls "$MSVC_BIN_PATH" | sort -V | tail -n 1)
-                LIB_PATH="$MSVC_BIN_PATH/$MSVC_VERSION/bin/Hostx64/x64"
-
-                echo "MSVC found at: $LIB_PATH"
-                echo "PATH=$LIB_PATH:$PATH" >> "$GITHUB_ENV"
-            else
-                echo "MSVC installation not found."
-                exit 1
-            fi
-        else
-            echo "vswhere.exe not found, unable to locate MSVC."
-            exit 1
-        fi
+        source "C:/Program Files (x86)/Microsoft Visual Studio/2022/Enterprise/Common7/Tools/VsDevCmd.bat"
+        echo "Visual Studio environment configured"
 
     - name: Verify lib.exe
       if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'
       shell: bash
       run: |
         which lib.exe || echo "lib.exe not found"
+        exit 1
 
     - name: Build IQ-TREE
       shell: bash

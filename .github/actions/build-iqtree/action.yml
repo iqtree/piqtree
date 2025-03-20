@@ -23,7 +23,8 @@ runs:
       id: cache
       with:
         key: libiqtree-${{ inputs.os }}-${{ steps.iqtree2-sha.outputs.iqtree2-sha }}
-        path: src/piqtree/_libiqtree/libiqtree2.a
+        path: |
+          ${{ inputs.os == 'windows-latest' && 'src/piqtree/_libiqtree/iqtree2.lib\nsrc/piqtree/_libiqtree/iqtree2.dll' || 'src/piqtree/_libiqtree/libiqtree2.a' }}
         lookup-only: true
 
     - name: Build IQ-TREE
@@ -31,7 +32,12 @@ runs:
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
         if [[ "${{ inputs.os }}" == "ubuntu-latest" ]]; then
-        sudo ./build_tools/before_all_linux.sh
+          sudo ./build_tools/before_all_linux.sh
+        elif [[ "${{ inputs.os }}" == "macOS-latest" ]]; then
+          ./build_tools/before_all_mac.sh
+        elif [[ "${{ inputs.os }}" == "windows-latest" ]]; then
+          ./build_tools/before_all_windows.sh
         else
-        ./build_tools/before_all_mac.sh
+          echo "Unrecognized OS: '${{ inputs.os }}'."
+          exit 1
         fi

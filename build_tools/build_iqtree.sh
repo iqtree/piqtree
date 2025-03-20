@@ -12,11 +12,14 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 elif [[ "$OSTYPE" == "msys"* || "$OSTYPE" == "cygwin"* ]]; then
     echo "Building for Windows."
     cmake -G "MinGW Makefiles" \
-        -DCMAKE_C_COMPILER=$CMAKE_C_COMPILER \
-        -DCMAKE_CXX_COMPILER=$CMAKE_CXX_COMPILER \
-        -DCMAKE_MAKE_PROGRAM=$CMAKE_MAKE_PROGRAM \
+        -DCMAKE_C_COMPILER=clang \
+        -DCMAKE_CXX_COMPILER=clang++ \
+        -DCMAKE_C_FLAGS=--target=x86_64-pc-windows-gnu \
+        -DCMAKE_CXX_FLAGS=--target=x86_64-pc-windows-gnu \
+        -DCMAKE_MAKE_PROGRAM=mingw32-make \
         -DBoost_INCLUDE_DIR=$Boost_INCLUDE_DIR \
         -DBoost_LIBRARY_DIRS=$Boost_LIBRARY_DIRS \
+        -DIQTREE_FLAGS="cpp14" \
         -DBUILD_LIB=ON \
         ..
     make -j

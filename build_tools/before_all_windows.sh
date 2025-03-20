@@ -1,10 +1,6 @@
 # Install dependencies using choco
-choco install -y llvm eigen make
-
-# Set environment variables for LLVM
-export CMAKE_C_COMPILER="clang"
-export CMAKE_CXX_COMPILER="clang++"
-export CMAKE_MAKE_PROGRAM="make"
+choco install -y llvm --version=14.0.6 --allow-downgrade
+choco install -y eigen 
 
 # Build IQ-TREE
 bash build_tools/build_iqtree.sh

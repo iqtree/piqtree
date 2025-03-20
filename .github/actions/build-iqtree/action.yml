@@ -47,13 +47,6 @@ runs:
       if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'
       uses: ilammy/msvc-dev-cmd@v1
 
-    - name: Verify lib.exe
-      if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'
-      shell: bash
-      run: |
-        which lib.exe || echo "lib.exe not found"
-        exit 1
-
     - name: Build IQ-TREE
       shell: bash
       if: steps.cache.outputs.cache-hit != 'true'

@@ -19,7 +19,7 @@ runs:
       uses: actions/cache/restore@v4
       id: cache-windows
       with:
-        key: libiqtree-windows-${{ steps.iqtree2-sha.outputs.iqtree2-sha }}
+        key: ${{ inputs.cache-key }}
         path: |
           src/piqtree/_libiqtree/iqtree2.lib
           src/piqtree/_libiqtree/iqtree2.dll
@@ -30,7 +30,7 @@ runs:
       uses: actions/cache/restore@v4
       id: cache-unix
       with:
-        key: libiqtree-${{ inputs.os }}-${{ steps.iqtree2-sha.outputs.iqtree2-sha }}
+        key: ${{ inputs.cache-key }}
         path: |
           src/piqtree/_libiqtree/libiqtree2.a
         fail-on-cache-miss: true

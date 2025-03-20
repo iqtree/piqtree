@@ -51,7 +51,7 @@ jobs:
           cache-key: libiqtree-${{ matrix.os }}-${{ needs.build-iqtree.outputs.iqtree2-sha }}
 
       - name: Install llvm
-        if: matrix.os != 'ubuntu-latest'
+        if: runner.os == 'macOS'
         run: |
           brew install llvm
           

@@ -27,6 +27,15 @@ runs:
           ${{ inputs.os == 'windows-latest' && 'src/piqtree/_libiqtree/iqtree2.lib\nsrc/piqtree/_libiqtree/iqtree2.dll' || 'src/piqtree/_libiqtree/libiqtree2.a' }}
         lookup-only: true
 
+    - name: Install Boost
+      if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'
+      uses: MarkusJx/install-boost@v2.4.5
+      id: install-boost
+      with:
+        boost_version: 1.84.0
+        platform_version: 2022
+        toolset: mingw
+
     - name: Build IQ-TREE
       shell: bash
       if: steps.cache.outputs.cache-hit != 'true'

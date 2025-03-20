@@ -1,5 +1,5 @@
 # Install dependencies using choco
-choco install -y llvm eigen boost libomp make
+choco install -y llvm eigen make
 
 # Set environment variables for LLVM
 export CMAKE_C_COMPILER="clang"

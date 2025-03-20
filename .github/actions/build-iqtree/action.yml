@@ -24,7 +24,7 @@ runs:
       uses: actions/cache@v4
       id: cache-windows
       with:
-        key: libiqtree-windows-${{ steps.iqtree2-sha.outputs.iqtree2-sha }}
+        key: libiqtree-${{ inputs.os }}-${{ steps.iqtree2-sha.outputs.iqtree2-sha }}
         path: |
           src/piqtree/_libiqtree/iqtree2.lib
           src/piqtree/_libiqtree/iqtree2.dll

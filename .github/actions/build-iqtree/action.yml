@@ -44,10 +44,9 @@ runs:
         echo "Boost_LIBRARY_DIRS=${{ steps.install-boost.outputs.BOOST_ROOT }}/lib" >> "$GITHUB_ENV"
 
     - name: Setup Visual Studio Environment
-      if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'
-      shell: bash
+      shell: cmd
       run: |
-        source "C:/Program Files (x86)/Microsoft Visual Studio/2022/Enterprise/Common7/Tools/VsDevCmd.bat"
+        "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat"
         echo "Visual Studio environment configured"
 
     - name: Verify lib.exe

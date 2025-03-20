@@ -74,11 +74,11 @@ runs:
       shell: bash
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        if [[ "${{ inputs.os }}" == "ubuntu-latest" ]]; then
+        if [[ "${{ runner.os }}" == "Linux" ]]; then
           sudo ./build_tools/before_all_linux.sh
-        elif [[ "${{ inputs.os }}" == "macOS-latest" ]]; then
+        elif [[ "${{ runner.os }}" == "macOS" ]]; then
           ./build_tools/before_all_mac.sh
-        elif [[ "${{ inputs.os }}" == "windows-latest" ]]; then
+        elif [[ "${{ runner.os }}" == "Windows" ]]; then
           ./build_tools/before_all_windows.sh
         else
           echo "Unrecognized OS: '${{ inputs.os }}'."

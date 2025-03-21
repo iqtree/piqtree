@@ -1,9 +1,9 @@
-from cogent3 import ArrayAlignment, make_tree
+from cogent3 import Alignment, make_tree
 
 from piqtree import jc_distances, nj_tree
 
 
-def test_nj_tree(five_otu: ArrayAlignment) -> None:
+def test_nj_tree(five_otu: Alignment) -> None:
     expected = make_tree("(((Human, Chimpanzee), Rhesus), Manatee, Dugong);")
 
     dists = jc_distances(five_otu)
@@ -12,7 +12,7 @@ def test_nj_tree(five_otu: ArrayAlignment) -> None:
     assert expected.same_topology(actual)
 
 
-def test_nj_tree_allow_negative(all_otu: ArrayAlignment) -> None:
+def test_nj_tree_allow_negative(all_otu: Alignment) -> None:
     # a distance matrix can produce trees with negative branch lengths
     dists = jc_distances(all_otu)
 

@@ -1,7 +1,7 @@
 import re
 
 import pytest
-from cogent3 import ArrayAlignment, make_tree
+from cogent3 import Alignment, make_tree
 
 import piqtree
 from piqtree.exceptions import IqTreeError
@@ -16,7 +16,7 @@ from piqtree.model import (
 
 
 def check_build_tree(
-    four_otu: ArrayAlignment,
+    four_otu: Alignment,
     dna_model: DnaModel,
     freq_type: FreqType | None = None,
     rate_model: RateModel | None = None,
@@ -49,7 +49,7 @@ def check_build_tree(
 @pytest.mark.parametrize("dna_model", list(DnaModel)[:22])
 @pytest.mark.parametrize("freq_type", list(FreqType))
 def test_non_lie_build_tree(
-    four_otu: ArrayAlignment,
+    four_otu: Alignment,
     dna_model: DnaModel,
     freq_type: FreqType,
 ) -> None:
@@ -57,7 +57,7 @@ def test_non_lie_build_tree(
 
 
 @pytest.mark.parametrize("dna_model", list(DnaModel)[22:])
-def test_lie_build_tree(four_otu: ArrayAlignment, dna_model: DnaModel) -> None:
+def test_lie_build_tree(four_otu: Alignment, dna_model: DnaModel) -> None:
     check_build_tree(four_otu, dna_model)
 
 
@@ -74,7 +74,7 @@ def test_lie_build_tree(four_otu: ArrayAlignment, dna_model: DnaModel) -> None:
     ],
 )
 def test_rate_model_build_tree(
-    four_otu: ArrayAlignment,
+    four_otu: Alignment,
     dna_model: DnaModel,
     invariant_sites: bool,
     rate_model: RateModel,
@@ -87,12 +87,12 @@ def test_rate_model_build_tree(
     )
 
 
-def test_build_tree_inadequate_bootstrapping(four_otu: ArrayAlignment) -> None:
+def test_build_tree_inadequate_bootstrapping(four_otu: Alignment) -> None:
     with pytest.raises(IqTreeError, match=re.escape("#replicates must be >= 1000")):
         piqtree.build_tree(four_otu, Model(DnaModel.GTR), bootstrap_replicates=10)
 
 
-def test_build_tree_bootstrapping(four_otu: ArrayAlignment) -> None:
+def test_build_tree_bootstrapping(four_otu: Alignment) -> None:
     tree = piqtree.build_tree(four_otu, Model(DnaModel.GTR), bootstrap_replicates=1000)
 
     supported_node = max(tree.children, key=lambda x: len(x.children))

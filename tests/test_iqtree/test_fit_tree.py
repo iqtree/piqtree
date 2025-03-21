@@ -1,5 +1,5 @@
 import pytest
-from cogent3 import ArrayAlignment, get_app, make_tree
+from cogent3 import Alignment, get_app, make_tree
 from cogent3.app.result import model_result
 from cogent3.core.tree import PhyloNode
 
@@ -78,7 +78,7 @@ def check_branch_lengths(got: PhyloNode, expected: PhyloNode) -> None:
         (DnaModel.F81, "F81"),
     ],
 )
-def test_fit_tree(three_otu: ArrayAlignment, iq_model: DnaModel, c3_model: str) -> None:
+def test_fit_tree(three_otu: Alignment, iq_model: DnaModel, c3_model: str) -> None:
     tree_topology = make_tree(tip_names=three_otu.names)
     app = get_app("model", c3_model, tree=tree_topology)
     expected = app(three_otu)

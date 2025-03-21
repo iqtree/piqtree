@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "piqtree"
 dependencies = ["cogent3>=2024.11.29a2", "pyyaml", "requests"]
-requires-python = ">=3.10, <3.13"
+requires-python = ">=3.11, <3.14"
 
 authors = [{name="Gavin Huttley"}, {name="Robert McArthur"}, {name="Bui Quang Minh "}, {name="Richard Morris"}, {name="Thomas Wong"}]
 description="Python bindings for IQTree"
@@ -43,7 +43,7 @@ Documentation = "https://piqtree.readthedocs.io"
 [project.optional-dependencies]
 dev = ["cibuildwheel", "pybind11", "scriv", "piqtree[test]", "piqtree[lint]", "piqtree[typing]"]
 test = ["pytest", "pytest-cov", "nox"]
-lint = ["ruff==0.9.7"]
+lint = ["ruff==0.11.0"]
 typing = ["mypy==1.15.0", "piqtree[stubs]", "piqtree[test]"]
 stubs = ["types-PyYAML", "types-requests"]
 extra = ["cogent3[extra]"]
@@ -67,6 +67,9 @@ piqtree_random_trees = "piqtree._app:piqtree_random_trees"
 piqtree_jc_dists = "piqtree._app:piqtree_jc_dists"
 piqtree_nj = "piqtree._app:piqtree_nj"
 piqtree_mfinder = "piqtree._app:piqtree_mfinder"
+
+[project.entry-points."cogent3.hook"]
+quick_tree = "piqtree._app:piqtree_nj"
 
 [tool.setuptools.dynamic]
 version = {attr = "piqtree.__version__"}

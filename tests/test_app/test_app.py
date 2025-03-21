@@ -1,18 +1,20 @@
 import pytest
-from cogent3 import ArrayAlignment, get_app, make_tree
+from cogent3 import __version__ as cogent3_vers
+from cogent3 import get_app, make_tree
+from cogent3.core.new_alignment import Alignment
 
 import piqtree
 from piqtree import jc_distances
 
 
-def test_piqtree_phylo(four_otu: ArrayAlignment) -> None:
+def test_piqtree_phylo(four_otu: Alignment) -> None:
     expected = make_tree("(Human,Chimpanzee,(Rhesus,Mouse));")
     app = get_app("piqtree_phylo", submod_type="JC")
     got = app(four_otu)
     assert expected.same_topology(got)
 
 
-def test_piqtree_phylo_support(four_otu: ArrayAlignment) -> None:
+def test_piqtree_phylo_support(four_otu: Alignment) -> None:
     app = get_app("piqtree_phylo", submod_type="JC", bootstrap_reps=1000)
     got = app(four_otu)
     supports = [
@@ -23,7 +25,7 @@ def test_piqtree_phylo_support(four_otu: ArrayAlignment) -> None:
     assert all(supports)
 
 
-def test_piqtree_fit(three_otu: ArrayAlignment) -> None:
+def test_piqtree_fit(three_otu: Alignment) -> None:
     tree = make_tree(tip_names=three_otu.names)
     app = get_app("model", "JC69", tree=tree)
     expected = app(three_otu)
@@ -53,7 +55,7 @@ def test_piqtree_random_trees(
         assert len(tree.tips()) == num_taxa
 
 
-def test_piqtree_jc_distances(five_otu: ArrayAlignment) -> None:
+def test_piqtree_jc_distances(five_otu: Alignment) -> None:
     app = get_app("piqtree_jc_dists")
     dists = app(five_otu)
 
@@ -79,7 +81,7 @@ def test_piqtree_jc_distances(five_otu: ArrayAlignment) -> None:
     )  # dugong closer than rhesus
 
 
-def test_piqtree_nj(five_otu: ArrayAlignment) -> None:
+def test_piqtree_nj(five_otu: Alignment) -> None:
     dists = jc_distances(five_otu)
 
     expected = make_tree("(((Human, Chimpanzee), Rhesus), Manatee, Dugong);")
@@ -91,7 +93,7 @@ def test_piqtree_nj(five_otu: ArrayAlignment) -> None:
     assert expected.same_topology(actual)
 
 
-def test_mfinder(five_otu: ArrayAlignment) -> None:
+def test_mfinder(five_otu: Alignment) -> None:
     from piqtree.iqtree import ModelFinderResult
 
     app = get_app("piqtree_mfinder")
@@ -99,7 +101,7 @@ def test_mfinder(five_otu: ArrayAlignment) -> None:
     assert isinstance(got, ModelFinderResult)
 
 
-def test_mfinder_result_roundtrip(five_otu: ArrayAlignment) -> None:
+def test_mfinder_result_roundtrip(five_otu: Alignment) -> None:
     from piqtree.iqtree import ModelFinderResult
 
     app = get_app("piqtree_mfinder")
@@ -108,3 +110,9 @@ def test_mfinder_result_roundtrip(five_otu: ArrayAlignment) -> None:
     inflated = ModelFinderResult.from_rich_dict(rd)
     assert isinstance(inflated, ModelFinderResult)
     assert str(got.best_aicc) == str(inflated.best_aicc)
+
+@pytest.mark.skipif(cogent3_vers < "2025.3.1", reason="requires cogent3 >= 2025.3.1")
+@pytest.mark.parametrize("use_hook", [None, "piqtree"])
+def test_quick_tree_hook(four_otu: Alignment, use_hook: str | None) -> None:
+    tree = four_otu.quick_tree(use_hook=use_hook)
+    assert tree.params["provenance"] == "piqtree"

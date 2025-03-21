@@ -312,7 +312,11 @@ def fit_tree(
     return tree
 
 
-def nj_tree(pairwise_distances: c3_types.PairwiseDistanceType,*,allow_negative:bool=False) -> cogent3.PhyloNode:
+def nj_tree(
+    pairwise_distances: c3_types.PairwiseDistanceType,
+    *,
+    allow_negative: bool = False,
+) -> cogent3.PhyloNode:
     """Construct a neighbour joining tree from a pairwise distance matrix.
 
     Parameters

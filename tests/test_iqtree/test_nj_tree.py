@@ -14,6 +14,7 @@ def test_nj_tree(five_otu: ArrayAlignment) -> None:
 
     assert expected.same_topology(actual)
 
+
 def test_nj_tree_allow_negative(DATA_DIR: pathlib.Path) -> None:
     # a distance matrix can produce trees with negative branch lengths
     dists = deserialise_object(DATA_DIR / "distance_matrix.json")

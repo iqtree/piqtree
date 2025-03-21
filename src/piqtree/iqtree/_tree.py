@@ -340,8 +340,9 @@ def nj_tree(
     )
 
     tree = make_tree(newick_tree)
-    if allow_negative is False:
-        for v in tree.get_edge_vector():
-            if v.params["length"] is not None:
-                v.params["length"] = max(v.params["length"], 0)
+
+    if not allow_negative:
+        for node in tree.traverse(include_self=False):
+            node.length = max(node.length, 0)
+
     return tree

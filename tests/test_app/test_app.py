@@ -1,5 +1,4 @@
 import pytest
-from cogent3 import __version__ as cogent3_vers
 from cogent3 import get_app, make_tree
 from cogent3.core.new_alignment import Alignment
 
@@ -112,7 +111,6 @@ def test_mfinder_result_roundtrip(five_otu: Alignment) -> None:
     assert str(got.best_aicc) == str(inflated.best_aicc)
 
 
-@pytest.mark.skipif(cogent3_vers < "2025.3.1", reason="requires cogent3 >= 2025.3.1")
 @pytest.mark.parametrize("use_hook", [None, "piqtree"])
 def test_quick_tree_hook(four_otu: Alignment, use_hook: str | None) -> None:
     tree = four_otu.quick_tree(use_hook=use_hook)

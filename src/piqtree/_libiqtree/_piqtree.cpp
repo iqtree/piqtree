@@ -5,10 +5,15 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
-using namespace std;
+#include "_piqtree.h"
 
 namespace py = pybind11;
+
+void checkError(char* errorStr) {
+  if (errorStr && std::strlen(errorStr) > 0) {
+    throw std::runtime_error(errorStr);
+  }
+}
 
 namespace PYBIND11_NAMESPACE {
 namespace detail {
@@ -80,9 +85,63 @@ struct type_caster<DoubleArray> {
 
   // Conversion from C++ to Python
   static handle cast(DoubleArray src, return_value_policy, handle) {
+    throw std::runtime_error("Unsupported operation");
+  }
+};
+
+template <>
+struct type_caster<IntegerResult> {
+ public:
+  PYBIND11_TYPE_CASTER(IntegerResult, _("IntegerResult"));
+
+  // Conversion from Python to C++
+  bool load(handle /* src */, bool /* convert */) {
+    throw std::runtime_error("Unsupported operation");
+  }
+
+  // Conversion from C++ to Python
+  static handle cast(const IntegerResult& src, return_value_policy, handle) {
+    checkError(src.errorStr);
+
+    return py::int_(src.value).release();
+  }
+};
+
+template <>
+struct type_caster<StringResult> {
+ public:
+  // Indicate that this caster only supports conversion from C++ to Python
+  PYBIND11_TYPE_CASTER(StringResult, _("StringResult"));
+
+  // Reject Python to C++ conversion
+  bool load(handle src, bool) {
+    throw std::runtime_error("Unsupported operation");
+  }
+
+  // Conversion from C++ to Python
+  static handle cast(const StringResult& src, return_value_policy, handle) {
+    checkError(src.errorStr);
+
+    return py::str(src.value).release();
+  }
+};
+
+template <>
+struct type_caster<DoubleArrayResult> {
+ public:
+  PYBIND11_TYPE_CASTER(DoubleArrayResult, _("DoubleArrayResult"));
+
+  // Conversion from Python to C++
+  bool load(handle src, bool) {
+    throw std::runtime_error("Unsupported operation");
+  }
+
+  // Conversion from C++ to Python
+  static handle cast(DoubleArrayResult src, return_value_policy, handle) {
+    checkError(src.errorStr);
+
     auto result = py::array_t<double>(src.length);
-    std::memcpy(result.mutable_data(), src.doubles,
-                src.length * sizeof(double));
+    std::memcpy(result.mutable_data(), src.value, src.length * sizeof(double));
     return result.release();
   }
 };

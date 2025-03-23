@@ -1,5 +1,3 @@
-import platform
-
 import pytest
 
 import piqtree
@@ -47,10 +45,6 @@ def test_random_trees_no_seed(
 
 @pytest.mark.parametrize("num_taxa", [-1, 0, 1, 2])
 @pytest.mark.parametrize("tree_mode", list(piqtree.TreeGenMode))
-@pytest.mark.skipif(
-    platform.system() == "Windows",
-    reason="IQ-TREE errors can't be caught yet on Windows",
-)
 def test_invalid_taxa(
     num_taxa: int,
     tree_mode: piqtree.TreeGenMode,

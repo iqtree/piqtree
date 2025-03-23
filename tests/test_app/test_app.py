@@ -111,6 +111,7 @@ def test_mfinder_result_roundtrip(five_otu: Alignment) -> None:
     assert isinstance(inflated, ModelFinderResult)
     assert str(got.best_aicc) == str(inflated.best_aicc)
 
+
 @pytest.mark.skipif(cogent3_vers < "2025.3.1", reason="requires cogent3 >= 2025.3.1")
 @pytest.mark.parametrize("use_hook", [None, "piqtree"])
 def test_quick_tree_hook(four_otu: Alignment, use_hook: str | None) -> None:

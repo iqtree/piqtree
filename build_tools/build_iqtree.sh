@@ -11,7 +11,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     gmake -j
 else
     echo "Building for linux."
-    cmake -DBUILD_LIB=ON ..
+    cmake -DBUILD_LIB=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5 ..
     make -j
 fi
 

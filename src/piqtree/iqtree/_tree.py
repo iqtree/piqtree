@@ -11,7 +11,7 @@ from cogent3 import PhyloNode, make_tree
 
 from piqtree.exceptions import ParseIqTreeError
 from piqtree.iqtree._decorator import iqtree_func
-from piqtree.model import DnaModel, Model
+from piqtree.model import DnaModel, Model, make_model
 
 iq_build_tree = iqtree_func(iq_build_tree, hide_files=True)
 iq_fit_tree = iqtree_func(iq_fit_tree, hide_files=True)
@@ -196,7 +196,7 @@ def _process_tree_yaml(
 
 def build_tree(
     aln: c3_types.AlignedSeqsType,
-    model: Model,
+    model: Model | str,
     rand_seed: int | None = None,
     bootstrap_replicates: int | None = None,
     num_threads: int | None = None,
@@ -209,7 +209,7 @@ def build_tree(
     ----------
     aln : c3_types.AlignedSeqsType
         The sequence alignment.
-    model : Model
+    model : Model | str
         The substitution model with base frequencies and rate heterogeneity.
     rand_seed : int | None, optional
         The random seed - 0 or None means no seed, by default None.
@@ -227,6 +227,9 @@ def build_tree(
         The IQ-TREE maximum likelihood tree from the given alignment.
 
     """
+    if isinstance(model, str):
+        model = make_model(model)
+
     if rand_seed is None:
         rand_seed = 0  # The default rand_seed in IQ-TREE
 
@@ -261,7 +264,7 @@ def build_tree(
 def fit_tree(
     aln: c3_types.AlignedSeqsType,
     tree: cogent3.PhyloNode,
-    model: Model,
+    model: Model | str,
     rand_seed: int | None = None,
     num_threads: int | None = None,
 ) -> cogent3.PhyloNode:
@@ -276,7 +279,7 @@ def fit_tree(
         The sequence alignment.
     tree : cogent3.PhyloNode
         The topology to fit branch lengths to.
-    model : Model
+    model : Model | str
         The substitution model with base frequencies and rate heterogeneity.
     rand_seed : int | None, optional
         The random seed - 0 or None means no seed, by default None.
@@ -290,6 +293,9 @@ def fit_tree(
         A phylogenetic tree with same given topology fitted with branch lengths.
 
     """
+    if isinstance(model, str):
+        model = make_model(model)
+
     if rand_seed is None:
         rand_seed = 0  # The default rand_seed in IQ-TREE
 

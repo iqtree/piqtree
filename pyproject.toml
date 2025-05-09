@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "piqtree"
-dependencies = ["cogent3>=2025.3.22a2", "pyyaml", "requests"]
+dependencies = ["cogent3>=2025.5.8a2", "pyyaml", "requests"]
 requires-python = ">=3.11, <3.14"
 
 authors = [{name="Gavin Huttley"}, {name="Robert McArthur"}, {name="Bui Quang Minh "}, {name="Richard Morris"}, {name="Thomas Wong"}]

@@ -22,6 +22,7 @@ def check_build_tree(
     rate_model: RateModel | None = None,
     *,
     invariant_sites: bool = False,
+    coerce_str: bool = False,
 ) -> None:
     expected = make_tree("(Human,Chimpanzee,(Rhesus,Mouse));")
 
@@ -32,7 +33,11 @@ def check_build_tree(
         rate_model=rate_model,
     )
 
-    got1 = piqtree.build_tree(four_otu, model, rand_seed=1)
+    got1 = piqtree.build_tree(
+        four_otu,
+        str(model) if coerce_str else model,
+        rand_seed=1,
+    )
     got1 = got1.unrooted()
     # Check topology
     assert expected.same_topology(got1.unrooted())
@@ -59,6 +64,11 @@ def test_non_lie_build_tree(
 @pytest.mark.parametrize("dna_model", list(DnaModel)[22:])
 def test_lie_build_tree(four_otu: Alignment, dna_model: DnaModel) -> None:
     check_build_tree(four_otu, dna_model)
+
+
+@pytest.mark.parametrize("dna_model", list(DnaModel)[-3:])
+def test_str_build_tree(four_otu: Alignment, dna_model: DnaModel) -> None:
+    check_build_tree(four_otu, dna_model, coerce_str=True)
 
 
 @pytest.mark.parametrize("dna_model", list(DnaModel)[:5])

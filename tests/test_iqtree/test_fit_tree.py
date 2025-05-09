@@ -83,14 +83,52 @@ def test_fit_tree(three_otu: Alignment, iq_model: DnaModel, c3_model: str) -> No
     app = get_app("model", c3_model, tree=tree_topology)
     expected = app(three_otu)
 
-    got1 = piqtree.fit_tree(three_otu, tree_topology, Model(iq_model), rand_seed=1)
+    model = Model(iq_model)
+
+    got1 = piqtree.fit_tree(three_otu, tree_topology, model, rand_seed=1)
     check_likelihood(got1, expected)
     check_motif_probs(got1, expected.tree)
     check_rate_parameters(got1, expected.tree)
     check_branch_lengths(got1, expected.tree)
 
     # Should be within an approximation for any seed
-    got2 = piqtree.fit_tree(three_otu, tree_topology, Model(iq_model), rand_seed=None)
+    got2 = piqtree.fit_tree(three_otu, tree_topology, model, rand_seed=None)
+    check_likelihood(got2, expected)
+    check_motif_probs(got2, expected.tree)
+    check_rate_parameters(got2, expected.tree)
+    check_branch_lengths(got2, expected.tree)
+
+
+@pytest.mark.parametrize(
+    ("iq_model", "c3_model"),
+    [
+        (DnaModel.JC, "JC69"),
+        (DnaModel.K80, "K80"),
+        (DnaModel.GTR, "GTR"),
+        (DnaModel.TN, "TN93"),
+        (DnaModel.HKY, "HKY85"),
+        (DnaModel.F81, "F81"),
+    ],
+)
+def test_fit_tree_str_model(
+    three_otu: Alignment,
+    iq_model: DnaModel,
+    c3_model: str,
+) -> None:
+    tree_topology = make_tree(tip_names=three_otu.names)
+    app = get_app("model", c3_model, tree=tree_topology)
+    expected = app(three_otu)
+
+    model = str(Model(iq_model))
+
+    got1 = piqtree.fit_tree(three_otu, tree_topology, model, rand_seed=1)
+    check_likelihood(got1, expected)
+    check_motif_probs(got1, expected.tree)
+    check_rate_parameters(got1, expected.tree)
+    check_branch_lengths(got1, expected.tree)
+
+    # Should be within an approximation for any seed
+    got2 = piqtree.fit_tree(three_otu, tree_topology, model, rand_seed=None)
     check_likelihood(got2, expected)
     check_motif_probs(got2, expected.tree)
     check_rate_parameters(got2, expected.tree)

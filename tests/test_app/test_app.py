@@ -3,18 +3,18 @@ from cogent3 import get_app, make_tree
 from cogent3.core.new_alignment import Alignment
 
 import piqtree
-from piqtree import jc_distances
+from piqtree import jc_distances, make_model
 
 
 def test_piqtree_phylo(four_otu: Alignment) -> None:
     expected = make_tree("(Human,Chimpanzee,(Rhesus,Mouse));")
-    app = get_app("piqtree_phylo", submod_type="JC")
+    app = get_app("piqtree_phylo", model="JC")
     got = app(four_otu)
     assert expected.same_topology(got)
 
 
 def test_piqtree_phylo_support(four_otu: Alignment) -> None:
-    app = get_app("piqtree_phylo", submod_type="JC", bootstrap_reps=1000)
+    app = get_app("piqtree_phylo", model=make_model("JC"), bootstrap_reps=1000)
     got = app(four_otu)
     supports = [
         node.params.get("support", None)
@@ -28,7 +28,7 @@ def test_piqtree_fit(three_otu: Alignment) -> None:
     tree = make_tree(tip_names=three_otu.names)
     app = get_app("model", "JC69", tree=tree)
     expected = app(three_otu)
-    piphylo = get_app("piqtree_fit", tree=tree, submod_type="JC")
+    piphylo = get_app("piqtree_fit", tree=tree, model="JC")
     got = piphylo(three_otu)
     assert got.params["lnL"] == pytest.approx(expected.lnL)
 

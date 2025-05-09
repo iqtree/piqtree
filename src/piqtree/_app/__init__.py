@@ -23,21 +23,13 @@ class piqtree_phylo:
     @extend_docstring_from(build_tree)
     def __init__(
         self,
-        submod_type: str,
-        freq_type: str | None = None,
-        rate_model: str | None = None,
+        model: Model | str,
         *,
-        invariant_sites: bool = False,
         rand_seed: int | None = None,
         bootstrap_reps: int | None = None,
         num_threads: int | None = None,
     ) -> None:
-        self._model = Model(
-            submod_type=submod_type,
-            invariant_sites=invariant_sites,
-            rate_model=rate_model,
-            freq_type=freq_type,
-        )
+        self._model = model
         self._rand_seed = rand_seed
         self._bootstrap_reps = bootstrap_reps
         self._num_threads = num_threads
@@ -61,21 +53,13 @@ class piqtree_fit:
     def __init__(
         self,
         tree: cogent3.PhyloNode,
-        submod_type: str,
-        freq_type: str | None = None,
-        rate_model: str | None = None,
+        model: Model | str,
         *,
         rand_seed: int | None = None,
         num_threads: int | None = None,
-        invariant_sites: bool = False,
     ) -> None:
         self._tree = tree
-        self._model = Model(
-            submod_type=submod_type,
-            invariant_sites=invariant_sites,
-            rate_model=rate_model,
-            freq_type=freq_type,
-        )
+        self._model = model
         self._rand_seed = rand_seed
         self._num_threads = num_threads
 

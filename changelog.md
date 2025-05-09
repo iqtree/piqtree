@@ -1,4 +1,24 @@
 
+<a id='changelog-0.5.0'></a>
+# Changes in release "0.5.0"
+
+## Contributors
+
+- @GavinHuttley added `nj_tree` as a hook for `cogent3.Alignment.quick_tree`.
+- @YapengLang handled negative branch lengths from the rapidNJ tree.
+- @rmcar17, @thomaskf general maintanence on the piqtree/IQ-TREE sides including work on windows behind the scenes.
+
+## ENH
+
+- Add support for Python 3.13, remove support for 3.10
+- IQ-TREE's rapidNJ implementation can be used as a hook for `quick_tree` on `cogent3` alignment objects. Try `Alignment.quick_tree(use_hook="piqtree")`.
+- `nj_tree` now by default does not allow negative branch lengths. Set `allow_negative=True` if this behaviour is desired.
+- Allow `str` to be used for `model` in `build_tree` and `fit_tree`. The value is automatically coerced into the `Model` class.
+
+## API
+
+- Simplify API for `piqtree_phylo` and `piqtree_fit` apps. Both now take a single parameter for the model, matching the parameter for `model` in `build_tree` and `fit_tree`.
+
 <a id='changelog-0.4.0'></a>
 # Changes in release "0.4.0"
 

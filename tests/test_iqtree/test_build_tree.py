@@ -1,7 +1,7 @@
 import re
 
 import pytest
-from cogent3 import ArrayAlignment, make_tree
+from cogent3 import Alignment, make_tree
 
 import piqtree
 from piqtree.exceptions import IqTreeError
@@ -16,12 +16,13 @@ from piqtree.model import (
 
 
 def check_build_tree(
-    four_otu: ArrayAlignment,
+    four_otu: Alignment,
     dna_model: DnaModel,
     freq_type: FreqType | None = None,
     rate_model: RateModel | None = None,
     *,
     invariant_sites: bool = False,
+    coerce_str: bool = False,
 ) -> None:
     expected = make_tree("(Human,Chimpanzee,(Rhesus,Mouse));")
 
@@ -32,7 +33,11 @@ def check_build_tree(
         rate_model=rate_model,
     )
 
-    got1 = piqtree.build_tree(four_otu, model, rand_seed=1)
+    got1 = piqtree.build_tree(
+        four_otu,
+        str(model) if coerce_str else model,
+        rand_seed=1,
+    )
     got1 = got1.unrooted()
     # Check topology
     assert expected.same_topology(got1.unrooted())
@@ -49,7 +54,7 @@ def check_build_tree(
 @pytest.mark.parametrize("dna_model", list(DnaModel)[:22])
 @pytest.mark.parametrize("freq_type", list(FreqType))
 def test_non_lie_build_tree(
-    four_otu: ArrayAlignment,
+    four_otu: Alignment,
     dna_model: DnaModel,
     freq_type: FreqType,
 ) -> None:
@@ -57,8 +62,13 @@ def test_non_lie_build_tree(
 
 
 @pytest.mark.parametrize("dna_model", list(DnaModel)[22:])
-def test_lie_build_tree(four_otu: ArrayAlignment, dna_model: DnaModel) -> None:
+def test_lie_build_tree(four_otu: Alignment, dna_model: DnaModel) -> None:
     check_build_tree(four_otu, dna_model)
+
+
+@pytest.mark.parametrize("dna_model", list(DnaModel)[-3:])
+def test_str_build_tree(four_otu: Alignment, dna_model: DnaModel) -> None:
+    check_build_tree(four_otu, dna_model, coerce_str=True)
 
 
 @pytest.mark.parametrize("dna_model", list(DnaModel)[:5])
@@ -74,7 +84,7 @@ def test_lie_build_tree(four_otu: ArrayAlignment, dna_model: DnaModel) -> None:
     ],
 )
 def test_rate_model_build_tree(
-    four_otu: ArrayAlignment,
+    four_otu: Alignment,
     dna_model: DnaModel,
     invariant_sites: bool,
     rate_model: RateModel,
@@ -87,12 +97,12 @@ def test_rate_model_build_tree(
     )
 
 
-def test_build_tree_inadequate_bootstrapping(four_otu: ArrayAlignment) -> None:
+def test_build_tree_inadequate_bootstrapping(four_otu: Alignment) -> None:
     with pytest.raises(IqTreeError, match=re.escape("#replicates must be >= 1000")):
         piqtree.build_tree(four_otu, Model(DnaModel.GTR), bootstrap_replicates=10)
 
 
-def test_build_tree_bootstrapping(four_otu: ArrayAlignment) -> None:
+def test_build_tree_bootstrapping(four_otu: Alignment) -> None:
     tree = piqtree.build_tree(four_otu, Model(DnaModel.GTR), bootstrap_replicates=1000)
 
     supported_node = max(tree.children, key=lambda x: len(x.children))

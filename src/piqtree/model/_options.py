@@ -3,7 +3,7 @@
 import functools
 from typing import Literal
 
-from cogent3 import _Table, make_table
+from cogent3.core.table import Table, make_table
 
 from piqtree.model._freq_type import FreqType
 from piqtree.model._rate_type import ALL_BASE_RATE_TYPES, get_description
@@ -40,7 +40,7 @@ def available_models(
     model_type: Literal["dna", "protein"] | None = None,
     *,
     show_all: bool = True,
-) -> _Table:
+) -> Table:
     """Return a table showing available substitution models.
 
     Parameters
@@ -52,7 +52,7 @@ def available_models(
 
     Returns
     -------
-    _Table
+    Table
         Table with all available models.
 
     """
@@ -78,7 +78,7 @@ def available_models(
     return table
 
 
-def available_freq_type() -> _Table:
+def available_freq_type() -> Table:
     """Return a table showing available freq type options."""
     data: dict[str, list[str]] = {"Freq Type": [], "Description": []}
 
@@ -89,7 +89,7 @@ def available_freq_type() -> _Table:
     return make_table(data=data, title="Available frequency types")
 
 
-def available_rate_type() -> _Table:
+def available_rate_type() -> Table:
     """Return a table showing available rate type options."""
     data: dict[str, list[str]] = {"Rate Type": [], "Description": []}
 

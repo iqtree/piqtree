@@ -1,9 +1,9 @@
-from cogent3 import ArrayAlignment
+from cogent3 import Alignment
 
 from piqtree import jc_distances
 
 
-def test_jc_distance(five_otu: ArrayAlignment) -> None:
+def test_jc_distance(five_otu: Alignment) -> None:
     dists = jc_distances(five_otu)
 
     assert (

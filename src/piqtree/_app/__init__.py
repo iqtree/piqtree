@@ -23,21 +23,13 @@ class piqtree_phylo:
     @extend_docstring_from(build_tree)
     def __init__(
         self,
-        submod_type: str,
-        freq_type: str | None = None,
-        rate_model: str | None = None,
+        model: Model | str,
         *,
-        invariant_sites: bool = False,
         rand_seed: int | None = None,
         bootstrap_reps: int | None = None,
         num_threads: int | None = None,
     ) -> None:
-        self._model = Model(
-            submod_type=submod_type,
-            invariant_sites=invariant_sites,
-            rate_model=rate_model,
-            freq_type=freq_type,
-        )
+        self._model = model
         self._rand_seed = rand_seed
         self._bootstrap_reps = bootstrap_reps
         self._num_threads = num_threads
@@ -61,21 +53,13 @@ class piqtree_fit:
     def __init__(
         self,
         tree: cogent3.PhyloNode,
-        submod_type: str,
-        freq_type: str | None = None,
-        rate_model: str | None = None,
+        model: Model | str,
         *,
         rand_seed: int | None = None,
         num_threads: int | None = None,
-        invariant_sites: bool = False,
     ) -> None:
         self._tree = tree
-        self._model = Model(
-            submod_type=submod_type,
-            invariant_sites=invariant_sites,
-            rate_model=rate_model,
-            freq_type=freq_type,
-        )
+        self._model = model
         self._rand_seed = rand_seed
         self._num_threads = num_threads
 
@@ -124,8 +108,12 @@ class piqtree_jc_dists:
 
 @composable.define_app
 @extend_docstring_from(nj_tree)
-def piqtree_nj(dists: c3_types.PairwiseDistanceType) -> cogent3.PhyloNode:
-    tree = nj_tree(dists)
+def piqtree_nj(
+    dists: c3_types.PairwiseDistanceType,
+    *,
+    allow_negative: bool = False,
+) -> cogent3.PhyloNode:
+    tree = nj_tree(dists, allow_negative=allow_negative)
     tree.params |= {"provenance": "piqtree"}
     return tree
 

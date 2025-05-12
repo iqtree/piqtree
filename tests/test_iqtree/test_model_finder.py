@@ -1,7 +1,7 @@
 import multiprocessing
 
 import pytest
-from cogent3 import ArrayAlignment
+from cogent3 import Alignment
 
 from piqtree.iqtree import ModelFinderResult, ModelResultValue, model_finder
 
@@ -47,7 +47,7 @@ def test_model_finder_result(model: str) -> None:
     assert result.model_stats[model].tree_length == 0.678
 
 
-def test_model_finder(five_otu: ArrayAlignment) -> None:
+def test_model_finder(five_otu: Alignment) -> None:
     result1 = model_finder(five_otu, rand_seed=1)
     result2 = model_finder(
         five_otu,
@@ -59,7 +59,7 @@ def test_model_finder(five_otu: ArrayAlignment) -> None:
     assert str(result1.best_bic) == str(result2.best_bic)
 
 
-def test_model_finder_restricted_submod(five_otu: ArrayAlignment) -> None:
+def test_model_finder_restricted_submod(five_otu: Alignment) -> None:
     result = model_finder(five_otu, rand_seed=1, model_set={"HKY", "TIM"})
     assert str(result.best_aic).startswith(("HKY", "TIM"))
     assert str(result.best_aicc).startswith(("HKY", "TIM"))

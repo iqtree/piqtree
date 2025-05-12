@@ -12,6 +12,9 @@
 
 # piqtree specific ignores
 src/piqtree/_libiqtree/**/*.a
+src/piqtree/_libiqtree/**/*.dll
+src/piqtree/_libiqtree/**/*.lib
+src/*.dll
 
 # docs
 data

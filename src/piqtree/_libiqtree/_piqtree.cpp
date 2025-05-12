@@ -1,89 +1,152 @@
+#include "_piqtree.h"
+#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <iostream>
 #include <string>
 #include <vector>
-
-using namespace std;
+#include "_piqtree.h"
 
 namespace py = pybind11;
 
-/*
- * Calculates the robinson fould distance between two trees
- */
-extern int robinson_fould(const string& tree1, const string& tree2);
+void checkError(char* errorStr) {
+  if (errorStr && std::strlen(errorStr) > 0) {
+    throw std::runtime_error(errorStr);
+  }
+}
 
-/*
- * Generates a set of random phylogenetic trees
- * tree_gen_mode allows:"YULE_HARDING", "UNIFORM", "CATERPILLAR", "BALANCED",
- * "BIRTH_DEATH", "STAR_TREE" output: a newick tree (in string format)
- */
-extern string random_tree(int num_taxa,
-                          string tree_gen_mode,
-                          int num_trees,
-                          int rand_seed = 0);
+namespace PYBIND11_NAMESPACE {
+namespace detail {
+template <>
+struct type_caster<StringArray> {
+ public:
+  PYBIND11_TYPE_CASTER(StringArray, const_name("StringArray"));
 
-/*
- * Perform phylogenetic analysis on the input alignment
- * With estimation of the best topology
- * output: results in YAML format with the tree and the details of parameters
- */
-extern string build_tree(vector<string>& names,
-                         vector<string>& seqs,
-                         string model,
-                         int rand_seed = 0,
-                         int bootstrap_rep = 0,
-                         int num_thres = 1);
+  // Conversion from Python to C++
+  bool load(handle src, bool) {
+    /* Extract PyObject from handle */
+    PyObject* source = src.ptr();
+    if (!py::isinstance<py::sequence>(source)) {
+      return false;
+    }
 
-/*
- * Perform phylogenetic analysis on the input alignment
- * With restriction to the input toplogy
- * output: results in YAML format with the details of parameters
- */
-extern string fit_tree(vector<string>& names,
-                       vector<string>& seqs,
-                       string model,
-                       string intree,
-                       int rand_seed = 0,
-                       int num_thres = 1);
+    auto seq = reinterpret_borrow<py::sequence>(src);
+    value.length = seq.size();
 
-/*
- * Perform phylogenetic analysis with ModelFinder
- * on the input alignment (in string format)
- * model_set -- a set of models to consider
- * freq_set -- a set of frequency types
- * rate_set -- a set of RHAS models
- * rand_seed -- random seed, if 0, then will generate a new random seed
- * output: modelfinder results in YAML format
- */
-extern string modelfinder(vector<string>& names,
-                          vector<string>& seqs,
-                          int rand_seed = 0,
-                          string model_set = "",
-                          string freq_set = "",
-                          string rate_set = "",
-                          int num_thres = 1);
+    tmpStrings.reserve(value.length);
+    tmpCStrs.reserve(value.length);
 
-/*
- * Build pairwise JC distance matrix
- * output: set of distances
- * (n * i + j)-th element of the list represents the distance between i-th and
- * j-th sequence, where n is the number of sequences
- */
-extern vector<double> build_distmatrix(vector<string>& names,
-                                       vector<string>& seqs,
-                                       int num_thres);
+    for (size_t i = 0; i < seq.size(); ++i) {
+      auto item = seq[i];
+      if (!py::isinstance<py::str>(item)) {
+        return false;
+      }
 
-/*
- * Using Rapid-NJ to build tree from a distance matrix
- * output: a newick tree (in string format)
- */
-extern string build_njtree(vector<string>& names, vector<double>& distances);
+      tmpStrings.push_back(item.cast<std::string>());
+      tmpCStrs.push_back(tmpStrings[i].c_str());
+    }
 
-/*
- * verion number
- */
-extern string version();
+    value.strings = tmpCStrs.data();
+
+    return true;
+  }
+
+  // Conversion from C++ to Python
+  static handle cast(StringArray src, return_value_policy, handle) {
+    throw std::runtime_error("Unsupported operation");
+  }
+
+ private:
+  vector<string> tmpStrings;
+  vector<const char*> tmpCStrs;
+};
+
+template <>
+struct type_caster<DoubleArray> {
+ public:
+  PYBIND11_TYPE_CASTER(DoubleArray, _("DoubleArray"));
+
+  // Conversion from Python to C++
+  bool load(handle src, bool) {
+    if (!py::isinstance<py::array_t<double>>(src)) {
+      return false;  // Only accept numpy arrays of float64
+    }
+
+    auto arr = py::cast<py::array_t<double>>(src);
+    if (arr.ndim() != 1) {
+      return false;  // Only accept 1D arrays
+    }
+
+    value.length = arr.size();
+    value.doubles = new double[value.length];
+    std::memcpy(value.doubles, arr.data(), value.length * sizeof(double));
+    return true;
+  }
+
+  // Conversion from C++ to Python
+  static handle cast(DoubleArray src, return_value_policy, handle) {
+    throw std::runtime_error("Unsupported operation");
+  }
+};
+
+template <>
+struct type_caster<IntegerResult> {
+ public:
+  PYBIND11_TYPE_CASTER(IntegerResult, _("IntegerResult"));
+
+  // Conversion from Python to C++
+  bool load(handle /* src */, bool /* convert */) {
+    throw std::runtime_error("Unsupported operation");
+  }
+
+  // Conversion from C++ to Python
+  static handle cast(const IntegerResult& src, return_value_policy, handle) {
+    checkError(src.errorStr);
+
+    return py::int_(src.value).release();
+  }
+};
+
+template <>
+struct type_caster<StringResult> {
+ public:
+  // Indicate that this caster only supports conversion from C++ to Python
+  PYBIND11_TYPE_CASTER(StringResult, _("StringResult"));
+
+  // Reject Python to C++ conversion
+  bool load(handle src, bool) {
+    throw std::runtime_error("Unsupported operation");
+  }
+
+  // Conversion from C++ to Python
+  static handle cast(const StringResult& src, return_value_policy, handle) {
+    checkError(src.errorStr);
+
+    return py::str(src.value).release();
+  }
+};
+
+template <>
+struct type_caster<DoubleArrayResult> {
+ public:
+  PYBIND11_TYPE_CASTER(DoubleArrayResult, _("DoubleArrayResult"));
+
+  // Conversion from Python to C++
+  bool load(handle src, bool) {
+    throw std::runtime_error("Unsupported operation");
+  }
+
+  // Conversion from C++ to Python
+  static handle cast(DoubleArrayResult src, return_value_policy, handle) {
+    checkError(src.errorStr);
+
+    auto result = py::array_t<double>(src.length);
+    std::memcpy(result.mutable_data(), src.value, src.length * sizeof(double));
+    return result.release();
+  }
+};
+}  // namespace detail
+}  // namespace PYBIND11_NAMESPACE
 
 int mine() {
   return 42;

@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-13, macos-14] # Intel linux, Intel Mac, ARM Mac
+        os: [ubuntu-latest, macos-13, macos-14, windows-latest] # Intel linux, Intel Mac, ARM Mac, Windows
 
     steps:
       - uses: "actions/checkout@v4"
@@ -35,7 +35,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-13, macos-14] # Intel linux, Intel Mac, ARM Mac
+        os: [ubuntu-latest, macos-13, macos-14, windows-latest] # Intel linux, Intel Mac, ARM Mac, Windows
         python-version: ["3.11", "3.12", "3.13"] 
     steps:
       - uses: "actions/checkout@v4"
@@ -48,10 +48,15 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache-key: libiqtree-${{ matrix.os }}-${{ needs.build-iqtree.outputs.iqtree2-sha }}
 
-      - name: Install llvm
-        if: matrix.os != 'ubuntu-latest'
+      - name: Install llvm (macOS)
+        if: runner.os == 'macOS'
         run: |
           brew install llvm
+
+      - name: Install llvm (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install -y llvm --version=14.0.6 --allow-downgrade
           
       - name: Run Nox Testing
         run: |

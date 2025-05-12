@@ -13,9 +13,24 @@ runs:
     - uses: "actions/setup-python@v5"
       with:
         python-version: ${{ inputs.python-version }}
-      
-    - uses: actions/cache/restore@v4
+
+    - name: Cache IQ-TREE 2 (Windows)
+      if: runner.os == 'Windows'
+      uses: actions/cache/restore@v4
+      id: cache-windows
       with:
         key: ${{ inputs.cache-key }}
-        path: src/piqtree/_libiqtree/libiqtree2.a
+        path: |
+          src/piqtree/_libiqtree/iqtree2.lib
+          src/piqtree/_libiqtree/iqtree2.dll
+        fail-on-cache-miss: true
+
+    - name: Cache IQ-TREE 2 (Linux/macOS)
+      if: runner.os != 'Windows'
+      uses: actions/cache/restore@v4
+      id: cache-unix
+      with:
+        key: ${{ inputs.cache-key }}
+        path: |
+          src/piqtree/_libiqtree/libiqtree2.a
         fail-on-cache-miss: true

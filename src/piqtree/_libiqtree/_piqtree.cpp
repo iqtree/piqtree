@@ -11,8 +11,12 @@ namespace py = pybind11;
 
 void checkError(char* errorStr) {
   if (errorStr && std::strlen(errorStr) > 0) {
-    throw std::runtime_error(errorStr);
+    string msg(errorStr);
+    free(errorStr);
+    throw std::runtime_error(msg);
   }
+  if (errorStr)
+    free(errorStr);
 }
 
 namespace PYBIND11_NAMESPACE {

@@ -151,7 +151,10 @@ struct type_caster<DoubleArrayResult> {
     checkError(src.errorStr);
 
     auto result = py::array_t<double>(src.length);
+
     std::memcpy(result.mutable_data(), src.value, src.length * sizeof(double));
+    free(src.value);
+
     return result.release();
   }
 };

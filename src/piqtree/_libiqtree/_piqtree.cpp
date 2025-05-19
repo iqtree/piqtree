@@ -126,11 +126,11 @@ struct type_caster<StringResult> {
   static handle cast(const StringResult& src, return_value_policy, handle) {
     checkError(src.errorStr);
 
-    py::capsule cap(src.value, [](void* p) { free(p); });
-
     PyObject* py_str = PyUnicode_FromString(src.value);
     if (!py_str)
       throw error_already_set();
+
+    std::free(src.value);
 
     return handle(py_str);
   }

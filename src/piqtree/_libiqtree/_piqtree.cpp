@@ -82,8 +82,12 @@ struct type_caster<DoubleArray> {
     }
 
     value.length = arr.size();
-    value.doubles = new double[value.length];
+
+    tmpDoubles.reserve(value.length);
+
+    value.doubles = tmpDoubles.data();
     std::memcpy(value.doubles, arr.data(), value.length * sizeof(double));
+
     return true;
   }
 
@@ -91,6 +95,9 @@ struct type_caster<DoubleArray> {
   static handle cast(DoubleArray src, return_value_policy, handle) {
     throw std::runtime_error("Unsupported operation");
   }
+
+ private:
+  vector<double> tmpDoubles;
 };
 
 template <>

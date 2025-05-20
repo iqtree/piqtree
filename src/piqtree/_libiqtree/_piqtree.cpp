@@ -130,7 +130,7 @@ struct type_caster<StringResult> {
     if (!py_str)
       throw error_already_set();
 
-    std::free(src.value);
+    free(src.value);
 
     return handle(py_str);
   }

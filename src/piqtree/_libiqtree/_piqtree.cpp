@@ -46,7 +46,7 @@ struct type_caster<StringArray> {
         return false;
       }
 
-      tmpStrings.push_back(item.cast<std::string>());
+      tmpStrings.push_back(item.cast<string>());
       tmpCStrs.push_back(tmpStrings[i].c_str());
     }
 

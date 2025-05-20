@@ -83,10 +83,8 @@ struct type_caster<DoubleArray> {
 
     value.length = arr.size();
 
-    tmpDoubles.reserve(value.length);
-
+    tmpDoubles.assign(arr.data(), arr.data() + value.length);
     value.doubles = tmpDoubles.data();
-    std::memcpy(value.doubles, arr.data(), value.length * sizeof(double));
 
     return true;
   }

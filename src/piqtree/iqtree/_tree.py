@@ -340,6 +340,10 @@ def nj_tree(
     jc_distances : construction of pairwise JC distance matrix from alignment.
 
     """
+    if np.isnan(pairwise_distances.array).any():
+        msg = "The pairwise distance matrix cannot contain NaN values."
+        raise ValueError(msg)
+
     newick_tree = iq_nj_tree(
         pairwise_distances.keys(),
         np.array(pairwise_distances).flatten(),

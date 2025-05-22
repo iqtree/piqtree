@@ -1,3 +1,7 @@
+import re
+
+import numpy as np
+import pytest
 from cogent3 import Alignment, make_tree
 
 from piqtree import jc_distances, nj_tree
@@ -23,3 +27,14 @@ def test_nj_tree_allow_negative(all_otu: Alignment) -> None:
     # check that some branch lengths are negative when allow_negative=True
     tree2 = nj_tree(dists, allow_negative=True)
     assert any(node.length < 0 for node in tree2.traverse(include_self=False))
+
+
+def test_nj_tree_nan(four_otu: Alignment) -> None:
+    dists = jc_distances(four_otu)
+    dists[1, 0] = dists[0, 1] = np.nan
+
+    with pytest.raises(
+        ValueError,
+        match=re.escape("The pairwise distance matrix cannot contain NaN values."),
+    ):
+        nj_tree(dists, allow_negative=True)

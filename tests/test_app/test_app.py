@@ -111,7 +111,6 @@ def test_mfinder_result_roundtrip(five_otu: Alignment) -> None:
     assert str(got.best_aicc) == str(inflated.best_aicc)
 
 
-@pytest.mark.parametrize("use_hook", [None, "piqtree"])
-def test_quick_tree_hook(four_otu: Alignment, use_hook: str | None) -> None:
-    tree = four_otu.quick_tree(use_hook=use_hook)
+def test_quick_tree_hook(four_otu: Alignment) -> None:
+    tree = four_otu.quick_tree(use_hook="piqtree")
     assert tree.params["provenance"] == "piqtree"

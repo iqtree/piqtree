@@ -19,7 +19,8 @@ jobs:
           ver=${GITHUB_REF#refs/tags/}
           tar czf piqtree-${ver}.tar.gz \
             --transform "s,^\.,piqtree-${ver}," \
-            --exclude-vcs .
+            --exclude-vcs 
+            --exclude="*.tar.gz" .
 
       - name: Upload sdist to GitHub Release
         uses: softprops/action-gh-release@v2.2.2

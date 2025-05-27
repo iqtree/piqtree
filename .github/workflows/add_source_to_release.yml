@@ -14,7 +14,7 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Make versioned tarball
+      - name: Make tarball
         run: |
           ver=${GITHUB_REF#refs/tags/}
           tar czf piqtree-${ver}.tar.gz \
@@ -22,7 +22,7 @@ jobs:
             --exclude-vcs 
             --exclude="*.tar.gz" .
 
-      - name: Upload sdist to GitHub Release
+      - name: Upload Full Source to GitHub Release
         uses: softprops/action-gh-release@v2.2.2
         with:
           files: piqtree-${{ github.ref_name }}.tar.gz

@@ -1,0 +1,29 @@
+name: "Attach Full Source to Release"
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  upload-sdist:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Make versioned tarball
+        run: |
+          ver=${GITHUB_REF#refs/tags/}
+          tar czf piqtree-${ver}.tar.gz \
+            --transform "s,^\.,piqtree-${ver}," \
+            --exclude-vcs .
+
+      - name: Upload sdist to GitHub Release
+        uses: softprops/action-gh-release@v2.2.2
+        with:
+          files: piqtree-${{ github.ref_name }}.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

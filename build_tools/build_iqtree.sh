@@ -32,7 +32,7 @@ elif [[ "$OSTYPE" == "msys"* || "$OSTYPE" == "cygwin"* ]]; then
 else
     echo "Building for linux."
     cmake -DBUILD_LIB=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5 ..
-    make -j
+    make -j12
 fi
 
 cd ../..

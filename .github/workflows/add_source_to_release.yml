@@ -19,7 +19,7 @@ jobs:
           ver=${GITHUB_REF#refs/tags/}
           tar czf piqtree-${ver}.tar.gz \
             --transform "s,^\.,piqtree-${ver}," \
-            --exclude-vcs 
+            --exclude-vcs \
             --exclude="*.tar.gz" .
 
       - name: Upload Full Source to GitHub Release

@@ -17,14 +17,13 @@ jobs:
       - name: Make tarball
         run: |
           ver=${GITHUB_REF#refs/tags/}
-          tar czf piqtree-${ver}.tar.gz \
+          tar czf ../piqtree-${ver}.tar.gz \
             --transform "s,^\.,piqtree-${ver}," \
-            --exclude-vcs \
-            --exclude="*.tar.gz" .
+            --exclude-vcs .
 
       - name: Upload Full Source to GitHub Release
         uses: softprops/action-gh-release@v2.2.2
         with:
-          files: piqtree-${{ github.ref_name }}.tar.gz
+          files: ../piqtree-${{ github.ref_name }}.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

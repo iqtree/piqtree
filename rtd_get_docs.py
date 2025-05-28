@@ -35,7 +35,7 @@ def get_latest_run(workflow_filename: str, headers: dict) -> dict:
 
     runs = response.json()["workflow_runs"]
     if not runs:
-        msg = f"No workflow runs found for: {workflow_filename}"
+        msg = f"No workflow runs found for: '{workflow_filename}'"
         raise ValueError(msg)
 
     return runs[0]
@@ -56,7 +56,7 @@ def wait_for_run_completion(run: dict, headers: dict) -> dict:
 
         if status == "completed":
             if conclusion != "success":
-                msg = f"Latest workflow run failed with conclusion: {conclusion}"
+                msg = f"Latest workflow run failed with conclusion: '{conclusion}'"
                 raise RuntimeError(msg)
             return run_status
 
@@ -96,7 +96,7 @@ def download_and_extract_docs() -> None:
     version = get_rtd_version_name()
 
     if version not in ("latest", "stable"):
-        msg = f"Unexpected version {version} for readthedocs."
+        msg = f"Unexpected version '{version}' for readthedocs."
         raise ValueError(msg)
 
     workflow_filename = "release.yml" if version == "stable" else "build_docs.yml"

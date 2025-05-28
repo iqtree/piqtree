@@ -1,4 +1,4 @@
-name: "Attach Full Source to Release"
+name: Attach Full Source to Release
 
 on:
   release:
@@ -14,7 +14,7 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Make tarball
+      - name: Make Tarball
         run: |
           ver=${GITHUB_REF#refs/tags/}
           tar czf ../piqtree-${ver}.tar.gz \

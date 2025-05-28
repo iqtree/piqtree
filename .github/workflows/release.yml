@@ -27,10 +27,10 @@ jobs:
           platform_id: win_amd64
 
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: "recursive"
+          submodules: recursive
 
       - name: Set up QEMU for Linux ARM builds
         if: ${{runner.os == 'Linux' && endsWith(matrix.platform_id, '_aarch64')}}
@@ -60,7 +60,7 @@ jobs:
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
     
-      - name: Build wheels
+      - name: Build Wheels
         uses: pypa/cibuildwheel@v2.23.3
         env: # Can specify per os - e.g. CIBW_BEFORE_ALL_LINUX, CIBW_BEFORE_ALL_MACOS, CIBW_BEFORE_ALL_WINDOWS 
           CIBW_BEFORE_ALL_LINUX: ./build_tools/before_all_linux.sh
@@ -76,7 +76,7 @@ jobs:
           CIBW_TEST_SKIP: "*-macosx_universal2:x86_64" # skip x86 on m1 mac
           CIBW_SKIP: pp* # Disable building PyPy wheels on all platforms
 
-      - name: Upload wheels
+      - name: Upload Wheels
         uses: actions/upload-artifact@v4
         with:
           name: cibw-wheels-${{ matrix.platform_id }}
@@ -86,7 +86,7 @@ jobs:
     name: Fetch or Build IQ-TREE 2 Static Library
     runs-on: ubuntu-latest
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: recursive
@@ -103,7 +103,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-iqtree
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -118,13 +118,12 @@ jobs:
         run: |
           pip install .[doc]
 
-      - name: Build documentation
+      - name: Build Documentation
         run: |
-          echo `pwd`
           mkdocs build
         working-directory: ${{ github.workspace }}
 
-      - name: Upload documentation artifact
+      - name: Upload Documentation Artifact
         uses: actions/upload-artifact@v4
         with:
           name: piqtree-docs-html
@@ -139,14 +138,14 @@ jobs:
       id-token: write
 
     steps:      
-      - name: Download artifacts
+      - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
           pattern: cibw-*
           path: dist
           merge-multiple: true
 
-      - name: Publish package distributions to Test PyPI
+      - name: Publish Package Distributions to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
@@ -160,12 +159,12 @@ jobs:
       id-token: write
 
     steps:      
-      - name: Download artifacts
+      - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
           pattern: cibw-*
           path: dist
           merge-multiple: true
 
-      - name: Publish package distributions to PyPI
+      - name: Publish Package Distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1

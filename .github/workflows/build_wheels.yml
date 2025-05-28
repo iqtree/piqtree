@@ -27,10 +27,10 @@ jobs:
           platform_id: win_amd64
 
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: "recursive"
+          submodules: recursive
 
       - name: Set up QEMU for Linux ARM builds
         if: ${{runner.os == 'Linux' && endsWith(matrix.platform_id, '_aarch64')}}
@@ -60,7 +60,7 @@ jobs:
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Build wheels
+      - name: Build Wheels
         uses: pypa/cibuildwheel@v2.23.3
         env: # Can specify per os - e.g. CIBW_BEFORE_ALL_LINUX, CIBW_BEFORE_ALL_MACOS, CIBW_BEFORE_ALL_WINDOWS 
           CIBW_BEFORE_ALL_LINUX: ./build_tools/before_all_linux.sh
@@ -76,7 +76,7 @@ jobs:
           CIBW_TEST_SKIP: "*-macosx_universal2:x86_64" # skip x86 on m1 mac
           CIBW_SKIP: pp* # Disable building PyPy wheels on all platforms
 
-      - name: Upload wheels
+      - name: Upload Wheels
         uses: actions/upload-artifact@v4
         with:
           name: cibw-wheels-${{ matrix.platform_id }}

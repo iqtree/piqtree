@@ -8,9 +8,9 @@ inputs:
     description: "Key for static library cache."
     required: true
 runs:
-  using: "composite"
+  using: composite
   steps:
-    - uses: "actions/setup-python@v5"
+    - uses: actions/setup-python@v5
       with:
         python-version: ${{ inputs.python-version }}
 

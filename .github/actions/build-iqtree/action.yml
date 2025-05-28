@@ -9,7 +9,7 @@ outputs:
     description: "SHA for commit of IQ-TREE 2 static library."
     value: ${{ steps.iqtree2-sha.outputs.iqtree2-sha }}
 runs:
-  using: "composite"
+  using: composite
   steps:
     - id: iqtree2-sha
       name: Get IQ-TREE 2 SHA

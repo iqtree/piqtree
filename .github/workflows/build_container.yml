@@ -12,13 +12,13 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Log in to GitHub Container Registry
+      - name: Login to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u iqtree --password-stdin
 
-      - name: Build and Push Base Docker image
+      - name: Build and Push Base Docker Image
         run: |
           docker build -f .devcontainer/DockerFile . \
             -t ghcr.io/iqtree/piqtree:latest

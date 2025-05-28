@@ -2,6 +2,9 @@ name: Release
 
 on: [workflow_dispatch]
 
+permissions:
+  contents: read
+
 jobs:
   build-wheels:
     name: Build Wheels for ${{matrix.platform_id}} on ${{matrix.os}}

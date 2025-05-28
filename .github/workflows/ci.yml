@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-iqtree:
-    name: Fetch or Build IQ-TREE 2 Static Library on ${{matrix.os}}
+    name: Fetch or Build IQ-TREE Static Library on ${{matrix.os}}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -27,7 +27,7 @@ jobs:
           os: ${{ matrix.os }}
     
     outputs:
-      iqtree2-sha: ${{steps.build.outputs.iqtree2-sha}}
+      iqtree-sha: ${{steps.build.outputs.iqtree-sha}}
 
   tests:
     name: Run Tests with Python ${{matrix.python-version}} on ${{matrix.os}}
@@ -46,7 +46,7 @@ jobs:
       - uses: ./.github/actions/setup-piqtree
         with:
           python-version: ${{ matrix.python-version }}
-          cache-key: libiqtree-${{ matrix.os }}-${{ needs.build-iqtree.outputs.iqtree2-sha }}
+          cache-key: libiqtree-${{ matrix.os }}-${{ needs.build-iqtree.outputs.iqtree-sha }}
 
       - name: Install llvm (macOS)
         if: runner.os == 'macOS'
@@ -101,7 +101,7 @@ jobs:
       - uses: ./.github/actions/setup-piqtree
         with:
           python-version: ${{ matrix.python-version }}
-          cache-key: libiqtree-${{ matrix.os }}-${{ needs.build-iqtree.outputs.iqtree2-sha }}
+          cache-key: libiqtree-${{ matrix.os }}-${{ needs.build-iqtree.outputs.iqtree-sha }}
       
       - name: "Run Type Checking for ${{ matrix.python-version }}" 
         run: |
@@ -126,7 +126,7 @@ jobs:
       - uses: ./.github/actions/setup-piqtree
         with:
           python-version: ${{ matrix.python-version }}
-          cache-key: libiqtree-${{ matrix.os }}-${{ needs.build-iqtree.outputs.iqtree2-sha }}
+          cache-key: libiqtree-${{ matrix.os }}-${{ needs.build-iqtree.outputs.iqtree-sha }}
       
       - name: "Run Linting for ${{ matrix.python-version }}" 
         run: |

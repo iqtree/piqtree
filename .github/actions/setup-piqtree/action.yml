@@ -14,7 +14,7 @@ runs:
       with:
         python-version: ${{ inputs.python-version }}
 
-    - name: Cache IQ-TREE 2 (Windows)
+    - name: Cache IQ-TREE (Windows)
       if: runner.os == 'Windows'
       uses: actions/cache/restore@v4
       id: cache-windows
@@ -25,7 +25,7 @@ runs:
           src/piqtree/_libiqtree/iqtree2.dll
         fail-on-cache-miss: true
 
-    - name: Cache IQ-TREE 2 (Linux/macOS)
+    - name: Cache IQ-TREE (Linux/macOS)
       if: runner.os != 'Windows'
       uses: actions/cache/restore@v4
       id: cache-unix

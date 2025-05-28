@@ -16,7 +16,7 @@ on:
 
 jobs:
   build-iqtree:
-    name: Fetch or Build IQ-TREE 2 Static Library
+    name: Fetch or Build IQ-TREE Static Library
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
           os: ubuntu-latest
     
     outputs:
-      iqtree2-sha: ${{steps.build.outputs.iqtree2-sha}}
+      iqtree-sha: ${{steps.build.outputs.iqtree-sha}}
           
   build-docs:
     runs-on: ubuntu-latest
@@ -45,7 +45,7 @@ jobs:
       - uses: ./.github/actions/setup-piqtree
         with:
           python-version: "3.13"
-          cache-key: libiqtree-ubuntu-latest-${{ needs.build-iqtree.outputs.iqtree2-sha }}
+          cache-key: libiqtree-ubuntu-latest-${{ needs.build-iqtree.outputs.iqtree-sha }}
       
       - name: Install Docs Dependencies
         run: |

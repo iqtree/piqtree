@@ -1,41 +1,41 @@
-name: Fetch or Build IQ-TREE 2 Static Library
-description: "Checks if the IQ-TREE 2 static library exists, if not then building it."
+name: Fetch or Build IQ-TREE Static Library
+description: "Checks if the IQ-TREE static library exists, if not then building it."
 inputs:
   os:
     description: "Runner OS Name."
     required: true
 outputs:
-  iqtree2-sha:
-    description: "SHA for commit of IQ-TREE 2 static library."
-    value: ${{ steps.iqtree2-sha.outputs.iqtree2-sha }}
+  iqtree-sha:
+    description: "SHA for commit of IQ-TREE static library."
+    value: ${{ steps.iqtree-sha.outputs.iqtree-sha }}
 runs:
   using: composite
   steps:
-    - id: iqtree2-sha
-      name: Get IQ-TREE 2 SHA
+    - id: iqtree-sha
+      name: Get IQ-TREE SHA
       shell: bash
       run: |
         cd iqtree2
-        IQ_TREE_2_SHA=$(git rev-parse HEAD)
-        echo "iqtree2-sha=${IQ_TREE_2_SHA}" >> "$GITHUB_OUTPUT"
+        IQ_TREE_SHA=$(git rev-parse HEAD)
+        echo "iqtree-sha=${IQ_TREE_SHA}" >> "$GITHUB_OUTPUT"
 
-    - name: Cache IQ-TREE 2 (Windows)
+    - name: Cache IQ-TREE (Windows)
       if: runner.os == 'Windows'
       uses: actions/cache@v4
       id: cache-windows
       with:
-        key: libiqtree-${{ inputs.os }}-${{ steps.iqtree2-sha.outputs.iqtree2-sha }}
+        key: libiqtree-${{ inputs.os }}-${{ steps.iqtree-sha.outputs.iqtree-sha }}
         path: |
           src/piqtree/_libiqtree/iqtree2.lib
           src/piqtree/_libiqtree/iqtree2.dll
         lookup-only: true
 
-    - name: Cache IQ-TREE 2 (Linux/macOS)
+    - name: Cache IQ-TREE (Linux/macOS)
       if: runner.os != 'Windows'
       uses: actions/cache@v4
       id: cache-unix
       with:
-        key: libiqtree-${{ inputs.os }}-${{ steps.iqtree2-sha.outputs.iqtree2-sha }}
+        key: libiqtree-${{ inputs.os }}-${{ steps.iqtree-sha.outputs.iqtree-sha }}
         path: |
           src/piqtree/_libiqtree/libiqtree2.a
         lookup-only: true

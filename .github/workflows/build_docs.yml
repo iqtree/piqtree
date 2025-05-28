@@ -1,6 +1,18 @@
 name: Build Docs
 
-on: [workflow_dispatch]
+concurrency:
+  group: docs-build-${{ github.ref }}
+  cancel-in-progress: true
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - '.readthedocs.yaml'
+      - 'mkdocs.yml'
+      - 'rtd_get_docs.py'
 
 jobs:
   build-iqtree:
@@ -41,7 +53,6 @@ jobs:
 
       - name: Build documentation
         run: |
-          echo `pwd`
           mkdocs build
         working-directory: ${{ github.workspace }}
 

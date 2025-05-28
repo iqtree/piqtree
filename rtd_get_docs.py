@@ -10,7 +10,7 @@ import zipfile
 import requests
 
 MAX_WAIT_TIME = 600  # Typically takes 5.5 minutes
-POLL_INTERVAL = 120
+POLL_INTERVAL = 20
 
 
 def get_rtd_version_name() -> str:

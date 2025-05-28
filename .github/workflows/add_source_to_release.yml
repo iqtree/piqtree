@@ -5,7 +5,7 @@ on:
     types: [published]
 
 jobs:
-  upload-sdist:
+  upload-source:
     runs-on: ubuntu-latest
 
     steps:

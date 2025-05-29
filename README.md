@@ -7,6 +7,7 @@
 [![CI](https://github.com/iqtree/piqtree/workflows/CI/badge.svg)](https://github.com/iqtree/piqtree/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/iqtree/piqtree/badge.svg?branch=main)](https://coveralls.io/github/iqtree/piqtree?branch=main)
 [![Documentation Status](https://readthedocs.org/projects/piqtree/badge/?version=latest)](https://piqtree.readthedocs.io/en/latest/?badge=latest)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 `piqtree` is a library which allows you use IQ-TREE directly from Python! The interface with python is through [cogent3](https://cogent3.org) objects.
 For usage, please refer to the [documentation](https://piqtree.readthedocs.io/) or the examples below.
@@ -56,7 +57,7 @@ tree = make_tree("(Human, Chimpanzee, (Rhesus, Mouse));")
 # Fit branch lengths with IQ-TREE!
 tree = fit_tree(aln, tree, "JC", rand_seed=1) # Optionally specify a random seed.
 
-print("Tree with branch lengths:", tree) # A cogent3 tree object
+print("Tree with branch lengths:", tree)
 print("Log-likelihood:", tree.params["lnL"])
 ```
 

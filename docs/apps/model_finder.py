@@ -1,5 +1,5 @@
 # %% [markdown]
-# We use the `piqtree_mfinder` app to rank models. This is the python binding to the IQ-TREE 2 ModelFinder tool.
+# We use the `piqtree_mfinder` app to rank models. This is the python binding to the IQ-TREE ModelFinder tool.
 
 # %%
 from cogent3 import app_help, get_app, load_aligned_seqs

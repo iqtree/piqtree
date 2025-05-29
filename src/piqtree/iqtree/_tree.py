@@ -218,7 +218,7 @@ def build_tree(
         If 0 is provided, then no bootstrapping is performed.
         At least 1000 is required to perform bootstrapping.
     num_threads: int | None, optional
-        Number of threads for IQ-TREE 2 to use, by default None (single-threaded).
+        Number of threads for IQ-TREE to use, by default None (single-threaded).
         If 0 is specified, IQ-TREE attempts to find the optimal number of threads.
 
     Returns
@@ -284,7 +284,7 @@ def fit_tree(
     rand_seed : int | None, optional
         The random seed - 0 or None means no seed, by default None.
     num_threads: int | None, optional
-        Number of threads for IQ-TREE 2 to use, by default None (single-threaded).
+        Number of threads for IQ-TREE to use, by default None (single-threaded).
         If 0 is specified, IQ-TREE attempts to find the optimal number of threads.
 
     Returns

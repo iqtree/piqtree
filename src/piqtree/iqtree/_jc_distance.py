@@ -47,7 +47,7 @@ def jc_distances(
     aln : c3_types.AlignedSeqsType
         alignment to compute pairwise JC distances for.
     num_threads: int | None, optional
-        Number of threads for IQ-TREE 2 to use, by default None (all available threads).
+        Number of threads for IQ-TREE to use, by default None (all available threads).
 
     Returns
     -------

@@ -171,7 +171,7 @@ int mine() {
 }
 
 PYBIND11_MODULE(_piqtree, m) {
-  m.doc() = "piqtree - Unlock the Power of IQ-TREE 2 with Python!";
+  m.doc() = "_piqtree - Linking IQ-TREE to Python!";
 
   m.attr("__iqtree_version__") = version();
 

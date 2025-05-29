@@ -130,4 +130,4 @@ extern "C" StringResult build_njtree(StringArray& names,
  */
 extern "C" StringResult version();
 
-#endif /* LIBIQTREE2_FUN */
+#endif /* _PIQTREE_H */

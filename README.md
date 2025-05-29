@@ -23,7 +23,6 @@ If you would like to help out by contributing to the piqtree project, please che
 
 ```python
 from piqtree import build_tree
-from piqtree.model import Model
 from cogent3 import load_aligned_seqs # Included with piqtree!
 
 # Load Sequences
@@ -31,7 +30,7 @@ aln = load_aligned_seqs("tests/data/example.fasta", moltype="dna")
 aln = aln.take_seqs(["Human", "Chimpanzee", "Rhesus", "Mouse"])
 
 # Reconstruct a phylogenetic tree with IQ-TREE!
-tree = build_tree(aln, Model("JC"), rand_seed=1) # Optionally specify a random seed.
+tree = build_tree(aln, "JC", rand_seed=1) # Optionally specify a random seed.
 
 print("Tree topology:", tree) # A cogent3 tree object
 print("Log-likelihood:", tree.params["lnL"])
@@ -45,8 +44,7 @@ print("Log-likelihood:", tree.params["lnL"])
 
 ```python
 from piqtree import fit_tree
-from piqtree.model import Model
-from cogent3 import load_aligned_seqs, make_tree # Included with piqtree!
+from cogent3 import load_aligned_seqs, make_tree
 
 # Load Sequences
 aln = load_aligned_seqs("tests/data/example.fasta", moltype="dna")
@@ -56,42 +54,12 @@ aln = aln.take_seqs(["Human", "Chimpanzee", "Rhesus", "Mouse"])
 tree = make_tree("(Human, Chimpanzee, (Rhesus, Mouse));")
 
 # Fit branch lengths with IQ-TREE!
-tree = fit_tree(aln, tree, Model("JC"), rand_seed=1) # Optionally specify a random seed.
+tree = fit_tree(aln, tree, "JC", rand_seed=1) # Optionally specify a random seed.
 
 print("Tree with branch lengths:", tree) # A cogent3 tree object
 print("Log-likelihood:", tree.params["lnL"])
 ```
 
-### Create a Collection of Random Trees
+## More
 
-```python
-from piqtree import TreeGenMode, random_trees
-
-num_trees = 3 
-num_taxa = 5
-
-# Also supports YULE_HARDING, CATERPILLAR, BALANCED, BIRTH_DEATH and STAR_TREE
-tree_gen_mode = TreeGenMode.UNIFORM 
-
-# Randomly generate trees
-trees = random_trees(num_trees, num_taxa, tree_gen_mode, rand_seed=1) # Optionally specify a random seed.
-
-print(trees) # A tuple of 3 trees with 5 taxa each.
-```
-
-### Pairwise Robinson-Foulds Distance between Trees
-
-```python
-from piqtree import robinson_foulds
-from cogent3 import make_tree # Included with piqtree!
-
-# Construct trees
-tree1 = make_tree("(a,b,(c,(d,e)));")
-tree2 = make_tree("(e,b,(c,(d,a)));")
-tree3 = make_tree("(a,b,(d,(c,e)));")
-
-# Calculate pairwise distances
-pairwise_distances = robinson_foulds([tree1, tree2, tree3]) # Supports any number of trees (for a sequence of trees use *seq_of_trees)
-
-print(pairwise_distances) # A numpy array containing pairwaise Robinson-Foulds distances between trees
-```
+For more examples ranging from using ModelFinder, to making rapid neighbour-joining trees, or randomly generated trees be sure to check out the [documentation](https://piqtree.readthedocs.io/)!

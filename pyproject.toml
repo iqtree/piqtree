@@ -58,7 +58,7 @@ dev = [
 ]
 test = ["pytest", "pytest-cov", "nox"]
 lint = ["ruff==0.11.11"]
-typing = ["mypy==1.15.0", "piqtree[stubs]", "piqtree[test]"]
+typing = ["mypy==1.16.0", "piqtree[stubs]", "piqtree[test]"]
 stubs = ["types-PyYAML", "types-requests"]
 extra = ["cogent3[extra]"]
 doc = [

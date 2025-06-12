@@ -22,4 +22,4 @@ rf_distances = robinson_foulds([tree1, tree2, tree3])
 ## See also
 
 - For constructing a maximum likelihood tree, see ["Construct a maximum likelihood phylogenetic tree"](construct_ml_tree.md).
-- For making a collection of random trees, see ["Make a collection of randomly generated trees"](make_random_trees.md).
+- For making a random phylogenetic tree, see ["Make a randomly generated phylogenetic tree"](make_random_tree.md).

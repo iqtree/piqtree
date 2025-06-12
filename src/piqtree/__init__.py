@@ -24,7 +24,7 @@ from piqtree.iqtree import (
     jc_distances,
     model_finder,
     nj_tree,
-    random_trees,
+    random_tree,
     robinson_foulds,
 )
 from piqtree.model import (
@@ -53,6 +53,6 @@ __all__ = [
     "make_model",
     "model_finder",
     "nj_tree",
-    "random_trees",
+    "random_tree",
     "robinson_foulds",
 ]

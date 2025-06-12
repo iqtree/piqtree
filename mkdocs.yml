@@ -50,7 +50,7 @@ nav:
     - quickstart/using_model_finder.md
     - quickstart/calculate_jc_distances.md
     - quickstart/construct_nj_tree.md
-    - quickstart/make_random_trees.md
+    - quickstart/make_random_tree.md
     - quickstart/calculate_rf_distances.md
   - API reference:
     - api/index.md
@@ -58,7 +58,7 @@ nav:
       - api/tree/build_tree.md
       - api/tree/fit_tree.md
       - api/tree/nj_tree.md
-      - api/tree/random_trees.md
+      - api/tree/random_tree.md
     - Substitution models:
       - api/model/model_finder.md
       - api/model/ModelFinderResult.md

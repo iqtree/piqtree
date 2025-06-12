@@ -7,7 +7,7 @@
 | [build_tree](tree/build_tree.md) |  Construct a maximum-likelihood phylogenetic tree. |
 | [fit_tree](tree/fit_tree.md) | Fit branch lengths to a phylogenetic tree. |
 | [nj_tree](tree/nj_tree.md) | Construct rapid neighbour-joining tree from pairwise distance matrix. |
-| [random_trees](tree/random_trees.md) | Create a collection of random phylogenetic trees. |
+| [random_tree](tree/random_tree.md) | Create a randomly generated phylogenetic tree. |
 
 ## Subsitution Models
 

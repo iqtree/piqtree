@@ -12,7 +12,7 @@ from piqtree import (
     jc_distances,
     model_finder,
     nj_tree,
-    random_trees,
+    random_tree,
 )
 from piqtree.iqtree import ModelFinderResult
 from piqtree.model import Model
@@ -77,14 +77,13 @@ class piqtree_fit:
 
 
 @composable.define_app
-@extend_docstring_from(random_trees)
-def piqtree_random_trees(
+@extend_docstring_from(random_tree)
+def piqtree_random_tree(
     num_taxa: int,
-    num_trees: int,
     tree_mode: TreeGenMode,
     rand_seed: int | None = None,
-) -> tuple[cogent3.PhyloNode]:
-    return random_trees(num_trees, num_taxa, tree_mode, rand_seed)
+) -> cogent3.PhyloNode:
+    return random_tree(num_taxa, tree_mode, rand_seed)
 
 
 @composable.define_app
@@ -129,7 +128,7 @@ def piqtree_mfinder(
 _ALL_APP_NAMES = [
     "piqtree_phylo",
     "piqtree_fit",
-    "piqtree_random_trees",
+    "piqtree_random_tree",
     "piqtree_jc_dists",
     "piqtree_nj",
     "piqtree_mfinder",

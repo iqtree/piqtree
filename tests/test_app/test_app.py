@@ -33,25 +33,13 @@ def test_piqtree_fit(three_otu: Alignment) -> None:
     assert got.params["lnL"] == pytest.approx(expected.lnL)
 
 
-@pytest.mark.parametrize("num_trees", [1, 10, 20])
 @pytest.mark.parametrize("num_taxa", [10, 50, 100])
 @pytest.mark.parametrize("tree_mode", list(piqtree.TreeGenMode))
-def test_piqtree_random_trees(
-    num_trees: int,
-    num_taxa: int,
-    tree_mode: piqtree.TreeGenMode,
-) -> None:
-    app = get_app(
-        "piqtree_random_trees",
-        tree_mode=tree_mode,
-        num_trees=num_trees,
-        rand_seed=1,
-    )
-    trees = app(num_taxa)
-    assert len(trees) == num_trees
+def test_piqtree_random_tree(num_taxa: int, tree_mode: piqtree.TreeGenMode) -> None:
+    app = get_app("piqtree_random_tree", tree_mode=tree_mode, rand_seed=1)
 
-    for tree in trees:
-        assert len(tree.tips()) == num_taxa
+    tree = app(num_taxa)
+    assert len(tree.tips()) == num_taxa
 
 
 def test_piqtree_jc_distances(five_otu: Alignment) -> None:

@@ -3,12 +3,12 @@
 import pytest
 from cogent3 import make_aligned_seqs, make_tree
 
-from piqtree import TreeGenMode, build_tree, fit_tree, random_trees
+from piqtree import TreeGenMode, build_tree, fit_tree, random_tree
 from piqtree.exceptions import IqTreeError
 from piqtree.model import DiscreteGammaModel, DnaModel, FreeRateModel, Model
 
 
-def test_two_build_random_trees() -> None:
+def test_two_build_random_tree() -> None:
     """
     Calling build tree twice followed by random trees with a bad input
     used to result in a Segmentation Fault in a previous version.
@@ -19,10 +19,10 @@ def test_two_build_random_trees() -> None:
     build_tree(aln, Model(DnaModel.JC), 2)
 
     with pytest.raises(IqTreeError):
-        random_trees(3, 2, TreeGenMode.BALANCED, 1)
+        random_tree(2, TreeGenMode.BALANCED, 1)
 
 
-def test_two_fit_random_trees() -> None:
+def test_two_fit_random_tree() -> None:
     """
     Calling fit tree twice followed by random trees with a bad input
     used to result in a Segmentation Fault in a previous version.
@@ -34,7 +34,7 @@ def test_two_fit_random_trees() -> None:
     fit_tree(aln, tree, Model(DnaModel.JC), 2)
 
     with pytest.raises(IqTreeError):
-        random_trees(3, 2, TreeGenMode.BALANCED, 1)
+        random_tree(2, TreeGenMode.BALANCED, 1)
 
 
 @pytest.mark.parametrize("rate_model_class", [DiscreteGammaModel, FreeRateModel])

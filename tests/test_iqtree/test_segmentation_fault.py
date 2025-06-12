@@ -10,7 +10,7 @@ from piqtree.model import DiscreteGammaModel, DnaModel, FreeRateModel, Model
 
 def test_two_build_random_tree() -> None:
     """
-    Calling build tree twice followed by random trees with a bad input
+    Calling build tree twice followed by random tree with a bad input
     used to result in a Segmentation Fault in a previous version.
     """
     aln = make_aligned_seqs({"a": "GGG", "b": "GGC", "c": "AAC", "d": "AAA"})
@@ -24,7 +24,7 @@ def test_two_build_random_tree() -> None:
 
 def test_two_fit_random_tree() -> None:
     """
-    Calling fit tree twice followed by random trees with a bad input
+    Calling fit tree twice followed by random tree with a bad input
     used to result in a Segmentation Fault in a previous version.
     """
     aln = make_aligned_seqs({"a": "GGG", "b": "GGC", "c": "AAC", "d": "AAA"})

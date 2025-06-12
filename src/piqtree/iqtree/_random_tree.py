@@ -11,7 +11,7 @@ iq_random_tree = iqtree_func(iq_random_tree)
 
 
 class TreeGenMode(Enum):
-    """Setting under which to generate random trees."""
+    """Setting under which to generate a random tree."""
 
     YULE_HARDING = auto()
     UNIFORM = auto()
@@ -28,21 +28,21 @@ def random_tree(
 ) -> cogent3.PhyloNode:
     """Generate a random phylogenetic tree.
 
-    Generates a random collection of trees through IQ-TREE.
+    Generates a random tree through IQ-TREE.
 
     Parameters
     ----------
     num_taxa : int
         The number of taxa per tree.
     tree_mode : TreeGenMode
-        How the trees are generated.
+        How the tree is generated.
     rand_seed : int | None, optional
         The random seed - 0 or None means no seed, by default None.
 
     Returns
     -------
-    tuple[cogent3.PhyloNode]
-        A collection of random trees.
+    cogent3.PhyloNode
+        A random phylogenetic tree.
 
     """
     if rand_seed is None:

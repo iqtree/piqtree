@@ -203,6 +203,7 @@ categories = [
     "Contributors",
     "ENH",
     "BUG",
+    "API",
     "DOC",
     "Deprecations",
     "Discontinued"

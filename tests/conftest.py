@@ -1,7 +1,8 @@
 import pathlib
 
 import pytest
-from cogent3 import Alignment, load_aligned_seqs
+from cogent3 import load_aligned_seqs
+from cogent3.core.alignment import Alignment
 
 
 @pytest.fixture(scope="session")

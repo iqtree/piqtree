@@ -1,4 +1,4 @@
-from cogent3 import Alignment
+from cogent3.core.alignment import Alignment
 
 from piqtree import jc_distances
 

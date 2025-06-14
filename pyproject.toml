@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "piqtree"
-dependencies = ["cogent3>=2025.5.8a2", "pyyaml", "requests"]
+dependencies = ["cogent3>=2025.5.8a7", "pyyaml", "requests"]
 requires-python = ">=3.11, <3.14"
 
 authors = [
@@ -12,7 +12,7 @@ authors = [
     { name = "Robert McArthur" },
     { name = "Bui Quang Minh " },
     { name = "Richard Morris" },
-    { name = "Thomas Wong" },
+    { name = "Thomas Wong" }
 ]
 description = "Python bindings for IQTree"
 readme = "README.md"
@@ -38,7 +38,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 
-    "Typing :: Typed",
+    "Typing :: Typed"
 ]
 
 [project.urls]
@@ -54,7 +54,7 @@ dev = [
     "scriv",
     "piqtree[test]",
     "piqtree[lint]",
-    "piqtree[typing]",
+    "piqtree[typing]"
 ]
 test = ["pytest", "pytest-cov", "nox"]
 lint = ["ruff==0.11.13"]
@@ -71,7 +71,7 @@ doc = [
     "cogent3[extra]",
     "diverse-seq",
     "jupyter",
-    "ipywidgets",
+    "ipywidgets"
 ]
 
 [project.entry-points."cogent3.app"]
@@ -116,7 +116,7 @@ exclude = [
     "dist",
     "node_modules",
     "site-packages",
-    "venv",
+    "venv"
 ]
 
 # Same as Black.
@@ -141,33 +141,33 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
-    "S101",   # asserts allowed in tests...
+    "S101", # asserts allowed in tests...
     "INP001", # __init__.py files are not required...
-    "N802",   # allow non snake_case function names for fixtures
-    "N803",   # allow use of fixture constants
+    "N802", # allow non snake_case function names for fixtures
+    "N803", # allow use of fixture constants
     "SLF001", # private member access is useful for testing
     "FBT001", # allow bool pos args for parameterisation
-    "D",      # don't require docstrings
+    "D" # don't require docstrings
 ]
 "docs/**/*.py" = ["B018", "E402", "ERA001", "INP001"]
 "noxfile.py" = [
-    "S101",   # asserts allowed in tests...
+    "S101", # asserts allowed in tests...
     "INP001", # __init__.py files are not required...
     "ANN",
     "N802",
     "N803",
-    "D",
+    "D"
 ]
 "src/piqtree/_app/__init__.py" = [
-    "N801", # apps follow function naming convention
+    "N801" # apps follow function naming convention
 ]
 "src/piqtree/__init__.py" = [
-    "E402",   # handle DLLs before imports
+    "E402", # handle DLLs before imports
     "PTH118", # os operations for DLL path
-    "PTH120", # os operations for DLL path
+    "PTH120" # os operations for DLL path
 ]
 "src/piqtree/model/_substitution_model.py" = [
-    "N815", # use IQ-TREE naming scheme
+    "N815" # use IQ-TREE naming scheme
 ]
 
 [tool.ruff.format]
@@ -205,7 +205,7 @@ categories = [
     "BUG",
     "DOC",
     "Deprecations",
-    "Discontinued",
+    "Discontinued"
 ]
 output_file = "changelog.md"
 version = "literal: src/piqtree/__init__.py: __version__"

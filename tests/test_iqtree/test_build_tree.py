@@ -1,7 +1,8 @@
 import re
 
 import pytest
-from cogent3 import Alignment, make_tree
+from cogent3 import make_tree
+from cogent3.core.alignment import Alignment
 
 import piqtree
 from piqtree.exceptions import IqTreeError

@@ -1,7 +1,7 @@
 import multiprocessing
 
 import pytest
-from cogent3 import Alignment
+from cogent3.core.alignment import Alignment
 
 from piqtree.iqtree import ModelFinderResult, ModelResultValue, model_finder
 

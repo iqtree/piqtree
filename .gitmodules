@@ -1,4 +1,4 @@
-[submodule "iqtree2"]
-	path = iqtree2
-	url = https://github.com/iqtree/iqtree2.git
+[submodule "iqtree3"]
+	path = iqtree3
+	url = https://github.com/thomaskf/iqtree3.git
 	branch = libiqtree

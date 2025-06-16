@@ -3,9 +3,10 @@ import os
 import nox
 
 _py_versions = range(11, 14)
+_python_sessions = [f"3.{v}" + (".5" if v == 13 else "") for v in _py_versions]
 
 
-@nox.session(python=[f"3.{v}" for v in _py_versions])
+@nox.session(python=_python_sessions)
 def test(session):
     posargs = list(session.posargs)
     env = os.environ.copy()
@@ -15,7 +16,7 @@ def test(session):
     session.run("pytest", *posargs, env=env)
 
 
-@nox.session(python=[f"3.{v}" for v in _py_versions])
+@nox.session(python=_python_sessions)
 def type_check(session):
     posargs = list(session.posargs)
     env = os.environ.copy()
@@ -25,7 +26,7 @@ def type_check(session):
     session.run("mypy", "src", "tests", *posargs, env=env)
 
 
-@nox.session(python=[f"3.{v}" for v in _py_versions])
+@nox.session(python=_python_sessions)
 def ruff(session):
     posargs = list(session.posargs)
     env = os.environ.copy()

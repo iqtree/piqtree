@@ -1,6 +1,7 @@
 import pytest
-from cogent3 import Alignment, get_app, make_tree
+from cogent3 import get_app, make_tree
 from cogent3.app.result import model_result
+from cogent3.core.alignment import Alignment
 from cogent3.core.tree import PhyloNode
 
 import piqtree

@@ -2,7 +2,8 @@ import re
 
 import numpy as np
 import pytest
-from cogent3 import Alignment, make_tree
+from cogent3 import make_tree
+from cogent3.core.alignment import Alignment
 
 from piqtree import jc_distances, nj_tree
 

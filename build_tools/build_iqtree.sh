@@ -1,4 +1,4 @@
-cd iqtree2
+cd iqtree3
 rm -rf build
 mkdir build && cd build
 
@@ -38,8 +38,8 @@ fi
 cd ../..
 
 if [[ "$OSTYPE" == "darwin"* || "$OSTYPE" == "linux"* ]]; then
-    mv iqtree2/build/libiqtree2.a src/piqtree/_libiqtree/
+    mv iqtree3/build/libiqtree.a src/piqtree/_libiqtree/
 elif [[ "$OSTYPE" == "msys"* || "$OSTYPE" == "cygwin"* ]]; then
-    mv iqtree2/build/iqtree2.lib src/piqtree/_libiqtree/
-    mv iqtree2/build/iqtree2.dll src/piqtree/_libiqtree/
+    mv iqtree3/build/iqtree.lib src/piqtree/_libiqtree/
+    mv iqtree3/build/iqtree.dll src/piqtree/_libiqtree/
 fi

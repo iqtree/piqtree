@@ -8,7 +8,7 @@ one can work through the provided dev container.
 
 Fork and clone the [`piqtree` repository](https://github.com/iqtree/piqtree).
 
-## Working with the `iqtree2` submodule
+## Working with the `iqtree3` submodule
 
 We use a git submodule to keep track of the version of IQ-TREE that is being used.
 To initialise the submodule, or to get the latest version after an update, the

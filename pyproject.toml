@@ -90,7 +90,7 @@ version = { attr = "piqtree.__version__" }
 
 [tool.ruff]
 exclude = [
-    "iqtree2",
+    "iqtree3",
     ".bzr",
     ".direnv",
     ".eggs",

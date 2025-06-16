@@ -15,7 +15,7 @@ runs:
       name: Get IQ-TREE SHA
       shell: bash
       run: |
-        cd iqtree2
+        cd iqtree3
         IQ_TREE_SHA=$(git rev-parse HEAD)
         echo "iqtree-sha=${IQ_TREE_SHA}" >> "$GITHUB_OUTPUT"
 
@@ -26,8 +26,8 @@ runs:
       with:
         key: libiqtree-${{ inputs.os }}-${{ steps.iqtree-sha.outputs.iqtree-sha }}
         path: |
-          src/piqtree/_libiqtree/iqtree2.lib
-          src/piqtree/_libiqtree/iqtree2.dll
+          src/piqtree/_libiqtree/iqtree.lib
+          src/piqtree/_libiqtree/iqtree.dll
         lookup-only: true
 
     - name: Cache IQ-TREE (Linux/macOS)
@@ -37,7 +37,7 @@ runs:
       with:
         key: libiqtree-${{ inputs.os }}-${{ steps.iqtree-sha.outputs.iqtree-sha }}
         path: |
-          src/piqtree/_libiqtree/libiqtree2.a
+          src/piqtree/_libiqtree/libiqtree.a
         lookup-only: true
 
     - name: Combine Cache Hits

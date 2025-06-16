@@ -9,7 +9,7 @@ from pybind11.setup_helpers import Pybind11Extension, build_ext
 from setuptools import setup
 
 LIBRARY_DIR = "src/piqtree/_libiqtree/"
-IQTREE_LIB_NAME = "iqtree2"
+IQTREE_LIB_NAME = "iqtree"
 
 
 def get_brew_prefix(package: str) -> Path:

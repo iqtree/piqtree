@@ -21,8 +21,8 @@ runs:
       with:
         key: ${{ inputs.cache-key }}
         path: |
-          src/piqtree/_libiqtree/iqtree2.lib
-          src/piqtree/_libiqtree/iqtree2.dll
+          src/piqtree/_libiqtree/iqtree.lib
+          src/piqtree/_libiqtree/iqtree.dll
         fail-on-cache-miss: true
 
     - name: Cache IQ-TREE (Linux/macOS)
@@ -32,5 +32,5 @@ runs:
       with:
         key: ${{ inputs.cache-key }}
         path: |
-          src/piqtree/_libiqtree/libiqtree2.a
+          src/piqtree/_libiqtree/libiqtree.a
         fail-on-cache-miss: true

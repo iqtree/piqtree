@@ -3,7 +3,7 @@ import functools
 from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import Enum, unique
-from typing import ClassVar, Literal
+from typing import ClassVar, Literal, cast
 
 
 class SubstitutionModel:
@@ -471,5 +471,5 @@ def get_substitution_model(name: str | SubstitutionModel) -> SubstitutionModel:
 def _get_lie_prefix(name: str) -> lie_model_pairing | None:
     potential_prefix = name[:2]
     if potential_prefix in LieModelInstance.valid_pairings:
-        return potential_prefix
+        return cast("lie_model_pairing", potential_prefix)
     return None

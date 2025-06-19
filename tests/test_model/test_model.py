@@ -18,9 +18,11 @@ from piqtree.model import (
 
 @pytest.mark.parametrize(
     "sub_mod",
-    StandardDnaModel.iter_available_models()
-    + LieModel.iter_available_models()
-    + AaModel.iter_available_models(),
+    [
+        *StandardDnaModel.iter_available_models(),
+        *LieModel.iter_available_models(),
+        *AaModel.iter_available_models(),
+    ],
 )
 @pytest.mark.parametrize("freq_type", [None, *list(FreqType)])
 @pytest.mark.parametrize("invariant_sites", [False, True])

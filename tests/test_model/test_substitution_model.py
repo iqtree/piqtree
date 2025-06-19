@@ -5,6 +5,7 @@ import pytest
 from piqtree.model import (
     AaModel,
     LieModel,
+    Model,
     StandardDnaModel,
     SubstitutionModel,
     get_substitution_model,
@@ -73,3 +74,23 @@ def test_invalid_substitution_model(submod_type: str) -> None:
         match=re.escape(f"Unknown substitution model: {submod_type!r}"),
     ):
         _ = get_substitution_model(submod_type)
+
+
+def test_bad_lie_model() -> None:
+    with pytest.raises(
+        ValueError,
+        match=re.escape("Invalid Lie Model pairing prefix: 'RS'"),
+    ):
+        _ = LieModel.LIE_10_34("RS")
+
+
+def test_lie_model_enum() -> None:
+    # Test that using just the enum instead of LieModelInstance still works
+    lie_model = LieModel.LIE_3_3a
+    assert str(Model(lie_model)) == "3.3a"
+    assert lie_model.model_type() == "nucleotide"
+    assert LieModel.model_type() == "nucleotide"
+    assert (
+        lie_model.description
+        == "Reversible model. Equal base frequencies. equiv. to K3P"
+    )

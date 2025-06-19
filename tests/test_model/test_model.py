@@ -46,19 +46,24 @@ def test_make_model(
     expected = str(model)
 
     # Check the expected string is approximately generated correctly
+    assert invariant_sites == model.invariant_sites
     if invariant_sites:
         assert "+I" in expected
     else:
         assert "+I" not in expected
 
     if isinstance(rate_model, DiscreteGammaModel):
+        assert isinstance(model.rate_model, DiscreteGammaModel)
         assert "+G" in expected
     else:
+        assert not isinstance(model.rate_model, DiscreteGammaModel)
         assert "+G" not in expected
 
     if isinstance(rate_model, FreeRateModel):
+        assert isinstance(model.rate_model, FreeRateModel)
         assert "+R" in expected
     else:
+        assert not isinstance(model.rate_model, FreeRateModel)
         assert "+R" not in expected
 
     if freq_type is not None:
@@ -69,6 +74,20 @@ def test_make_model(
     # Check make_model
     got = str(make_model(expected))
     assert got == expected
+
+
+def test_model_repr() -> None:
+    model = make_model("GTR")
+    assert repr(model) == "Model(submod_type=GTR, freq_type=None, rate_type=None)"
+
+    model = make_model("MK6.6+FO+R3")
+    assert repr(model) == "Model(submod_type=MK6.6, freq_type=FO, rate_type=R3)"
+
+    model = make_model("12.12+G")
+    assert repr(model) == "Model(submod_type=12.12, freq_type=None, rate_type=G)"
+
+    model = make_model("NQ.mammal+FQ")
+    assert repr(model) == "Model(submod_type=NQ.mammal, freq_type=FQ, rate_type=None)"
 
 
 def test_bad_sub_model() -> None:

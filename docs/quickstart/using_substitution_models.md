@@ -8,20 +8,36 @@ using enums. Substitution models can be combined with specification for base fre
 
 ## Usage
 
-### DNA Models
+### Standard DNA Models
 
-DNA models may be specified using the [`DnaModel`](../api/model/SubstitutionModel.md#piqtree.model.DnaModel) enum, or by using
-the IQ-TREE string representation. A full list of supported DNA models is available [here](../api/model/SubstitutionModel.md#piqtree.model.DnaModel).
+DNA models may be specified using the [`StandardDnaModel`](../api/model/SubstitutionModel.md#piqtree.model.StandardDnaModel) enum, or by using
+the IQ-TREE string representation. A full list of supported DNA models is available [here](../api/model/SubstitutionModel.md#piqtree.model.StandardDnaModel).
 
 ```python
 from piqtree import Model
-from piqtree.model import DnaModel
+from piqtree.model import StandardDnaModel
 
 hky_model_1 = Model("HKY")
-hky_model_2 = Model(DnaModel.HKY)
+hky_model_2 = Model(StandardDnaModel.HKY)
 
 lie_6_6_model_1 = Model("6.6")
-lie_6_6_model_2 = Model(DnaModel.LIE_6_6)
+lie_6_6_model_2 = Model(StandardDnaModel.LIE_6_6)
+```
+
+### Lie Markov Models
+
+Lie Markov models may be specified using the [`LieModel`](../api/model/SubstitutionModel.md#piqtree.model.LieModel) enum, or by using
+the IQ-TREE string representation. A full list of supported DNA models is available [here](../api/model/SubstitutionModel.md#piqtree.model.LieModel). The pairing prefix may also be specified - RY for purine-pyrimidine pairing (default); WS for weak-strong pairing; and MK aMino-Keto pairing.
+
+```python
+from piqtree import Model
+from piqtree.model import LieModel
+
+lie_ws_6_6_model_1 = Model("WS6.6")
+lie_ws_6_6_model_2 = Model(LieModel.LIE_6_6("WS"))
+
+lie_12_12_model_1 = Model("12.12")
+lie_12_12_model_2 = Model(LieModel.LIE_12_12)
 ```
 
 ### Amino-acid Models

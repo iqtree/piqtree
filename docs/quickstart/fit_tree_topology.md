@@ -28,12 +28,12 @@ For reproducible results, a random seed may be specified.
 ```python
 from cogent3 import load_aligned_seqs, make_tree
 from piqtree import Model, fit_tree
-from piqtree.model import DnaModel
+from piqtree.model import StandardDnaModel
 
 aln = load_aligned_seqs("my_alignment.fasta", moltype="dna")
 tree = make_tree("((Human, Chimpanzee), Rhesus, Mouse);")
 
-fitted_tree = fit_tree(aln, tree, model=Model(DnaModel.SYM), rand_seed=42)
+fitted_tree = fit_tree(aln, tree, model=Model(StandardDnaModel.SYM), rand_seed=42)
 ```
 
 ### Multithreading
@@ -49,12 +49,12 @@ then IQ-TREE attempts to determine the optimal number of threads.
 ```python
 from cogent3 import load_aligned_seqs, make_tree
 from piqtree import Model, fit_tree
-from piqtree.model import DnaModel, FreeRateModel
+from piqtree.model import StandardDnaModel, FreeRateModel
 
 aln = load_aligned_seqs("my_alignment.fasta", moltype="dna")
 tree = make_tree("((Human, Chimpanzee), Rhesus, Mouse);")
 
-model = Model(DnaModel.HKY, rate_model=FreeRateModel(3), invariant_sites=True)
+model = Model(StandardDnaModel.HKY, rate_model=FreeRateModel(3), invariant_sites=True)
 fitted_tree = fit_tree(aln, tree, model, num_threads=4)
 ```
 

@@ -1,8 +1,16 @@
 # SubstitutionModel
 
-Enums for available DNA and amino acid models. Strings may be used instead of the enums.
+Enums for available DNA (including Lie Markov Models) and amino acid models. Strings may be used instead of the enums.
 
-::: piqtree.model.DnaModel
+::: piqtree.model.StandardDnaModel
+    options:
+        show_if_no_docstring: true
+
+::: piqtree.model.LieModel
+    options:
+        show_if_no_docstring: true
+
+::: piqtree.model.LieModelInstance
     options:
         show_if_no_docstring: true
 

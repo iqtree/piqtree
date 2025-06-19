@@ -61,11 +61,11 @@ then IQ-TREE attempts to determine the optimal number of threads.
 ```python
 from cogent3 import load_aligned_seqs
 from piqtree import Model, build_tree
-from piqtree.model import DiscreteGammaModel, DnaModel
+from piqtree.model import DiscreteGammaModel, StandardDnaModel
 
 aln = load_aligned_seqs("my_alignment.fasta", moltype="dna")
 
-model = Model(DnaModel.HKY, rate_model=DiscreteGammaModel(6), invariant_sites=True)
+model = Model(StandardDnaModel.HKY, rate_model=DiscreteGammaModel(6), invariant_sites=True)
 tree = build_tree(aln, model, num_threads=4)
 ```
 

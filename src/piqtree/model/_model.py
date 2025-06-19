@@ -46,7 +46,7 @@ class Model:
 
     def __repr__(self) -> str:
         attrs = [
-            f"submod_type={getattr(self.submod_type, 'name', None)}",
+            f"submod_type={self.submod_type.iqtree_str()}",
             f"freq_type={getattr(self.freq_type, 'name', None)}",
             f"rate_type={getattr(self.rate_type, 'name', None)}",
         ]

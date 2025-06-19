@@ -81,7 +81,7 @@ def test_bad_lie_model() -> None:
         ValueError,
         match=re.escape("Invalid Lie Model pairing prefix: 'RS'"),
     ):
-        _ = LieModel.LIE_10_34("RS")
+        _ = LieModel.LIE_10_34("RS")  # type: ignore[arg-type]
 
 
 def test_lie_model_enum() -> None:

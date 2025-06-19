@@ -5,21 +5,29 @@ from typing import Literal
 import pytest
 
 from piqtree import available_freq_type, available_models, available_rate_type
-from piqtree.model import AaModel, DnaModel, FreqType, SubstitutionModel
+from piqtree.model import (
+    AaModel,
+    FreqType,
+    LieModel,
+    StandardDnaModel,
+    SubstitutionModel,
+)
 from piqtree.model._rate_type import ALL_BASE_RATE_TYPES
 
 
 @pytest.mark.parametrize(
-    ("model_class", "model_type"),
-    [(None, None), (DnaModel, "dna"), (AaModel, "protein")],
+    ("model_classes", "model_type"),
+    [(None, None), ([StandardDnaModel, LieModel], "dna"), ([AaModel], "protein")],
 )
 def test_num_available_models(
-    model_class: type[SubstitutionModel] | None,
+    model_classes: list[type[SubstitutionModel]] | None,
     model_type: Literal["dna", "protein"] | None,
 ) -> None:
     table = available_models(model_type)
-    total_models = (
-        len(DnaModel) + len(AaModel) if model_class is None else len(model_class)
+    if model_classes is None:
+        model_classes = [StandardDnaModel, LieModel, AaModel]
+    total_models = sum(
+        model_class.num_available_models() for model_class in model_classes
     )
     assert total_models > 0
     assert table.shape[0] == total_models

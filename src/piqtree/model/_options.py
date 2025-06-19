@@ -10,27 +10,32 @@ from piqtree.model._rate_type import ALL_BASE_RATE_TYPES, get_description
 from piqtree.model._substitution_model import (
     ALL_MODELS_CLASSES,
     AaModel,
-    DnaModel,
+    LieModel,
+    StandardDnaModel,
     SubstitutionModel,
 )
 
 
 @functools.cache
-def _make_models(model_type: type[SubstitutionModel]) -> dict[str, list[str]]:
+def _make_models(
+    model_classes: type[SubstitutionModel] | tuple[type[SubstitutionModel], ...],
+) -> dict[str, list[str]]:
     data: dict[str, list[str]] = {
         "Model Type": [],
         "Abbreviation": [],
         "Description": [],
     }
 
-    model_classes = (
-        ALL_MODELS_CLASSES if model_type == SubstitutionModel else [model_type]
-    )
+    if model_classes == SubstitutionModel:
+        model_classes = ALL_MODELS_CLASSES
+
+    if isinstance(model_classes, type) and issubclass(model_classes, SubstitutionModel):
+        model_classes = (model_classes,)
 
     for model_class in model_classes:
-        for model in model_class:
+        for model in model_class.iter_available_models():
             data["Model Type"].append(model.model_type())
-            data["Abbreviation"].append(model.value)
+            data["Abbreviation"].append(model.iqtree_str())
             data["Description"].append(model.description)
 
     return data
@@ -59,7 +64,7 @@ def available_models(
     template = "Available {}substitution models"
     if model_type == "dna":
         table = make_table(
-            data=_make_models(DnaModel),
+            data=_make_models((StandardDnaModel, LieModel)),
             title=template.format("nucleotide "),
         )
     elif model_type == "protein":

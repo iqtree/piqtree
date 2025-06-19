@@ -2,18 +2,26 @@ import re
 
 import pytest
 
-from piqtree.model import AaModel, DnaModel, SubstitutionModel, get_substitution_model
+from piqtree.model import (
+    AaModel,
+    LieModel,
+    StandardDnaModel,
+    SubstitutionModel,
+    get_substitution_model,
+)
 
 
-@pytest.mark.parametrize("model_class", [DnaModel, AaModel])
+@pytest.mark.parametrize("model_class", [StandardDnaModel, AaModel])
 def test_number_of_descriptions(
-    model_class: type[DnaModel] | type[AaModel],
+    model_class: type[StandardDnaModel] | type[AaModel],
 ) -> None:
     assert len(model_class) == len(model_class._descriptions())
 
 
-@pytest.mark.parametrize("model_class", [DnaModel, AaModel])
-def test_descriptions_exist(model_class: type[DnaModel] | type[AaModel]) -> None:
+@pytest.mark.parametrize("model_class", [StandardDnaModel, AaModel])
+def test_descriptions_exist(
+    model_class: type[StandardDnaModel] | type[AaModel],
+) -> None:
     for model in model_class:
         # Raises an error if description not present
         _ = model.description
@@ -21,10 +29,10 @@ def test_descriptions_exist(model_class: type[DnaModel] | type[AaModel]) -> None
 
 @pytest.mark.parametrize(
     ("model_class", "model_type"),
-    [(DnaModel, "nucleotide"), (AaModel, "protein")],
+    [(StandardDnaModel, "nucleotide"), (AaModel, "protein")],
 )
 def test_model_type(
-    model_class: type[DnaModel] | type[AaModel],
+    model_class: type[StandardDnaModel] | type[AaModel],
     model_type: str,
 ) -> None:
     assert model_class.model_type() == model_type
@@ -36,8 +44,10 @@ def test_model_type(
 @pytest.mark.parametrize(
     ("submod_type", "iqtree_str"),
     [
-        (DnaModel.F81, "F81"),
-        (DnaModel.LIE_10_34, "10.34"),
+        (StandardDnaModel.F81, "F81"),
+        (LieModel.LIE_10_34, "10.34"),
+        (LieModel.LIE_4_4a("WS"), "WS4.4a"),
+        (LieModel.LIE_5_11c("RY"), "RY5.11c"),
         (AaModel.NQ_insect, "NQ.insect"),
         ("NQ.yeast", "NQ.yeast"),
         ("GTR", "GTR"),

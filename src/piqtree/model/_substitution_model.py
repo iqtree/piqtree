@@ -1,14 +1,15 @@
 import contextlib
 import functools
-from abc import abstractmethod
+from collections.abc import Sequence
+from dataclasses import dataclass
 from enum import Enum, unique
+from typing import ClassVar, Literal
 
 
-class SubstitutionModel(Enum):
+class SubstitutionModel:
     """Base class for substitution models."""
 
     @staticmethod
-    @abstractmethod
     def model_type() -> str:
         """Get the type of the model.
 
@@ -18,18 +19,42 @@ class SubstitutionModel(Enum):
             The type of the model.
 
         """
+        raise NotImplementedError
 
-    @staticmethod
-    @abstractmethod
-    def _descriptions() -> dict["SubstitutionModel", str]:
-        """Get the description of each model.
+    def iqtree_str(self) -> str:
+        """The IQ-TREE representation of the model.
+
 
         Returns
         -------
-        dict[Self, str]
-            A mapping of models to their description.
-
+        str
+            The IQ-TREE representation of the model.
         """
+        raise NotImplementedError
+
+    @staticmethod
+    def iter_available_models() -> Sequence["SubstitutionModel"]:
+        """The available models for the model type.
+
+
+        Returns
+        -------
+        Iterable["SubstitutionModel"]:
+            The available models.
+        """
+        raise NotImplementedError
+
+    @staticmethod
+    def num_available_models() -> int:
+        """The number of available models for the model type.
+
+
+        Returns
+        -------
+        int:
+            The number of available models.
+        """
+        raise NotImplementedError
 
     @property
     def description(self) -> str:
@@ -41,15 +66,12 @@ class SubstitutionModel(Enum):
             The model's description.
 
         """
-        return self._descriptions()[self]
-
-    def iqtree_str(self) -> str:
-        return self.value
+        raise NotImplementedError
 
 
 @unique
-class DnaModel(SubstitutionModel):
-    """DNA substitution models."""
+class StandardDnaModel(SubstitutionModel, Enum):
+    """Standard DNA substitution models."""
 
     JC = "JC"
     JC69 = "JC69"
@@ -78,6 +100,116 @@ class DnaModel(SubstitutionModel):
     TVMe = "TVMe"
     SYM = "SYM"
     GTR = "GTR"
+
+    @staticmethod
+    def model_type() -> str:
+        return "nucleotide"
+
+    def iqtree_str(self) -> str:
+        return self.value
+
+    @staticmethod
+    def iter_available_models() -> Sequence["StandardDnaModel"]:
+        return list(StandardDnaModel)
+
+    @staticmethod
+    def num_available_models() -> int:
+        return len(StandardDnaModel)
+
+    @property
+    def description(self) -> str:
+        return self._descriptions()[self]
+
+    @staticmethod
+    @functools.cache
+    def _descriptions() -> dict[SubstitutionModel, str]:
+        return {
+            StandardDnaModel.JC: "Equal substitution rates and equal base frequencies (Jukes and Cantor, 1969).",
+            StandardDnaModel.JC69: "Equal substitution rates and equal base frequencies (Jukes and Cantor, 1969).",
+            StandardDnaModel.F81: "Equal rates but unequal base freq. (Felsenstein, 1981).",
+            StandardDnaModel.K80: "Unequal transition/transversion rates and equal base freq. (Kimura, 1980).",
+            StandardDnaModel.K2P: "Unequal transition/transversion rates and equal base freq. (Kimura, 1980).",
+            StandardDnaModel.HKY: "Unequal transition/transversion rates and unequal base freq. (Hasegawa, Kishino and Yano, 1985).",
+            StandardDnaModel.HKY85: "Unequal transition/transversion rates and unequal base freq. (Hasegawa, Kishino and Yano, 1985).",
+            StandardDnaModel.TN: "Like HKY but unequal purine/pyrimidine rates (Tamura and Nei, 1993).",
+            StandardDnaModel.TN93: "Like HKY but unequal purine/pyrimidine rates (Tamura and Nei, 1993).",
+            StandardDnaModel.TNe: "Like TN but equal base freq.",
+            StandardDnaModel.K81: "Three substitution types model and equal base freq. (Kimura, 1981).",
+            StandardDnaModel.K3P: "Three substitution types model and equal base freq. (Kimura, 1981).",
+            StandardDnaModel.K81u: "Like K81 but unequal base freq.",
+            StandardDnaModel.TPM2: "AC=AT, AG=CT, CG=GT and equal base freq.",
+            StandardDnaModel.TPM2u: "Like TPM2 but unequal base freq.",
+            StandardDnaModel.TPM3: "AC=CG, AG=CT, AT=GT and equal base freq.",
+            StandardDnaModel.TPM3u: "Like TPM3 but unequal base freq.",
+            StandardDnaModel.TIM: "Transition model, AC=GT, AT=CG and unequal base freq.",
+            StandardDnaModel.TIMe: "Like TIM but equal base freq.",
+            StandardDnaModel.TIM2: "AC=AT, CG=GT and unequal base freq.",
+            StandardDnaModel.TIM2e: "Like TIM2 but equal base freq.",
+            StandardDnaModel.TIM3: "AC=CG, AT=GT and unequal base freq.",
+            StandardDnaModel.TIM3e: "Like TIM3 but equal base freq.",
+            StandardDnaModel.TVM: "Transversion model, AG=CT and unequal base freq.",
+            StandardDnaModel.TVMe: "Like TVM but equal base freq.",
+            StandardDnaModel.SYM: "Symmetric model with unequal rates but equal base freq. (Zharkikh, 1994).",
+            StandardDnaModel.GTR: "General time reversible model with unequal rates and unequal base freq. (Tavare, 1986).",
+        }
+
+
+lie_model_pairing = Literal["RY", "WS", "MK"]
+
+
+@dataclass(frozen=True)
+class LieModelInstance(SubstitutionModel):
+    lie_model: "LieModel"
+    pairing: lie_model_pairing | None = None
+
+    valid_pairings: ClassVar[
+        tuple[lie_model_pairing, lie_model_pairing, lie_model_pairing]
+    ] = "RY", "WS", "MK"
+
+    pairing_descriptions: ClassVar[dict[lie_model_pairing, str]] = {
+        "RY": "purine-pyrimidine pairing (default).",
+        "WS": "weak-strong pairing.",
+        "MK": "aMino-Keto pairing",
+    }
+
+    def __post_init__(self) -> None:
+        if (
+            self.pairing is not None
+            and self.pairing not in LieModelInstance.valid_pairings
+        ):
+            msg = f"Invalid Lie Model pairing prefix: '{self.pairing}'"
+            raise ValueError(msg)
+
+    @staticmethod
+    def model_type() -> str:
+        return "nucleotide"
+
+    def iqtree_str(self) -> str:
+        if self.pairing:
+            return f"{self.pairing}{self.lie_model.value}"
+        return self.lie_model.value
+
+    @staticmethod
+    def iter_available_models() -> Sequence["LieModelInstance"]:
+        return [
+            LieModelInstance(lie_model, prefix)
+            for prefix in (None, *LieModelInstance.valid_pairings)
+            for lie_model in LieModel
+        ]
+
+    @staticmethod
+    def num_available_models() -> int:
+        return (len(LieModelInstance.valid_pairings) + 1) * len(LieModel)
+
+    @property
+    def description(self) -> str:
+        base_desc = LieModel._descriptions()[self.lie_model]  # noqa: SLF001
+        if self.pairing is None:
+            return base_desc
+        return f"{base_desc} Pairing: {LieModelInstance.pairing_descriptions[self.pairing]}"
+
+
+class LieModel(SubstitutionModel, Enum):
     LIE_1_1 = "1.1"
     LIE_2_2b = "2.2b"
     LIE_3_3a = "3.3a"
@@ -116,83 +248,74 @@ class DnaModel(SubstitutionModel):
     LIE_10_34 = "10.34"
     LIE_12_12 = "12.12"
 
+    def __call__(self, pairing: lie_model_pairing | None = None) -> LieModelInstance:
+        return LieModelInstance(self, pairing)
+
     @staticmethod
     def model_type() -> str:
         return "nucleotide"
+
+    def iqtree_str(self) -> str:
+        return self.value
+
+    @staticmethod
+    def iter_available_models() -> Sequence[LieModelInstance]:
+        return LieModelInstance.iter_available_models()
+
+    @staticmethod
+    def num_available_models() -> int:
+        return LieModelInstance.num_available_models()
+
+    @property
+    def description(self) -> str:
+        return LieModel._descriptions()[self]
 
     @staticmethod
     @functools.cache
     def _descriptions() -> dict[SubstitutionModel, str]:
         return {
-            DnaModel.JC: "Equal substitution rates and equal base frequencies (Jukes and Cantor, 1969).",
-            DnaModel.JC69: "Equal substitution rates and equal base frequencies (Jukes and Cantor, 1969).",
-            DnaModel.F81: "Equal rates but unequal base freq. (Felsenstein, 1981).",
-            DnaModel.K80: "Unequal transition/transversion rates and equal base freq. (Kimura, 1980).",
-            DnaModel.K2P: "Unequal transition/transversion rates and equal base freq. (Kimura, 1980).",
-            DnaModel.HKY: "Unequal transition/transversion rates and unequal base freq. (Hasegawa, Kishino and Yano, 1985).",
-            DnaModel.HKY85: "Unequal transition/transversion rates and unequal base freq. (Hasegawa, Kishino and Yano, 1985).",
-            DnaModel.TN: "Like HKY but unequal purine/pyrimidine rates (Tamura and Nei, 1993).",
-            DnaModel.TN93: "Like HKY but unequal purine/pyrimidine rates (Tamura and Nei, 1993).",
-            DnaModel.TNe: "Like TN but equal base freq.",
-            DnaModel.K81: "Three substitution types model and equal base freq. (Kimura, 1981).",
-            DnaModel.K3P: "Three substitution types model and equal base freq. (Kimura, 1981).",
-            DnaModel.K81u: "Like K81 but unequal base freq.",
-            DnaModel.TPM2: "AC=AT, AG=CT, CG=GT and equal base freq.",
-            DnaModel.TPM2u: "Like TPM2 but unequal base freq.",
-            DnaModel.TPM3: "AC=CG, AG=CT, AT=GT and equal base freq.",
-            DnaModel.TPM3u: "Like TPM3 but unequal base freq.",
-            DnaModel.TIM: "Transition model, AC=GT, AT=CG and unequal base freq.",
-            DnaModel.TIMe: "Like TIM but equal base freq.",
-            DnaModel.TIM2: "AC=AT, CG=GT and unequal base freq.",
-            DnaModel.TIM2e: "Like TIM2 but equal base freq.",
-            DnaModel.TIM3: "AC=CG, AT=GT and unequal base freq.",
-            DnaModel.TIM3e: "Like TIM3 but equal base freq.",
-            DnaModel.TVM: "Transversion model, AG=CT and unequal base freq.",
-            DnaModel.TVMe: "Like TVM but equal base freq.",
-            DnaModel.SYM: "Symmetric model with unequal rates but equal base freq. (Zharkikh, 1994).",
-            DnaModel.GTR: "General time reversible model with unequal rates and unequal base freq. (Tavare, 1986).",
-            DnaModel.LIE_1_1: "Reversible model. Equal base frequencies. equiv. to JC",
-            DnaModel.LIE_2_2b: "Reversible model. Equal base frequencies. equiv. to K2P",
-            DnaModel.LIE_3_3a: "Reversible model. Equal base frequencies. equiv. to K3P",
-            DnaModel.LIE_3_3b: "Non-reversible model. Equal base frequencies.",
-            DnaModel.LIE_3_3c: "Reversible model. Equal base frequencies. equiv. to TNe",
-            DnaModel.LIE_3_4: "Reversible model. f(A)=f(G) and f(C)=f(T).",
-            DnaModel.LIE_4_4a: "Reversible model. Unconstrained base frequencies. equiv. to F81",
-            DnaModel.LIE_4_4b: "Reversible model. f(A)=f(G) and f(C)=f(T).",
-            DnaModel.LIE_4_5a: "Non-reversible model. f(A)=f(G) and f(C)=f(T).",
-            DnaModel.LIE_4_5b: "Non-reversible model. f(A)=f(G) and f(C)=f(T).",
-            DnaModel.LIE_5_6a: "Non-reversible model. Equal base frequencies.",
-            DnaModel.LIE_5_6b: "Non-reversible model. Unconstrained base frequencies.",
-            DnaModel.LIE_5_7a: "Non-reversible model. f(A)+f(G)=0.5=f(C)+f(T).",
-            DnaModel.LIE_5_7b: "Non-reversible model. Equal base frequencies.",
-            DnaModel.LIE_5_7c: "Non-reversible model. Equal base frequencies.",
-            DnaModel.LIE_5_11a: "Non-reversible model. f(A)+f(G)=0.5=f(C)+f(T).",
-            DnaModel.LIE_5_11b: "Non-reversible model. Equal base frequencies.",
-            DnaModel.LIE_5_11c: "Non-reversible model. Equal base frequencies.",
-            DnaModel.LIE_5_16: "Non-reversible model. f(A)=f(G) and f(C)=f(T).",
-            DnaModel.LIE_6_6: "Non-reversible model. f(A)=f(G) and f(C)=f(T). equiv. to STRSYM for strand-symmetric model (Bielawski and Gold, 2002)",
-            DnaModel.LIE_6_7a: "Non-reversible model. Unconstrained base frequencies. F81+K3P",
-            DnaModel.LIE_6_7b: "Non-reversible model. Unconstrained base frequencies.",
-            DnaModel.LIE_6_8a: "Non-reversible model. Unconstrained base frequencies.",
-            DnaModel.LIE_6_8b: "Non-reversible model. f(A)=f(G) and f(C)=f(T).",
-            DnaModel.LIE_6_17a: "Non-reversible model. f(A)=f(G) and f(C)=f(T).",
-            DnaModel.LIE_6_17b: "Non-reversible model. f(A)=f(G) and f(C)=f(T).",
-            DnaModel.LIE_8_8: "Non-reversible model. Unconstrained base frequencies.",
-            DnaModel.LIE_8_10a: "Non-reversible model. Unconstrained base frequencies.",
-            DnaModel.LIE_8_10b: "Non-reversible model. f(A)=f(G) and f(C)=f(T).",
-            DnaModel.LIE_8_16: "Non-reversible model. Unconstrained base frequencies.",
-            DnaModel.LIE_8_17: "Non-reversible model. Unconstrained base frequencies.",
-            DnaModel.LIE_8_18: "Non-reversible model. Unconstrained base frequencies.",
-            DnaModel.LIE_9_20a: "Non-reversible model. f(A)+f(G)=0.5=f(C)+f(T).",
-            DnaModel.LIE_9_20b: "Non-reversible model. Equal base frequencies. Doubly stochastic",
-            DnaModel.LIE_10_12: "Non-reversible model. Unconstrained base frequencies.",
-            DnaModel.LIE_10_34: "Non-reversible model. Unconstrained base frequencies.",
-            DnaModel.LIE_12_12: "Non-reversible model. Unconstrained base frequencies. equiv. to UNREST (unrestricted model)",
+            LieModel.LIE_1_1: "Reversible model. Equal base frequencies. equiv. to JC",
+            LieModel.LIE_2_2b: "Reversible model. Equal base frequencies. equiv. to K2P",
+            LieModel.LIE_3_3a: "Reversible model. Equal base frequencies. equiv. to K3P",
+            LieModel.LIE_3_3b: "Non-reversible model. Equal base frequencies.",
+            LieModel.LIE_3_3c: "Reversible model. Equal base frequencies. equiv. to TNe",
+            LieModel.LIE_3_4: "Reversible model. f(A)=f(G) and f(C)=f(T).",
+            LieModel.LIE_4_4a: "Reversible model. Unconstrained base frequencies. equiv. to F81",
+            LieModel.LIE_4_4b: "Reversible model. f(A)=f(G) and f(C)=f(T).",
+            LieModel.LIE_4_5a: "Non-reversible model. f(A)=f(G) and f(C)=f(T).",
+            LieModel.LIE_4_5b: "Non-reversible model. f(A)=f(G) and f(C)=f(T).",
+            LieModel.LIE_5_6a: "Non-reversible model. Equal base frequencies.",
+            LieModel.LIE_5_6b: "Non-reversible model. Unconstrained base frequencies.",
+            LieModel.LIE_5_7a: "Non-reversible model. f(A)+f(G)=0.5=f(C)+f(T).",
+            LieModel.LIE_5_7b: "Non-reversible model. Equal base frequencies.",
+            LieModel.LIE_5_7c: "Non-reversible model. Equal base frequencies.",
+            LieModel.LIE_5_11a: "Non-reversible model. f(A)+f(G)=0.5=f(C)+f(T).",
+            LieModel.LIE_5_11b: "Non-reversible model. Equal base frequencies.",
+            LieModel.LIE_5_11c: "Non-reversible model. Equal base frequencies.",
+            LieModel.LIE_5_16: "Non-reversible model. f(A)=f(G) and f(C)=f(T).",
+            LieModel.LIE_6_6: "Non-reversible model. f(A)=f(G) and f(C)=f(T). equiv. to STRSYM for strand-symmetric model (Bielawski and Gold, 2002)",
+            LieModel.LIE_6_7a: "Non-reversible model. Unconstrained base frequencies. F81+K3P",
+            LieModel.LIE_6_7b: "Non-reversible model. Unconstrained base frequencies.",
+            LieModel.LIE_6_8a: "Non-reversible model. Unconstrained base frequencies.",
+            LieModel.LIE_6_8b: "Non-reversible model. f(A)=f(G) and f(C)=f(T).",
+            LieModel.LIE_6_17a: "Non-reversible model. f(A)=f(G) and f(C)=f(T).",
+            LieModel.LIE_6_17b: "Non-reversible model. f(A)=f(G) and f(C)=f(T).",
+            LieModel.LIE_8_8: "Non-reversible model. Unconstrained base frequencies.",
+            LieModel.LIE_8_10a: "Non-reversible model. Unconstrained base frequencies.",
+            LieModel.LIE_8_10b: "Non-reversible model. f(A)=f(G) and f(C)=f(T).",
+            LieModel.LIE_8_16: "Non-reversible model. Unconstrained base frequencies.",
+            LieModel.LIE_8_17: "Non-reversible model. Unconstrained base frequencies.",
+            LieModel.LIE_8_18: "Non-reversible model. Unconstrained base frequencies.",
+            LieModel.LIE_9_20a: "Non-reversible model. f(A)+f(G)=0.5=f(C)+f(T).",
+            LieModel.LIE_9_20b: "Non-reversible model. Equal base frequencies. Doubly stochastic",
+            LieModel.LIE_10_12: "Non-reversible model. Unconstrained base frequencies.",
+            LieModel.LIE_10_34: "Non-reversible model. Unconstrained base frequencies.",
+            LieModel.LIE_12_12: "Non-reversible model. Unconstrained base frequencies. equiv. to UNREST (unrestricted model)",
         }
 
 
 @unique
-class AaModel(SubstitutionModel):
+class AaModel(SubstitutionModel, Enum):
     """Protein substitution models."""
 
     Blosum62 = "Blosum62"
@@ -237,6 +360,21 @@ class AaModel(SubstitutionModel):
     @staticmethod
     def model_type() -> str:
         return "protein"
+
+    def iqtree_str(self) -> str:
+        return self.value
+
+    @staticmethod
+    def iter_available_models() -> Sequence["AaModel"]:
+        return list(AaModel)
+
+    @staticmethod
+    def num_available_models() -> int:
+        return len(AaModel)
+
+    @property
+    def description(self) -> str:
+        return self._descriptions()[self]
 
     @staticmethod
     @functools.cache
@@ -283,7 +421,11 @@ class AaModel(SubstitutionModel):
         }
 
 
-ALL_MODELS_CLASSES: list[type[SubstitutionModel]] = [DnaModel, AaModel]
+ALL_MODELS_CLASSES: tuple[type[SubstitutionModel], ...] = (
+    StandardDnaModel,
+    LieModelInstance,
+    AaModel,
+)
 
 
 def get_substitution_model(name: str | SubstitutionModel) -> SubstitutionModel:
@@ -308,14 +450,26 @@ def get_substitution_model(name: str | SubstitutionModel) -> SubstitutionModel:
         msg = f"Unknown substitution model: {name!r}"
         raise ValueError(msg)
 
-    if enum_name[0].isdigit():
-        enum_name = "LIE_" + enum_name
+    with contextlib.suppress(KeyError):
+        return StandardDnaModel[enum_name]
 
     with contextlib.suppress(KeyError):
         return AaModel[enum_name]
 
+    # Lie models
+    prefix = _get_lie_prefix(enum_name)
+    if prefix is not None:
+        enum_name = enum_name[2:]
+
     with contextlib.suppress(KeyError):
-        return DnaModel[enum_name]
+        return LieModel["LIE_" + enum_name](prefix)
 
     msg = f"Unknown substitution model: {name!r}"
     raise ValueError(msg)
+
+
+def _get_lie_prefix(name: str) -> lie_model_pairing | None:
+    potential_prefix = name[:2]
+    if potential_prefix in LieModelInstance.valid_pairings:
+        return potential_prefix
+    return None

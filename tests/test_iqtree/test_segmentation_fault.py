@@ -6,7 +6,7 @@ from cogent3.core.alignment import Alignment
 
 from piqtree import TreeGenMode, build_tree, fit_tree, random_tree
 from piqtree.exceptions import IqTreeError
-from piqtree.model import DiscreteGammaModel, DnaModel, FreeRateModel, Model
+from piqtree.model import DiscreteGammaModel, FreeRateModel, Model, StandardDnaModel
 
 
 @pytest.fixture
@@ -23,8 +23,8 @@ def test_two_build_random_tree(tiny_alignment: Alignment) -> None:
     used to result in a Segmentation Fault in a previous version.
     """
 
-    build_tree(tiny_alignment, Model(DnaModel.JC), 1)
-    build_tree(tiny_alignment, Model(DnaModel.JC), 2)
+    build_tree(tiny_alignment, Model(StandardDnaModel.JC), 1)
+    build_tree(tiny_alignment, Model(StandardDnaModel.JC), 2)
 
     with pytest.raises(IqTreeError):
         random_tree(2, TreeGenMode.BALANCED, 1)
@@ -37,8 +37,8 @@ def test_two_fit_random_tree(tiny_alignment: Alignment) -> None:
     """
     tree = make_tree("(a,b,(c,d));")
 
-    fit_tree(tiny_alignment, tree, Model(DnaModel.JC), 1)
-    fit_tree(tiny_alignment, tree, Model(DnaModel.JC), 2)
+    fit_tree(tiny_alignment, tree, Model(StandardDnaModel.JC), 1)
+    fit_tree(tiny_alignment, tree, Model(StandardDnaModel.JC), 2)
 
     with pytest.raises(IqTreeError):
         random_tree(2, TreeGenMode.BALANCED, 1)
@@ -58,11 +58,11 @@ def test_two_invalid_models(
     with pytest.raises(IqTreeError):
         _ = build_tree(
             tiny_alignment,
-            Model(DnaModel.JC, rate_model=rate_model_class(categories)),
+            Model(StandardDnaModel.JC, rate_model=rate_model_class(categories)),
         )
 
     with pytest.raises(IqTreeError):
         _ = build_tree(
             tiny_alignment,
-            Model(DnaModel.JC, rate_model=rate_model_class(categories)),
+            Model(StandardDnaModel.JC, rate_model=rate_model_class(categories)),
         )

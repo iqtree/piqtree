@@ -11,7 +11,7 @@ from cogent3 import PhyloNode, make_tree
 
 from piqtree.exceptions import ParseIqTreeError
 from piqtree.iqtree._decorator import iqtree_func
-from piqtree.model import DnaModel, Model, make_model
+from piqtree.model import Model, StandardDnaModel, make_model
 
 iq_build_tree = iqtree_func(iq_build_tree, hide_files=True)
 iq_fit_tree = iqtree_func(iq_fit_tree, hide_files=True)
@@ -43,20 +43,20 @@ def _edge_pars_for_cogent3(tree: cogent3.PhyloNode, model: Model) -> None:
     rate_pars = tree.params["edge_pars"]["rates"]
     motif_pars = {"mprobs": tree.params["edge_pars"]["mprobs"]}
     # renames parameters to conform to cogent3's naming conventions
-    if model.submod_type in {DnaModel.JC, DnaModel.F81}:
+    if model.submod_type in {StandardDnaModel.JC, StandardDnaModel.F81}:
         # skip rate_pars since rate parameters are constant in JC and F81
         _insert_edge_pars(
             tree,
             **motif_pars,
         )
         return
-    if model.submod_type in {DnaModel.K80, DnaModel.HKY}:
+    if model.submod_type in {StandardDnaModel.K80, StandardDnaModel.HKY}:
         rate_pars = {"kappa": rate_pars["A/G"]}
 
-    elif model.submod_type is DnaModel.TN:
+    elif model.submod_type is StandardDnaModel.TN:
         rate_pars = {"kappa_r": rate_pars["A/G"], "kappa_y": rate_pars["C/T"]}
 
-    elif model.submod_type is DnaModel.GTR:
+    elif model.submod_type is StandardDnaModel.GTR:
         del rate_pars["G/T"]
 
     # applies global rate parameters to each edge

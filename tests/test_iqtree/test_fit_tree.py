@@ -5,7 +5,7 @@ from cogent3.core.alignment import Alignment
 from cogent3.core.tree import PhyloNode
 
 import piqtree
-from piqtree.model import DnaModel, Model
+from piqtree.model import Model, StandardDnaModel
 
 
 def check_likelihood(got: PhyloNode, expected: model_result) -> None:
@@ -71,15 +71,19 @@ def check_branch_lengths(got: PhyloNode, expected: PhyloNode) -> None:
 @pytest.mark.parametrize(
     ("iq_model", "c3_model"),
     [
-        (DnaModel.JC, "JC69"),
-        (DnaModel.K80, "K80"),
-        (DnaModel.GTR, "GTR"),
-        (DnaModel.TN, "TN93"),
-        (DnaModel.HKY, "HKY85"),
-        (DnaModel.F81, "F81"),
+        (StandardDnaModel.JC, "JC69"),
+        (StandardDnaModel.K80, "K80"),
+        (StandardDnaModel.GTR, "GTR"),
+        (StandardDnaModel.TN, "TN93"),
+        (StandardDnaModel.HKY, "HKY85"),
+        (StandardDnaModel.F81, "F81"),
     ],
 )
-def test_fit_tree(three_otu: Alignment, iq_model: DnaModel, c3_model: str) -> None:
+def test_fit_tree(
+    three_otu: Alignment,
+    iq_model: StandardDnaModel,
+    c3_model: str,
+) -> None:
     tree_topology = make_tree(tip_names=three_otu.names)
     app = get_app("model", c3_model, tree=tree_topology)
     expected = app(three_otu)
@@ -103,17 +107,17 @@ def test_fit_tree(three_otu: Alignment, iq_model: DnaModel, c3_model: str) -> No
 @pytest.mark.parametrize(
     ("iq_model", "c3_model"),
     [
-        (DnaModel.JC, "JC69"),
-        (DnaModel.K80, "K80"),
-        (DnaModel.GTR, "GTR"),
-        (DnaModel.TN, "TN93"),
-        (DnaModel.HKY, "HKY85"),
-        (DnaModel.F81, "F81"),
+        (StandardDnaModel.JC, "JC69"),
+        (StandardDnaModel.K80, "K80"),
+        (StandardDnaModel.GTR, "GTR"),
+        (StandardDnaModel.TN, "TN93"),
+        (StandardDnaModel.HKY, "HKY85"),
+        (StandardDnaModel.F81, "F81"),
     ],
 )
 def test_fit_tree_str_model(
     three_otu: Alignment,
-    iq_model: DnaModel,
+    iq_model: StandardDnaModel,
     c3_model: str,
 ) -> None:
     tree_topology = make_tree(tip_names=three_otu.names)

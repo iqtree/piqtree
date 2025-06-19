@@ -12,7 +12,9 @@ from ._rate_type import (
 )
 from ._substitution_model import (
     AaModel,
-    DnaModel,
+    LieModel,
+    LieModelInstance,
+    StandardDnaModel,
     SubstitutionModel,
     get_substitution_model,
 )
@@ -20,12 +22,14 @@ from ._substitution_model import (
 __all__ = [
     "AaModel",
     "DiscreteGammaModel",
-    "DnaModel",
     "FreeRateModel",
     "FreqType",
+    "LieModel",
+    "LieModelInstance",
     "Model",
     "RateModel",
     "RateType",
+    "StandardDnaModel",
     "SubstitutionModel",
     "available_freq_type",
     "available_models",

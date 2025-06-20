@@ -11,6 +11,7 @@ def test_piqtree_phylo(four_otu: Alignment) -> None:
     app = get_app("piqtree_phylo", model="JC")
     got = app(four_otu)
     assert expected.same_topology(got)
+    assert got.source == four_otu.source
 
 
 def test_piqtree_phylo_support(four_otu: Alignment) -> None:
@@ -31,6 +32,7 @@ def test_piqtree_fit(three_otu: Alignment) -> None:
     piphylo = get_app("piqtree_fit", tree=tree, model="JC")
     got = piphylo(three_otu)
     assert got.params["lnL"] == pytest.approx(expected.lnL)
+    assert got.source == three_otu.source
 
 
 @pytest.mark.parametrize("num_taxa", [10, 50, 100])
@@ -66,6 +68,8 @@ def test_piqtree_jc_distances(five_otu: Alignment) -> None:
     assert (
         0 < dists["Manatee", "Dugong"] < dists["Manatee", "Rhesus"]
     )  # dugong closer than rhesus
+
+    assert dists.source == five_otu.source
 
 
 def test_piqtree_nj(five_otu: Alignment) -> None:

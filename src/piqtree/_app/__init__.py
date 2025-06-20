@@ -38,13 +38,15 @@ class piqtree_phylo:
         self,
         aln: c3_types.AlignedSeqsType,
     ) -> cogent3.PhyloNode | cogent3.app.typing.SerialisableType:
-        return build_tree(
+        tree = build_tree(
             aln,
             self._model,
             self._rand_seed,
             bootstrap_replicates=self._bootstrap_reps,
             num_threads=self._num_threads,
         )
+        tree.source = aln.source
+        return tree
 
 
 @composable.define_app
@@ -67,13 +69,15 @@ class piqtree_fit:
         self,
         aln: c3_types.AlignedSeqsType,
     ) -> cogent3.PhyloNode | cogent3.app.typing.SerialisableType:
-        return fit_tree(
+        tree = fit_tree(
             aln,
             self._tree,
             self._model,
             self._rand_seed,
             self._num_threads,
         )
+        tree.source = aln.source
+        return tree
 
 
 @composable.define_app
@@ -98,11 +102,13 @@ class piqtree_jc_dists:
     def main(
         self,
         aln: c3_types.AlignedSeqsType,
-    ) -> cogent3.PhyloNode | cogent3.app.typing.SerialisableType:
-        return jc_distances(
+    ) -> c3_types.PairwiseDistanceType | cogent3.app.typing.SerialisableType:
+        dists = jc_distances(
             aln,
             num_threads=self._num_threads,
         )
+        dists.source = aln.source
+        return dists
 
 
 @composable.define_app
@@ -114,6 +120,7 @@ def piqtree_nj(
 ) -> cogent3.PhyloNode:
     tree = nj_tree(dists, allow_negative=allow_negative)
     tree.params |= {"provenance": "piqtree"}
+    tree.source = dists.source
     return tree
 
 

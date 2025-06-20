@@ -100,6 +100,8 @@ class StandardDnaModel(SubstitutionModel, Enum):
     TVMe = "TVMe"
     SYM = "SYM"
     GTR = "GTR"
+    STRSYM = "STRSYM"
+    UNREST = "UNREST"
 
     @staticmethod
     def model_type() -> str:

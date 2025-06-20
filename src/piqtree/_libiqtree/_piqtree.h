@@ -126,6 +126,14 @@ extern "C" StringResult build_njtree(StringArray& names,
                                      DoubleArray& distances);
 
 /*
+ * Compute a consensus tree
+ * trees   -- a set of input trees
+ * minsup  -- a threshold to build the majority consensus (default: 0.5)
+ * output  -- the resulting consensus tree
+ */
+extern "C" StringResult consensus_tree(StringArray& trees, double minsup = 0.5);
+
+/*
  * verion number
  */
 extern "C" StringResult version();

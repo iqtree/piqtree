@@ -1,12 +1,12 @@
 """Python wrappers to tree searching functions in the IQ-TREE library."""
 
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 
 import cogent3
 import cogent3.app.typing as c3_types
 import numpy as np
 import yaml
-from _piqtree import iq_build_tree, iq_fit_tree, iq_nj_tree
+from _piqtree import iq_build_tree, iq_consensus_tree, iq_fit_tree, iq_nj_tree
 from cogent3 import PhyloNode, make_tree
 
 from piqtree.exceptions import ParseIqTreeError
@@ -16,7 +16,7 @@ from piqtree.model import Model, StandardDnaModel, make_model
 iq_build_tree = iqtree_func(iq_build_tree, hide_files=True)
 iq_fit_tree = iqtree_func(iq_fit_tree, hide_files=True)
 iq_nj_tree = iqtree_func(iq_nj_tree, hide_files=True)
-
+iq_consensus_tree = iqtree_func(iq_consensus_tree, hide_files=True)
 
 # the order defined in IQ-TREE
 RATE_PARS = "A/C", "A/G", "A/T", "C/G", "C/T", "G/T"
@@ -356,3 +356,32 @@ def nj_tree(
             node.length = max(node.length, 0)
 
     return tree
+
+
+def consensus_tree(
+    trees: Iterable[cogent3.PhyloNode],
+    *,
+    min_support: float = 0.5,
+) -> cogent3.PhyloNode:
+    """Build a consensus tree, defaults to majority rule consensus tree.
+
+    Parameters
+    ----------
+    trees : Iterable[cogent3.PhyloNode]
+        The trees to form a consensus tree from.
+    min_support : float, optional
+        The minimum support for a clade, by default 0.5
+
+    Returns
+    -------
+    cogent3.PhyloNode
+        The constructed consensus tree
+
+    """
+    if not 0 <= min_support < 1:
+        msg = f"Only min support values in the range 0 <= value < 1 are supported, got {min_support}"
+        raise ValueError(msg)
+
+    newick_trees = [str(tree) for tree in trees]
+
+    return make_tree(iq_consensus_tree(newick_trees, min_support))

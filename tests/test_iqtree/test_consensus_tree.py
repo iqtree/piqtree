@@ -1,0 +1,64 @@
+import pytest
+from cogent3 import PhyloNode, make_tree
+
+from piqtree import consensus_tree
+
+
+def tree_equal(tree1: PhyloNode, tree2: PhyloNode) -> bool:
+    return str(tree1.sorted()) == str(tree2.sorted())
+
+
+@pytest.fixture
+def standard_trees() -> list[PhyloNode]:
+    tree1 = make_tree("(a,(b,(c,(d,(e,f)))))")
+    tree2 = make_tree("(a,(b,(c,(d,(e,f)))))")
+    tree3 = make_tree("((a,b),(c,(d,(e,f))))")
+    tree4 = make_tree("(((a,b),c),(d,(e,f)))")
+    tree5 = make_tree("((((a,b),c),d),(e,f))")
+
+    return [tree1, tree2, tree3, tree4, tree5]
+
+
+def test_majority_consensus_tree(standard_trees: list[PhyloNode]) -> None:
+    expected = make_tree("((a,b),(((e,f),d),c))")
+    got_default = consensus_tree(standard_trees)
+    assert tree_equal(got_default, expected)
+
+    got = consensus_tree(standard_trees, min_support=0.5)
+    assert tree_equal(got, expected)
+
+
+def test_higher_support(standard_trees: list[PhyloNode]) -> None:
+    expected_0_7 = make_tree("(a,b,c,(d,(e,f)));")
+    got_0_7 = consensus_tree(standard_trees, min_support=0.7)
+    assert tree_equal(got_0_7, expected_0_7)
+
+    expected_0_9 = make_tree("(a,b,c,d,(e,f));")
+    got_0_9 = consensus_tree(standard_trees, min_support=0.9)
+    assert tree_equal(got_0_9, expected_0_9)
+
+
+def test_lower_support(standard_trees: list[PhyloNode]) -> None:
+    expected = make_tree("((a,b),(((e,f),d),c))")
+    for support in 0.1, 0.3:
+        got = consensus_tree(standard_trees, min_support=support)
+        assert tree_equal(got, expected)
+
+
+def test_single_tree(standard_trees: list[PhyloNode]) -> None:
+    single_tree = standard_trees[0]
+    got = consensus_tree([single_tree])
+    assert tree_equal(got, single_tree)
+
+
+def test_even_majority_rule() -> None:
+    tree1 = make_tree("(a,(b,(c,d)))")
+    tree2 = make_tree("(a,(b,(c,d)))")
+    tree3 = make_tree("(b,(a,(c,d)))")
+    tree4 = make_tree("(c,(a,(b,d)))")
+
+    expected = make_tree("(a,b,(c,d))")  # Not including (b, (c,d)) as that's only in 2
+
+    got = consensus_tree([tree1, tree2, tree3, tree4])
+
+    assert tree_equal(got, expected)

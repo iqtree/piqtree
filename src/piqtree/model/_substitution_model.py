@@ -153,6 +153,8 @@ class StandardDnaModel(SubstitutionModel, Enum):
             StandardDnaModel.TVMe: "Like TVM but equal base freq.",
             StandardDnaModel.SYM: "Symmetric model with unequal rates but equal base freq. (Zharkikh, 1994).",
             StandardDnaModel.GTR: "General time reversible model with unequal rates and unequal base freq. (Tavare, 1986).",
+            StandardDnaModel.STRSYM: "Strand-symmetric model (Bielawski and Gold, 2002).",
+            StandardDnaModel.UNREST: "Unrestricted model.",
         }
 
 

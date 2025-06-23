@@ -1,9 +1,5 @@
 # Setting up your environment for development
 
-We currently only support x86-64 linux, and both x86-64 and ARM mac operating systems.
-For windows development we recommend using Windows Subsytem for Linux. Alternatively,
-one can work through the provided dev container.
-
 ## Initial setup
 
 Fork and clone the [`piqtree` repository](https://github.com/iqtree/piqtree).

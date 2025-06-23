@@ -29,6 +29,3 @@ To get visualisation support with plotly, use the `[extra]` option.
 pip install "piqtree[extra]"
 ```
 
-## Supported platforms
-
-At present we do not provide native binaries for Windows. Windows users can run `piqtree` using the Windows Subsystem for Linux (WSL) which can installed via the Windows Store.

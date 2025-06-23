@@ -358,6 +358,16 @@ def nj_tree(
     return tree
 
 
+def _all_same_taxa_set(trees: Iterable[cogent3.PhyloNode]) -> bool:
+    tree_it = iter(trees)
+    try:
+        taxa_set = set(next(tree_it).get_tip_names())
+    except StopIteration:
+        return True
+
+    return all(taxa_set == set(tree.get_tip_names()) for tree in tree_it)
+
+
 def consensus_tree(
     trees: Iterable[cogent3.PhyloNode],
     *,
@@ -387,6 +397,10 @@ def consensus_tree(
     """
     if not 0 <= min_support <= 1:
         msg = f"Only min support values in the range 0 <= value < 1 are supported, got {min_support}"
+        raise ValueError(msg)
+
+    if not _all_same_taxa_set(trees):
+        msg = "Trees must be on same taxa set."
         raise ValueError(msg)
 
     newick_trees = [str(tree) for tree in trees]

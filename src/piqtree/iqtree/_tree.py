@@ -363,13 +363,13 @@ def consensus_tree(
     *,
     min_support: float = 0.5,
 ) -> cogent3.PhyloNode:
-    """Build a consensus tree, defaults to majority rule consensus tree.
+    """Build a consensus tree, defaults to majority-rule consensus tree.
 
     The min_support parameter represents the proportion of trees a clade
     must appear in to be in the resulting consensus tree.
 
     If min_support is 1.0, computes the strict consensus tree.
-    If min_support is 0.0, computes the extended majority rule consensus tree.
+    If min_support is 0.0, computes the extended majority-rule consensus tree.
 
     Parameters
     ----------

@@ -1,15 +1,15 @@
 # Construct a consensus tree from a collection of trees
 
 A consensus tree can be constructed from a collection of `cogent3` tree objects with 
-[`consensus_tree`](../api/tree/consensus_tree.md). The method defaults to the majority rule consensus 
+[`consensus_tree`](../api/tree/consensus_tree.md). The method defaults to the majority-rule consensus 
 tree - though different minimum levels of support can be used to achieve the strict consensus tree, 
-and extended majority rule consensus tree.
+and extended majority-rule consensus tree.
 
 ## Usage
 
-### Majority rule consensus tree
+### Majority-rule consensus tree
 
-From a collection of trees, the majority rule consensus tree can be constructed.
+From a collection of trees, the majority-rule consensus tree can be constructed.
 
 ```python
 from cogent3 import make_tree
@@ -38,9 +38,9 @@ tree3 = make_tree("(a,((b,d),(c,e)));")
 tree = consensus_tree([tree1, tree2, tree3], min_support=1.0) # (a,(b,c,d,e));
 ```
 
-### Extended majority rule consensus tree
+### Extended majority-rule consensus tree
 
-When the `min_support` parameter is equal to 0, the extended majority rule consensus tree is computed. 
+When the `min_support` parameter is equal to 0, the extended majority-rule consensus tree is computed. 
 
 ```python
 from cogent3 import make_tree

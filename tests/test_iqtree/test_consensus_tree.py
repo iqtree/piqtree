@@ -52,7 +52,7 @@ def test_extended_majority_rule() -> None:
     tree5 = make_tree("(c,(b,(a,(d,e))))")
 
     got = consensus_tree([tree1, tree2, tree3, tree4, tree5], min_support=0)
-    expected = make_tree("(a,((b,c),(d,e))")
+    expected = make_tree("(a,((b,c),(d,e)))")
 
     assert tree_equal(got, expected)
 

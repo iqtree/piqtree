@@ -56,7 +56,7 @@ dev = [
     "piqtree[lint]",
     "piqtree[typing]"
 ]
-test = ["pytest", "pytest-cov", "nox"]
+test = ["pytest", "pytest-cov", "pytest-markdown-docs", "nox"]
 lint = ["ruff==0.11.13"]
 typing = ["mypy==1.16.0", "piqtree[stubs]", "piqtree[test]"]
 stubs = ["types-PyYAML", "types-requests"]
@@ -150,14 +150,6 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
     "D" # don't require docstrings
 ]
 "docs/**/*.py" = ["B018", "E402", "ERA001", "INP001"]
-"noxfile.py" = [
-    "S101", # asserts allowed in tests...
-    "INP001", # __init__.py files are not required...
-    "ANN",
-    "N802",
-    "N803",
-    "D"
-]
 "src/piqtree/_app/__init__.py" = [
     "N801" # apps follow function naming convention
 ]

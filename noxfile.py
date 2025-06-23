@@ -7,7 +7,7 @@ _python_sessions = [f"3.{v}" + (".5" if v == 13 else "") for v in _py_versions]
 
 
 @nox.session(python=_python_sessions)
-def test(session):
+def test(session: nox.Session) -> None:
     posargs = list(session.posargs)
     env = os.environ.copy()
 
@@ -17,7 +17,7 @@ def test(session):
 
 
 @nox.session(python=_python_sessions)
-def type_check(session):
+def type_check(session: nox.Session) -> None:
     posargs = list(session.posargs)
     env = os.environ.copy()
 
@@ -27,7 +27,7 @@ def type_check(session):
 
 
 @nox.session(python=_python_sessions)
-def ruff(session):
+def ruff(session: nox.Session) -> None:
     posargs = list(session.posargs)
     env = os.environ.copy()
 

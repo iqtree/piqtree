@@ -43,7 +43,7 @@ from cogent3 import load_aligned_seqs
 from piqtree import Model, build_tree
 from piqtree.model import AaModel
 
-aln = load_aligned_seqs("my_alignment.fasta", moltype="protein")
+aln = load_aligned_seqs("my_protein.fasta", moltype="protein")
 
 tree = build_tree(aln, Model(AaModel.Dayhoff), rand_seed=3)
 ```

@@ -18,7 +18,8 @@ src/*.dll
 
 # docs
 /data/
-
+/my_alignment.fasta
+/protein.fasta
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

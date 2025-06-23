@@ -47,4 +47,10 @@ def test_docs(session: nox.Session) -> None:
 
     install_spec = ".[test]"
     session.install(install_spec)
-    session.run("pytest", *posargs, env=env)
+
+    try:
+        session.run("python", "docs/scripts/prepare_doc_test_data.py", env=env)
+        session.run("pytest", *posargs, env=env)
+    finally:
+        Path("my_alignment.fasta").unlink(missing_ok=True)
+        Path("protein.fasta").unlink(missing_ok=True)

@@ -37,8 +37,8 @@ def test_two_fit_random_tree(tiny_alignment: Alignment) -> None:
     """
     tree = make_tree("(a,b,(c,d));")
 
-    fit_tree(tiny_alignment, tree, Model(StandardDnaModel.JC), 1)
-    fit_tree(tiny_alignment, tree, Model(StandardDnaModel.JC), 2)
+    fit_tree(tiny_alignment, tree, Model(StandardDnaModel.JC))
+    fit_tree(tiny_alignment, tree, Model(StandardDnaModel.JC))
 
     with pytest.raises(IqTreeError):
         random_tree(2, TreeGenMode.BALANCED, 1)

@@ -90,18 +90,11 @@ def test_fit_tree(
 
     model = Model(iq_model)
 
-    got1 = piqtree.fit_tree(three_otu, tree_topology, model, rand_seed=1)
+    got1 = piqtree.fit_tree(three_otu, tree_topology, model)
     check_likelihood(got1, expected)
     check_motif_probs(got1, expected.tree)
     check_rate_parameters(got1, expected.tree)
     check_branch_lengths(got1, expected.tree)
-
-    # Should be within an approximation for any seed
-    got2 = piqtree.fit_tree(three_otu, tree_topology, model, rand_seed=None)
-    check_likelihood(got2, expected)
-    check_motif_probs(got2, expected.tree)
-    check_rate_parameters(got2, expected.tree)
-    check_branch_lengths(got2, expected.tree)
 
 
 @pytest.mark.parametrize(
@@ -126,15 +119,8 @@ def test_fit_tree_str_model(
 
     model = str(Model(iq_model))
 
-    got1 = piqtree.fit_tree(three_otu, tree_topology, model, rand_seed=1)
+    got1 = piqtree.fit_tree(three_otu, tree_topology, model)
     check_likelihood(got1, expected)
     check_motif_probs(got1, expected.tree)
     check_rate_parameters(got1, expected.tree)
     check_branch_lengths(got1, expected.tree)
-
-    # Should be within an approximation for any seed
-    got2 = piqtree.fit_tree(three_otu, tree_topology, model, rand_seed=None)
-    check_likelihood(got2, expected)
-    check_motif_probs(got2, expected.tree)
-    check_rate_parameters(got2, expected.tree)
-    check_branch_lengths(got2, expected.tree)

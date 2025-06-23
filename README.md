@@ -55,7 +55,7 @@ aln = aln.take_seqs(["Human", "Chimpanzee", "Rhesus", "Mouse"])
 tree = make_tree("(Human, Chimpanzee, (Rhesus, Mouse));")
 
 # Fit branch lengths with IQ-TREE!
-tree = fit_tree(aln, tree, "JC", rand_seed=1) # Optionally specify a random seed.
+tree = fit_tree(aln, tree, "JC")
 
 print("Tree with branch lengths:", tree)
 print("Log-likelihood:", tree.params["lnL"])

@@ -265,7 +265,6 @@ def fit_tree(
     aln: c3_types.AlignedSeqsType,
     tree: cogent3.PhyloNode,
     model: Model | str,
-    rand_seed: int | None = None,
     num_threads: int | None = None,
 ) -> cogent3.PhyloNode:
     """Fit branch lengths to a tree.
@@ -281,8 +280,6 @@ def fit_tree(
         The topology to fit branch lengths to.
     model : Model | str
         The substitution model with base frequencies and rate heterogeneity.
-    rand_seed : int | None, optional
-        The random seed - 0 or None means no seed, by default None.
     num_threads: int | None, optional
         Number of threads for IQ-TREE to use, by default None (single-threaded).
         If 0 is specified, IQ-TREE attempts to find the optimal number of threads.
@@ -296,9 +293,6 @@ def fit_tree(
     if isinstance(model, str):
         model = make_model(model)
 
-    if rand_seed is None:
-        rand_seed = 0  # The default rand_seed in IQ-TREE
-
     if num_threads is None:
         num_threads = 1
 
@@ -307,7 +301,7 @@ def fit_tree(
     newick = str(tree)
 
     yaml_result = yaml.safe_load(
-        iq_fit_tree(names, seqs, str(model), newick, rand_seed, num_threads),
+        iq_fit_tree(names, seqs, str(model), newick, 0, num_threads),
     )
     tree = _process_tree_yaml(yaml_result, names)
 

@@ -57,12 +57,10 @@ class piqtree_fit:
         tree: cogent3.PhyloNode,
         model: Model | str,
         *,
-        rand_seed: int | None = None,
         num_threads: int | None = None,
     ) -> None:
         self._tree = tree
         self._model = model
-        self._rand_seed = rand_seed
         self._num_threads = num_threads
 
     def main(
@@ -73,7 +71,6 @@ class piqtree_fit:
             aln,
             self._tree,
             self._model,
-            self._rand_seed,
             self._num_threads,
         )
         tree.source = getattr(aln, "source", None)

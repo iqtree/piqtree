@@ -20,21 +20,6 @@ fitted_tree = fit_tree(aln, tree, model="F81")
 log_likelihood = fitted_tree.params["lnL"]
 ```
 
-### Reproducible Results
-
-For reproducible results, a random seed may be specified.
-> **Caution:** 0 and None are equivalent to no random seed being specified.
-
-```python
-from cogent3 import load_aligned_seqs, make_tree
-from piqtree import fit_tree
-
-aln = load_aligned_seqs("my_alignment.fasta", moltype="dna")
-tree = make_tree("((Human, Chimpanzee), Rhesus, Mouse);")
-
-fitted_tree = fit_tree(aln, tree, model="SYM", rand_seed=42)
-```
-
 ### Multithreading
 
 To speed up computation, the number of threads to be used may be specified.

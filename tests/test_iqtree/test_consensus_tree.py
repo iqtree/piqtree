@@ -38,6 +38,25 @@ def test_higher_support(standard_trees: list[PhyloNode]) -> None:
     assert tree_equal(got_0_9, expected_0_9)
 
 
+def test_strict_consensus_tree(standard_trees: list[PhyloNode]) -> None:
+    expected = make_tree("(a,b,c,d,(e,f));")
+    got = consensus_tree(standard_trees, min_support=1)
+    assert tree_equal(got, expected)
+
+
+def test_extended_majority_rule() -> None:
+    tree1 = make_tree("(a,(b,(c,(d,e))))")
+    tree2 = make_tree("(a,((b,c),(d,e)))")
+    tree3 = make_tree("(a,((b,c),(d,e)))")
+    tree4 = make_tree("(a,(c,(b,(d,e))))")
+    tree5 = make_tree("(c,(b,(a,(d,e))))")
+
+    got = consensus_tree([tree1, tree2, tree3, tree4, tree5], min_support=0)
+    expected = make_tree("(a,((b,c),(d,e))")
+
+    assert tree_equal(got, expected)
+
+
 def test_lower_support(standard_trees: list[PhyloNode]) -> None:
     expected = make_tree("((a,b),(((e,f),d),c))")
     for support in 0.1, 0.3:

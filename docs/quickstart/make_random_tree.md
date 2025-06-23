@@ -37,3 +37,4 @@ tree = random_tree(num_taxa, TreeGenMode.CATERPILLAR, rand_seed=1)
 ## See also
 
 - For constructing a maximum likelihood tree, see ["Construct a maximum likelihood phylogenetic tree"](construct_ml_tree.md).
+- For constructing a consensus tree, see ["Construct a consensus tree from a collection of trees"](construct_consensus_tree.md)

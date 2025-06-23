@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import nox
 
@@ -34,3 +35,16 @@ def ruff(session: nox.Session) -> None:
     install_spec = ".[lint]"
     session.install(install_spec)
     session.run("ruff", "check", *posargs, env=env)
+
+
+@nox.session(python=_python_sessions)
+def test_docs(session: nox.Session) -> None:
+    md_files = Path("docs").rglob("*.md")
+
+    posargs = list(session.posargs)
+    posargs.extend(["--markdown-docs", *md_files])
+    env = os.environ.copy()
+
+    install_spec = ".[test]"
+    session.install(install_spec)
+    session.run("pytest", *posargs, env=env)

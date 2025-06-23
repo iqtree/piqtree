@@ -138,3 +138,29 @@ jobs:
         run: |
           pip install nox
           nox -s ruff-${{ matrix.python-version }}
+
+  test-docs:
+    name: Test Code Blocks in Docs
+    needs: build-iqtree
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        python-version: ["3.13.5"]
+        os: [ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - uses: ./.github/actions/setup-piqtree
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache-key: libiqtree-${{ matrix.os }}-${{ needs.build-iqtree.outputs.iqtree-sha }}
+          
+      - name: Test Code Blocks in Docs
+        run: |
+          pip install nox
+          nox -s test_docs-3.13.5

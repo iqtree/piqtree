@@ -5,6 +5,7 @@ import pytest
 from cogent3 import PhyloNode, make_tree
 
 from piqtree import consensus_tree
+from piqtree.exceptions import IqTreeError
 
 
 def tree_equal(tree1: PhyloNode, tree2: PhyloNode) -> bool:
@@ -109,3 +110,8 @@ def test_bad_min_support(standard_trees: list[PhyloNode], min_support: float) ->
 def test_bad_trees(trees: Iterable[PhyloNode]) -> None:
     with pytest.raises(ValueError, match=re.escape("Trees must be on same taxa set.")):
         consensus_tree(trees)
+
+
+def test_no_trees() -> None:
+    with pytest.raises(IqTreeError):
+        consensus_tree([])

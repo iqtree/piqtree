@@ -11,11 +11,11 @@ Construct a `cogent3` alignment object, then construct a maximum-likelihood tree
 
 ```python
 from cogent3 import load_aligned_seqs
-from piqtree import Model, build_tree
+from piqtree import build_tree
 
 aln = load_aligned_seqs("my_alignment.fasta", moltype="dna")
 
-tree = build_tree(aln, Model("GTR"))
+tree = build_tree(aln, "GTR")
 log_likelihood = tree.params["lnL"]
 ```
 
@@ -26,11 +26,10 @@ The support for each node in the tree object can be accessed from `#!py3 node.pa
 
 ```python
 from cogent3 import load_aligned_seqs
-from piqtree import Model, build_tree
-from piqtree.model import FreqType
+from piqtree import build_tree
 
 aln = load_aligned_seqs("my_alignment.fasta", moltype="dna")
-tree = build_tree(aln, Model("K81", freq_type=FreqType.FO), bootstrap_replicates=2000)
+tree = build_tree(aln, "K81+FO", bootstrap_replicates=2000)
 ```
 
 ### Reproducible Results
@@ -40,12 +39,11 @@ For reproducible results, a random seed may be specified.
 
 ```python
 from cogent3 import load_aligned_seqs
-from piqtree import Model, build_tree
-from piqtree.model import AaModel
+from piqtree import build_tree
 
 aln = load_aligned_seqs("my_protein.fasta", moltype="protein")
 
-tree = build_tree(aln, Model(AaModel.Dayhoff), rand_seed=3)
+tree = build_tree(aln, "Dayhoff", rand_seed=3)
 ```
 
 ### Multithreading
@@ -60,12 +58,11 @@ then IQ-TREE attempts to determine the optimal number of threads.
 
 ```python
 from cogent3 import load_aligned_seqs
-from piqtree import Model, build_tree
-from piqtree.model import DiscreteGammaModel, StandardDnaModel
+from piqtree import build_tree
 
 aln = load_aligned_seqs("my_alignment.fasta", moltype="dna")
+model = "HKY+I+G6"
 
-model = Model(StandardDnaModel.HKY, rate_model=DiscreteGammaModel(6), invariant_sites=True)
 tree = build_tree(aln, model, num_threads=4)
 ```
 

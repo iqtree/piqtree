@@ -28,7 +28,7 @@ app_help("piqtree_phylo")
 # %%
 from cogent3 import get_app
 
-phylo_gtr = get_app("piqtree_phylo", "GTR", bootstrap_reps=1000)
+phylo_gtr = get_app("piqtree_phylo", model="GTR", bootstrap_reps=1000)
 phylo_gtr
 
 # %% [markdown]

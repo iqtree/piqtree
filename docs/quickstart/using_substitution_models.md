@@ -4,7 +4,7 @@ piqtree currently supports all named IQ-TREE DNA models including Lie Markov mod
 as well as specification for base frequencies and rate heterogeneity across sites.
 
 We use the [`Model`](../api/model/Model.md) class to represent the substitution model which can be constructed from strings, or
-using enums. Substitution models can be combined with specification for base frequencies, and rate heterogeneity across sites models.
+using enums. Most functions can already compute this directly from the passed model string, so usage of [`make_model`](../api/model/make_model.md) may be preferable. Substitution models can be combined with specification for base frequencies, and rate heterogeneity across sites models.
 
 ## Usage
 

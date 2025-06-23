@@ -11,12 +11,12 @@ Construct `cogent3` alignment and tree objects, then fit branch lengths to a new
 
 ```python
 from cogent3 import load_aligned_seqs, make_tree
-from piqtree import Model, fit_tree
+from piqtree import fit_tree
 
 aln = load_aligned_seqs("my_alignment.fasta", moltype="dna")
 tree = make_tree("((Human, Chimpanzee), Rhesus, Mouse);")
 
-fitted_tree = fit_tree(aln, tree, model=Model("F81"))
+fitted_tree = fit_tree(aln, tree, model="F81")
 log_likelihood = fitted_tree.params["lnL"]
 ```
 
@@ -27,13 +27,12 @@ For reproducible results, a random seed may be specified.
 
 ```python
 from cogent3 import load_aligned_seqs, make_tree
-from piqtree import Model, fit_tree
-from piqtree.model import StandardDnaModel
+from piqtree import fit_tree
 
 aln = load_aligned_seqs("my_alignment.fasta", moltype="dna")
 tree = make_tree("((Human, Chimpanzee), Rhesus, Mouse);")
 
-fitted_tree = fit_tree(aln, tree, model=Model(StandardDnaModel.SYM), rand_seed=42)
+fitted_tree = fit_tree(aln, tree, model="SYM", rand_seed=42)
 ```
 
 ### Multithreading
@@ -48,13 +47,12 @@ then IQ-TREE attempts to determine the optimal number of threads.
 
 ```python
 from cogent3 import load_aligned_seqs, make_tree
-from piqtree import Model, fit_tree
-from piqtree.model import StandardDnaModel, FreeRateModel
+from piqtree import fit_tree
 
 aln = load_aligned_seqs("my_alignment.fasta", moltype="dna")
 tree = make_tree("((Human, Chimpanzee), Rhesus, Mouse);")
+model = "HKY+I+R3"
 
-model = Model(StandardDnaModel.HKY, rate_model=FreeRateModel(3), invariant_sites=True)
 fitted_tree = fit_tree(aln, tree, model, num_threads=4)
 ```
 

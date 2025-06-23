@@ -378,7 +378,7 @@ def consensus_tree(
         The constructed consensus tree
 
     """
-    if not 0 <= min_support < 1:
+    if not 0 <= min_support <= 1:
         msg = f"Only min support values in the range 0 <= value < 1 are supported, got {min_support}"
         raise ValueError(msg)
 

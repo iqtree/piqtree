@@ -45,7 +45,7 @@ class piqtree_phylo:
             bootstrap_replicates=self._bootstrap_reps,
             num_threads=self._num_threads,
         )
-        tree.source = aln.source
+        tree.source = getattr(aln, "source", None)
         return tree
 
 
@@ -76,7 +76,7 @@ class piqtree_fit:
             self._rand_seed,
             self._num_threads,
         )
-        tree.source = aln.source
+        tree.source = getattr(aln, "source", None)
         return tree
 
 
@@ -107,7 +107,7 @@ class piqtree_jc_dists:
             aln,
             num_threads=self._num_threads,
         )
-        dists.source = aln.source
+        dists.source = getattr(aln, "source", None)
         return dists
 
 
@@ -120,7 +120,7 @@ def piqtree_nj(
 ) -> cogent3.PhyloNode:
     tree = nj_tree(dists, allow_negative=allow_negative)
     tree.params |= {"provenance": "piqtree"}
-    tree.source = dists.source
+    tree.source = getattr(dists, "source", None)
     return tree
 
 

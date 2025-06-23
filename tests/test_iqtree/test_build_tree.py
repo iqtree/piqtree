@@ -20,7 +20,7 @@ from piqtree.model import (
 
 
 def check_build_tree(
-    four_otu: Alignment,
+    aln: Alignment,
     dna_model: SubstitutionModel,
     freq_type: FreqType | None = None,
     rate_model: RateModel | None = None,
@@ -38,7 +38,7 @@ def check_build_tree(
     )
 
     got1 = piqtree.build_tree(
-        four_otu,
+        aln,
         str(model) if coerce_str else model,
         rand_seed=1,
     )
@@ -49,7 +49,7 @@ def check_build_tree(
     assert all("length" in v.params for v in got1.get_edge_vector())
 
     # Should be similar for any seed
-    got2 = piqtree.build_tree(four_otu, model, rand_seed=None)
+    got2 = piqtree.build_tree(aln, model, rand_seed=None)
     got2 = got2.unrooted()
     assert expected.same_topology(got2)
     assert all("length" in v.params for v in got2.get_edge_vector())

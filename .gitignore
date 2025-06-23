@@ -17,7 +17,8 @@ src/piqtree/_libiqtree/**/*.lib
 src/*.dll
 
 # docs
-data
+/data/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

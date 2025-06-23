@@ -35,3 +35,14 @@ def five_otu(DATA_DIR: pathlib.Path) -> Alignment:
 def all_otu(DATA_DIR: pathlib.Path) -> Alignment:
     aln = load_aligned_seqs(DATA_DIR / "example.fasta", moltype="dna", new_type=True)
     return aln.omit_gap_pos(allowed_gap_frac=0)
+
+
+@pytest.fixture
+def protein_four_otu(DATA_DIR: pathlib.Path) -> Alignment:
+    aln = load_aligned_seqs(
+        DATA_DIR / "protein.fasta",
+        moltype="protein",
+        new_type=True,
+    )
+    aln = aln.take_seqs(sorted(aln.names)[:4])
+    return aln.omit_gap_pos(allowed_gap_frac=0)

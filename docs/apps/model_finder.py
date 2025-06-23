@@ -41,12 +41,6 @@ ranked.model_stats[selected]
 # > The process is the same for both the `piqtree_phylo` and the `piqtree_fit` apps.
 
 # %%
-fit = get_app(
-    "piqtree_phylo",
-    selected.submod_type,
-    freq_type=selected.freq_type,
-    rate_model=selected.rate_model,
-    invariant_sites=selected.invariant_sites,
-)
+fit = get_app("piqtree_phylo", selected)
 fitted = fit(aln)
 fitted

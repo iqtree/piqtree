@@ -34,7 +34,7 @@ app_help("piqtree_fit")
 # %%
 from cogent3 import get_app
 
-fit_gtr = get_app("piqtree_fit", tree, submod_type="GTR", freq_type="FO")
+fit_gtr = get_app("piqtree_fit", tree, "GTR+FO")
 fit_gtr
 
 # %% [markdown]

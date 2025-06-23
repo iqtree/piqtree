@@ -34,6 +34,7 @@ plugins:
               ignore_init_summary: true
             merge_init_into_class: true
   - mkdocs-jupyter:
+      allow_errors: false
       include_requirejs: true
       execute: true
       remove_tag_config:

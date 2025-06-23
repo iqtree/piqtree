@@ -352,7 +352,7 @@ def nj_tree(
     tree = make_tree(newick_tree)
 
     if not allow_negative:
-        for node in tree.traverse(include_self=False):
+        for node in tree.preorder(include_self=False):
             node.length = max(node.length, 0)
 
     return tree

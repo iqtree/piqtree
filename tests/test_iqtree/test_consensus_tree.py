@@ -1,3 +1,5 @@
+import re
+
 import pytest
 from cogent3 import PhyloNode, make_tree
 
@@ -81,3 +83,14 @@ def test_even_majority_rule() -> None:
     got = consensus_tree([tree1, tree2, tree3, tree4])
 
     assert tree_equal(got, expected)
+
+
+@pytest.mark.parametrize("min_support", [-1, -0.1, 1.00001, 2.5])
+def test_bad_min_support(standard_trees: list[PhyloNode], min_support: float) -> None:
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            f"Only min support values in the range 0 <= value < 1 are supported, got {min_support}",
+        ),
+    ):
+        consensus_tree(standard_trees, min_support=min_support)

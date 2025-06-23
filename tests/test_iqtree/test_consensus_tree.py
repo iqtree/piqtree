@@ -1,4 +1,5 @@
 import re
+from collections.abc import Iterable
 
 import pytest
 from cogent3 import PhyloNode, make_tree
@@ -94,3 +95,17 @@ def test_bad_min_support(standard_trees: list[PhyloNode], min_support: float) ->
         ),
     ):
         consensus_tree(standard_trees, min_support=min_support)
+
+
+@pytest.mark.parametrize(
+    "trees",
+    [
+        [make_tree("(a,(b,(c,d)))"), make_tree("(a,(b,(c,(d,e))))")],
+        [make_tree("(a,(b,(c,(d,e))))"), make_tree("(a,(b,(c,d)))")],
+        (make_tree("(a,(b,(c,e)))"), make_tree("(a,(b,(c,d)))")),
+        (make_tree("(a,(b,(c,d)))"), make_tree("(a,(b,(c,a)))")),
+    ],
+)
+def test_bad_trees(trees: Iterable[PhyloNode]) -> None:
+    with pytest.raises(ValueError, match=re.escape("Trees must be on same taxa set.")):
+        consensus_tree(trees)

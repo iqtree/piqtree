@@ -19,9 +19,6 @@ from piqtree.model import StandardDnaModel
 
 hky_model_1 = Model("HKY")
 hky_model_2 = Model(StandardDnaModel.HKY)
-
-lie_6_6_model_1 = Model("6.6")
-lie_6_6_model_2 = Model(StandardDnaModel.LIE_6_6)
 ```
 
 ### Lie Markov Models

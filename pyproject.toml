@@ -154,7 +154,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
     "N803", # allow use of fixture constants
     "SLF001", # private member access is useful for testing
     "FBT001", # allow bool pos args for parameterisation
-    "D" # don't require docstrings
+    "D" # don't require docstring linting
 ]
 "docs/**/*.py" = ["B018", "E402", "ERA001", "INP001"]
 "src/piqtree/_app/__init__.py" = [

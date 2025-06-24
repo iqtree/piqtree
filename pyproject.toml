@@ -57,7 +57,7 @@ dev = [
     "piqtree[typing]"
 ]
 test = ["pytest", "pytest-cov", "pytest-markdown-docs", "nox"]
-lint = ["ruff==0.11.13"]
+lint = ["ruff==0.12.0"]
 typing = ["mypy==1.16.1", "piqtree[stubs]", "piqtree[test]"]
 stubs = ["types-PyYAML", "types-requests"]
 extra = ["cogent3[extra]"]

@@ -3,7 +3,7 @@ from cogent3 import get_app, make_tree
 from cogent3.core.new_alignment import Alignment
 
 import piqtree
-from piqtree import jc_distances, make_model
+from piqtree import ModelFinderResult, jc_distances, make_model
 
 
 def test_piqtree_phylo(four_otu: Alignment) -> None:
@@ -85,16 +85,12 @@ def test_piqtree_nj(five_otu: Alignment) -> None:
 
 
 def test_mfinder(five_otu: Alignment) -> None:
-    from piqtree.iqtree import ModelFinderResult
-
     app = get_app("piqtree_mfinder")
     got = app(five_otu)
     assert isinstance(got, ModelFinderResult)
 
 
 def test_mfinder_result_roundtrip(five_otu: Alignment) -> None:
-    from piqtree.iqtree import ModelFinderResult
-
     app = get_app("piqtree_mfinder")
     got = app(five_otu)
     rd = got.to_rich_dict()

@@ -90,11 +90,11 @@ def test_fit_tree(
 
     model = Model(iq_model)
 
-    got1 = piqtree.fit_tree(three_otu, tree_topology, model)
-    check_likelihood(got1, expected)
-    check_motif_probs(got1, expected.tree)
-    check_rate_parameters(got1, expected.tree)
-    check_branch_lengths(got1, expected.tree)
+    got = piqtree.fit_tree(three_otu, tree_topology, model)
+    check_likelihood(got, expected)
+    check_motif_probs(got, expected.tree)
+    check_rate_parameters(got, expected.tree)
+    check_branch_lengths(got, expected.tree)
 
 
 @pytest.mark.parametrize(
@@ -119,8 +119,8 @@ def test_fit_tree_str_model(
 
     model = str(Model(iq_model))
 
-    got1 = piqtree.fit_tree(three_otu, tree_topology, model)
-    check_likelihood(got1, expected)
-    check_motif_probs(got1, expected.tree)
-    check_rate_parameters(got1, expected.tree)
-    check_branch_lengths(got1, expected.tree)
+    got = piqtree.fit_tree(three_otu, tree_topology, model)
+    check_likelihood(got, expected)
+    check_motif_probs(got, expected.tree)
+    check_rate_parameters(got, expected.tree)
+    check_branch_lengths(got, expected.tree)

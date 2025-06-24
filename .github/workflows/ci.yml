@@ -9,6 +9,8 @@ on:
     - cron: "35 4 */6 * *" # Every 6 days.
   pull_request:
   push:
+    branches-ignore:
+      - 'dependabot/**'
 
 permissions:
   contents: read

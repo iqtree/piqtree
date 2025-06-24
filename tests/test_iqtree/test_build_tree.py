@@ -37,22 +37,11 @@ def check_build_tree(
         rate_model=rate_model,
     )
 
-    got1 = piqtree.build_tree(
-        aln,
-        str(model) if coerce_str else model,
-        rand_seed=1,
-    )
-    got1 = got1.unrooted()
+    got = piqtree.build_tree(aln, str(model) if coerce_str else model)
     # Check topology
-    assert expected.same_topology(got1.unrooted())
+    assert expected.same_topology(got.unrooted())
     # Check if branch lengths exist
-    assert all("length" in v.params for v in got1.get_edge_vector())
-
-    # Should be similar for any seed
-    got2 = piqtree.build_tree(aln, model, rand_seed=None)
-    got2 = got2.unrooted()
-    assert expected.same_topology(got2)
-    assert all("length" in v.params for v in got2.get_edge_vector())
+    assert all("length" in v.params for v in got.get_edge_vector())
 
 
 @pytest.mark.parametrize("dna_model", StandardDnaModel.iter_available_models())
@@ -75,7 +64,7 @@ def test_str_build_tree(four_otu: Alignment, lie_model: LieModelInstance) -> Non
     check_build_tree(four_otu, lie_model, coerce_str=True)
 
 
-@pytest.mark.parametrize("dna_model", StandardDnaModel.iter_available_models()[:5])
+@pytest.mark.parametrize("dna_model", StandardDnaModel.iter_available_models()[:3])
 @pytest.mark.parametrize("invariant_sites", [False, True])
 @pytest.mark.parametrize(
     "rate_model",

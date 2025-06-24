@@ -7,7 +7,7 @@ from piqtree import ModelFinderResult, jc_distances, make_model
 
 
 def test_piqtree_phylo(four_otu: Alignment) -> None:
-    expected = make_tree("(Human,Chimpanzee,(Rhesus,Mouse));")
+    expected = make_tree("(Human,Chimpanzee,(SpermWhale,HumpbackW));")
     app = get_app("piqtree_phylo", model="JC")
     got = app(four_otu)
     assert expected.same_topology(got)

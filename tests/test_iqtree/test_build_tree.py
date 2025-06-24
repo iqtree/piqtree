@@ -28,7 +28,7 @@ def check_build_tree(
     invariant_sites: bool = False,
     coerce_str: bool = False,
 ) -> None:
-    expected = make_tree("(Human,Chimpanzee,(Rhesus,Mouse));")
+    expected = make_tree("(Human,Chimpanzee,(SpermWhale,HumpbackW));")
 
     model = Model(
         dna_model,

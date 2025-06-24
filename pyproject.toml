@@ -130,7 +130,14 @@ target-version = "py311"
 # Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
 # McCabe complexity (`C901`) by default.
 select = ["ALL"]
-ignore = ["EXE002", "FA100", "E501", "PLR0913", "PLR2004", "S603", "S607", "D"]
+ignore = [
+    "EXE002", # don't require shebang
+    "E501", # allow long lines where appropriate
+    "PLC0415", # allow imports inside functions
+    "PLR0913", # allow many arguments
+    "PLR2004", # allow magic value comparisons
+    "D" # doc linting rules
+]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
@@ -160,6 +167,10 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 ]
 "src/piqtree/model/_substitution_model.py" = [
     "N815" # use IQ-TREE naming scheme
+]
+"setup.py" = [
+    "S603", # allow subprocess invalidated input for brew install
+    "S607" # allow subprocess with partial path
 ]
 
 [tool.ruff.format]

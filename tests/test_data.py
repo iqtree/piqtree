@@ -26,7 +26,7 @@ def test_download_dataset(tmp_path: pathlib.Path, mocker: MockerFixture) -> None
 
     # Check correct arguments
     expected_url = piqtree._data._get_url(dataset_name)
-    piqtree._data.requests.get.assert_called_once_with(
+    piqtree._data.requests.get.assert_called_once_with(  # type: ignore[attr-defined]
         expected_url,
         stream=True,
         timeout=20,

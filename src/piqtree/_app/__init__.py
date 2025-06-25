@@ -1,5 +1,7 @@
 """cogent3 apps for piqtree."""
 
+from collections.abc import Iterable
+
 import cogent3
 import cogent3.app.typing as c3_types
 from cogent3.app import composable
@@ -8,6 +10,7 @@ from cogent3.util.misc import extend_docstring_from
 from piqtree import (
     TreeGenMode,
     build_tree,
+    consensus_tree,
     fit_tree,
     jc_distances,
     model_finder,
@@ -129,6 +132,16 @@ def piqtree_mfinder(
     return model_finder(aln)
 
 
+@composable.define_app
+@extend_docstring_from(consensus_tree)
+def piqtree_consensus(
+    trees: Iterable[cogent3.PhyloNode],
+    *,
+    min_support: float = 0.5,
+) -> cogent3.PhyloNode:
+    return consensus_tree(trees, min_support=min_support)
+
+
 _ALL_APP_NAMES = [
     "piqtree_phylo",
     "piqtree_fit",
@@ -136,4 +149,5 @@ _ALL_APP_NAMES = [
     "piqtree_jc_dists",
     "piqtree_nj",
     "piqtree_mfinder",
+    "piqtree_consensus",
 ]

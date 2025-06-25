@@ -81,6 +81,7 @@ piqtree_random_tree = "piqtree._app:piqtree_random_tree"
 piqtree_jc_dists = "piqtree._app:piqtree_jc_dists"
 piqtree_nj = "piqtree._app:piqtree_nj"
 piqtree_mfinder = "piqtree._app:piqtree_mfinder"
+piqtree_consensus = "piqtree._app:piqtree_consensus"
 
 [project.entry-points."cogent3.hook"]
 quick_tree = "piqtree._app:piqtree_nj"

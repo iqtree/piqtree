@@ -1,5 +1,5 @@
 import pytest
-from cogent3 import get_app, make_tree
+from cogent3 import PhyloNode, get_app, make_tree
 from cogent3.core.new_alignment import Alignment
 
 import piqtree
@@ -97,6 +97,28 @@ def test_mfinder_result_roundtrip(five_otu: Alignment) -> None:
     inflated = ModelFinderResult.from_rich_dict(rd)
     assert isinstance(inflated, ModelFinderResult)
     assert str(got.best_aicc) == str(inflated.best_aicc)
+
+
+def tree_equal(tree1: PhyloNode, tree2: PhyloNode) -> bool:
+    return str(tree1.sorted()) == str(tree2.sorted())
+
+
+def test_consesus_tree(five_trees: list[PhyloNode]) -> None:
+    app_majority = get_app("piqtree_consensus")
+    app_strict = get_app("piqtree_consensus", min_support=1)
+    app_0_3 = get_app("piqtree_consensus", min_support=0.3)
+
+    expected_majority = make_tree("((a,b),(((e,f),d),c))")
+    got_majority = app_majority(five_trees)
+    assert tree_equal(got_majority, expected_majority)
+
+    expected_strict = make_tree("(a,b,c,d,(e,f));")
+    got_strict = app_strict(five_trees)
+    assert tree_equal(got_strict, expected_strict)
+
+    expected_0_3 = make_tree("((a,b),(((e,f),d),c))")
+    got_0_3 = app_0_3(five_trees)
+    assert tree_equal(got_0_3, expected_0_3)
 
 
 def test_quick_tree_hook(four_otu: Alignment) -> None:

@@ -74,7 +74,7 @@ jobs:
           CIBW_ARCHS_MACOS: ${{endsWith(matrix.platform_id, 'universal2') && 'universal2' || 'auto'}} 
           CIBW_ARCHS_WINDOWS: ${{endsWith(matrix.platform_id, '_amd64') && 'AMD64' || 'ARM64'}} 
           CIBW_BUILD: "*${{matrix.platform_id}}"
-          CIBW_TEST_REQUIRES: pytest
+          CIBW_TEST_REQUIRES: pytest pytest-mock
           CIBW_TEST_COMMAND: pytest {package}/tests
           CIBW_TEST_SKIP: "*-macosx_universal2:x86_64" # skip x86 on m1 mac
           CIBW_SKIP: pp* # Disable building PyPy wheels on all platforms

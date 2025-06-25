@@ -12,39 +12,28 @@ def tree_equal(tree1: PhyloNode, tree2: PhyloNode) -> bool:
     return str(tree1.sorted()) == str(tree2.sorted())
 
 
-@pytest.fixture
-def standard_trees() -> list[PhyloNode]:
-    tree1 = make_tree("(a,(b,(c,(d,(e,f)))))")
-    tree2 = make_tree("(a,(b,(c,(d,(e,f)))))")
-    tree3 = make_tree("((a,b),(c,(d,(e,f))))")
-    tree4 = make_tree("(((a,b),c),(d,(e,f)))")
-    tree5 = make_tree("((((a,b),c),d),(e,f))")
-
-    return [tree1, tree2, tree3, tree4, tree5]
-
-
-def test_majority_consensus_tree(standard_trees: list[PhyloNode]) -> None:
+def test_majority_consensus_tree(five_trees: list[PhyloNode]) -> None:
     expected = make_tree("((a,b),(((e,f),d),c))")
-    got_default = consensus_tree(standard_trees)
+    got_default = consensus_tree(five_trees)
     assert tree_equal(got_default, expected)
 
-    got = consensus_tree(standard_trees, min_support=0.5)
+    got = consensus_tree(five_trees, min_support=0.5)
     assert tree_equal(got, expected)
 
 
-def test_higher_support(standard_trees: list[PhyloNode]) -> None:
+def test_higher_support(five_trees: list[PhyloNode]) -> None:
     expected_0_7 = make_tree("(a,b,c,(d,(e,f)));")
-    got_0_7 = consensus_tree(standard_trees, min_support=0.7)
+    got_0_7 = consensus_tree(five_trees, min_support=0.7)
     assert tree_equal(got_0_7, expected_0_7)
 
     expected_0_9 = make_tree("(a,b,c,d,(e,f));")
-    got_0_9 = consensus_tree(standard_trees, min_support=0.9)
+    got_0_9 = consensus_tree(five_trees, min_support=0.9)
     assert tree_equal(got_0_9, expected_0_9)
 
 
-def test_strict_consensus_tree(standard_trees: list[PhyloNode]) -> None:
+def test_strict_consensus_tree(five_trees: list[PhyloNode]) -> None:
     expected = make_tree("(a,b,c,d,(e,f));")
-    got = consensus_tree(standard_trees, min_support=1)
+    got = consensus_tree(five_trees, min_support=1)
     assert tree_equal(got, expected)
 
 
@@ -61,15 +50,15 @@ def test_extended_majority_rule() -> None:
     assert tree_equal(got, expected)
 
 
-def test_lower_support(standard_trees: list[PhyloNode]) -> None:
+def test_lower_support(five_trees: list[PhyloNode]) -> None:
     expected = make_tree("((a,b),(((e,f),d),c))")
     for support in 0.1, 0.3:
-        got = consensus_tree(standard_trees, min_support=support)
+        got = consensus_tree(five_trees, min_support=support)
         assert tree_equal(got, expected)
 
 
-def test_single_tree(standard_trees: list[PhyloNode]) -> None:
-    single_tree = standard_trees[0]
+def test_single_tree(five_trees: list[PhyloNode]) -> None:
+    single_tree = five_trees[0]
     got = consensus_tree([single_tree])
     assert tree_equal(got, single_tree)
 
@@ -88,14 +77,14 @@ def test_even_majority_rule() -> None:
 
 
 @pytest.mark.parametrize("min_support", [-1, -0.1, 1.00001, 2.5])
-def test_bad_min_support(standard_trees: list[PhyloNode], min_support: float) -> None:
+def test_bad_min_support(five_trees: list[PhyloNode], min_support: float) -> None:
     with pytest.raises(
         ValueError,
         match=re.escape(
             f"Only min support values in the range 0 <= value < 1 are supported, got {min_support}",
         ),
     ):
-        consensus_tree(standard_trees, min_support=min_support)
+        consensus_tree(five_trees, min_support=min_support)
 
 
 @pytest.mark.parametrize(

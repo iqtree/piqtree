@@ -1,3 +1,4 @@
+import numpy as np
 import pytest
 from cogent3 import get_app, make_tree
 from cogent3.app.result import model_result
@@ -55,17 +56,14 @@ def check_rate_parameters(got: PhyloNode, expected: PhyloNode) -> None:
 def check_branch_lengths(got: PhyloNode, expected: PhyloNode) -> None:
     got = got.get_distances()
     expected = expected.get_distances()
+    # make sure the distance matrices have the same name order
+    # so we can just compare entire numpy arrays
+    expected = expected.take_dists(got.names)
     # Check that the keys of branch lengths are the same
-    assert got.keys() == expected.keys()
+    assert set(got.names) == set(expected.names)
 
     # Check that the branch lengths are the same
-    expected_values = [expected[key] for key in expected]
-    got_values = [got[key] for key in expected]
-
-    assert all(
-        got == pytest.approx(exp, rel=1e-2)
-        for got, exp in zip(got_values, expected_values, strict=True)
-    )
+    np.testing.assert_allclose(got.array, expected.array, atol=1e-4)
 
 
 @pytest.mark.parametrize(

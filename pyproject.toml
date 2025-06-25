@@ -18,14 +18,15 @@ description = "Python bindings for IQTree"
 readme = "README.md"
 dynamic = ["version"]
 
+license = "GPL-2.0-only"
+license-files = ["LICENSE"]
+
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
 
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Bio-Informatics",
     "Topic :: Software Development :: Libraries :: Python Modules",
-
-    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
 
     "Natural Language :: English",
 

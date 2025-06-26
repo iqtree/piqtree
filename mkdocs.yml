@@ -54,6 +54,9 @@ nav:
     - quickstart/construct_consensus_tree.md
     - quickstart/make_random_tree.md
     - quickstart/calculate_rf_distances.md
+    - Available substitution models: quickstart/available_submodels.py
+    - Available state frequency options: quickstart/available_frequency_options.py
+    - Available rate-heterogeneity options:  quickstart/available_rate_heterogeneity_options.py
   - API reference:
     - api/index.md
     - Trees:
@@ -75,11 +78,11 @@ nav:
     - Tree distances:
       - api/tree_distance/robinson_foulds.md
   - Apps:
-    - Available apps: apps/available_help.py
+    - apps/index.md
+    - The available piqtree apps: apps/available_help.py
     - Selecting models for phylogenetic analysis: apps/model_finder.py
     - Estimate a phylogenetic tree: apps/phylo.py
     - Fit a model to one tree: apps/fit_tree.py
-    - Phylogenetic model options: apps/options.py
     - Pairwise JC distances: apps/pairwise_dist.py
     - NJ tree: apps/nj.py
     - Parallel processing across alignments: apps/app_pipeline.py

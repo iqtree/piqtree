@@ -5,6 +5,7 @@ from ._model_finder import ModelFinderResult, ModelResultValue, model_finder
 from ._random_tree import TreeGenMode, random_tree
 from ._robinson_foulds import robinson_foulds
 from ._tree import build_tree, consensus_tree, fit_tree, nj_tree
+from ._aln import simulate_alignment
 
 __all__ = [
     "ModelFinderResult",
@@ -18,4 +19,5 @@ __all__ = [
     "nj_tree",
     "random_tree",
     "robinson_foulds",
+    "simulate_alignment",
 ]

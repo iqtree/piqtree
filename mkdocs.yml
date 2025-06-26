@@ -57,26 +57,6 @@ nav:
     - Available substitution models: quickstart/available_submodels.py
     - Available state frequency options: quickstart/available_frequency_options.py
     - Available rate-heterogeneity options:  quickstart/available_rate_heterogeneity_options.py
-  - API reference:
-    - api/index.md
-    - Trees:
-      - api/tree/build_tree.md
-      - api/tree/fit_tree.md
-      - api/tree/nj_tree.md
-      - api/tree/consensus_tree.md
-      - api/tree/random_tree.md
-    - Substitution models:
-      - api/model/model_finder.md
-      - api/model/ModelFinderResult.md
-      - api/model/Model.md
-      - api/model/make_model.md
-      - api/model/SubstitutionModel.md
-      - api/model/FreqType.md
-      - api/model/RateModel.md
-    - Genetic distances:
-      - api/genetic_distance/jc_distances.md
-    - Tree distances:
-      - api/tree_distance/robinson_foulds.md
   - Apps:
     - apps/index.md
     - The available piqtree apps: apps/available_help.py
@@ -86,6 +66,26 @@ nav:
     - Pairwise JC distances: apps/pairwise_dist.py
     - NJ tree: apps/nj.py
     - Parallel processing across alignments: apps/app_pipeline.py
+  - API reference:
+      - api/index.md
+      - Trees:
+          - api/tree/build_tree.md
+          - api/tree/fit_tree.md
+          - api/tree/nj_tree.md
+          - api/tree/consensus_tree.md
+          - api/tree/random_tree.md
+      - Substitution models:
+          - api/model/model_finder.md
+          - api/model/ModelFinderResult.md
+          - api/model/Model.md
+          - api/model/make_model.md
+          - api/model/SubstitutionModel.md
+          - api/model/FreqType.md
+          - api/model/RateModel.md
+      - Genetic distances:
+          - api/genetic_distance/jc_distances.md
+      - Tree distances:
+          - api/tree_distance/robinson_foulds.md
   - Contributing:
     - developers/index.md
     - developers/environment_setup.md

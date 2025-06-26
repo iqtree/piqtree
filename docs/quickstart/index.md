@@ -10,5 +10,9 @@ Want to jump right in to using `piqtree`? This is the place to be! Here, you can
 - [Construct a rapid neighbour-joining tree from a distance matrix.](construct_nj_tree.md)
 - [Make a randomly generated phylogenetic tree.](make_random_tree.md)
 - [Calculate pairwise Robinson-Foulds distances between trees.](calculate_rf_distances.md)
+- [Display substitution models](available_submodels.py)
+- [Display frequency options](available_frequency_options.py)
+- [Display rate-heterogeneity options](available_rate_heterogeneity_options.py)
+- [Using the `piqtree` `cogent3` apps](../apps/index.md)
 
 Be sure to check out the [API Reference](../api/index.md) for full usage!

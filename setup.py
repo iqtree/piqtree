@@ -3,6 +3,7 @@
 import os
 import platform
 import subprocess
+import sys
 from pathlib import Path
 
 from pybind11.setup_helpers import Pybind11Extension, build_ext
@@ -100,10 +101,25 @@ ext_modules = [
     ),
 ]
 
+
+# ⬇️ Custom build_ext to strip .so on Linux
+class StripBuildExt(build_ext):
+    def run(self) -> None:
+        super().run()
+        if sys.platform.startswith("linux"):
+            for ext in self.extensions:
+                so_path = self.get_ext_fullpath(ext.name)
+                if Path(so_path).exists():
+                    subprocess.run(
+                        ["strip", "--strip-unneeded", so_path],
+                        check=True,
+                    )
+
+
 setup(
     name="piqtree",
     ext_modules=ext_modules,
-    cmdclass={"build_ext": build_ext},
+    cmdclass={"build_ext": StripBuildExt},
     zip_safe=False,
     package_data={"piqtree": ["_libiqtree/*.dll"]},
 )

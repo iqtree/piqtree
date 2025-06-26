@@ -44,7 +44,7 @@ fit_gtr
 fit = fit_gtr(aln)
 
 # %% [markdown]
-# The `fit` object is a cogent3 tree (`PhyloNode`) and the maximum likelihood estimated parameters are stored in the `params` attribute.
+# The `fit` object is a `cogent3` tree (`PhyloNode`) and the maximum likelihood estimated parameters are stored in the `params` attribute.
 #
 # > **Note**
 # > "lnL" is short for log likelihood and is the log likelihood of the model.

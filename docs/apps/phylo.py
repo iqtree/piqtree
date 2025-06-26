@@ -1,7 +1,7 @@
 # %% [markdown]
 # We use the `piqtree_phylo` app to build phylogenies.
 # For this simple case, we will build a single phylogeny using the GTR model on one alignment.
-# We have a utility script for this documentation that provides the local path to that data. We will then load that data and, as it contains quite a few sequences, we will use a subset of it. We use methods on the cogent3 object to do that.
+# We have a utility script for this documentation that provides the local path to that data. We will then load that data and, as it contains quite a few sequences, we will use a subset of it. We use methods on the `cogent3` object to do that.
 
 # %%
 import cogent3

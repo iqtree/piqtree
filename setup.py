@@ -108,8 +108,8 @@ class StripBuildExt(build_ext):
         system = platform.system()
         flag = "-x" if system == "Darwin" else "--strip-unneeded"
         for ext in self.extensions:
-            so_path = self.get_ext_fullpath(ext.name)
-            subprocess.run(["strip", flag, so_path], check=True)
+            ext_path = self.get_ext_fullpath(ext.name)
+            subprocess.run(["strip", flag, ext_path], check=True)
 
 
 setup(

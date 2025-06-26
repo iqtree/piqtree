@@ -105,7 +105,7 @@ class StripBuildExt(build_ext):
     def run(self) -> None:
         super().run()
 
-        if platform.system() in ("Darwin", "Linux"):
+        if platform.system() in "Linux":
             for ext in self.extensions:
                 so_path = self.get_ext_fullpath(ext.name)
                 subprocess.run(

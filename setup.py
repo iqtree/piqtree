@@ -106,7 +106,7 @@ class StripBuildExt(build_ext):
         super().run()
 
         system = platform.system()
-        flag = "-x" if system == "Dawin" else "--strip-unneeded"
+        flag = "-x" if system == "Darwin" else "--strip-unneeded"
         for ext in self.extensions:
             so_path = self.get_ext_fullpath(ext.name)
             subprocess.run(["strip", flag, so_path], check=True)

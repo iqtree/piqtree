@@ -3,6 +3,8 @@ site_url: "https://github.com/iqtree/piqtree"
 site_author: "Gavin Huttley"
 repo_url: "https://github.com/iqtree/piqtree"
 repo_name: 'GitHub'
+exclude_docs: |
+  scripts/*
 theme:
     name: material
     features:

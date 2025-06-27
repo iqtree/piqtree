@@ -39,7 +39,7 @@ divergent = get_app("dvs_nmost", n=10, k=6)
 just_nucs = get_app("omit_degenerates")  # has to go after the divergent selector
 min_length = get_app("min_length", length=600)
 best_model = get_app("piqtree_mfinder")
-app = loader + divergent + min_length + best_model
+app = loader + divergent + just_nucs + min_length + best_model
 model_counts = Counter(
     str(result.best_aic)
     for result in app.as_completed(dstore, show_progress=True, parallel=True)

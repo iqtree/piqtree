@@ -2,6 +2,7 @@
 
 import tempfile
 from pathlib import Path
+from typing import Literal
 
 import cogent3
 import cogent3.app.typing as c3_types
@@ -25,7 +26,7 @@ def simulate_alignment(
     deletion_size_distribution: str = "POW{1.7/100}",
     root_seq: str | None = None,
     partition_info: list[str] | None = None,
-    partition_type: str | None = None,
+    partition_type: Literal["equal", "proportion", "unlinked"] | None = None,
     num_threads: int | None = None,
 ) -> tuple[c3_types.AlignedSeqsType, str]:
     """Executes AliSim Simulation through IQ-TREE.
@@ -54,9 +55,9 @@ def simulate_alignment(
         The root sequence (by default None).
     partition_info: list[str] | None, optional
         Partition information (by default None).
-    partition_type: str | None, optional
-        If provided, partition type must be 'equal', 'proportion', or
-        'unlinked' (by default None).
+    partition_type: Literal["equal", "proportion", "unlinked"] | None, optional
+        If provided, partition type must be "equal", "proportion", or
+        "unlinked" (by default None).
     num_threads: int | None, optional
         Number of threads for IQ-TREE to use, by default None (single-threaded).
 

@@ -1,11 +1,13 @@
 """Python wrapper for AliSim Simulation in the IQ-TREE library."""
 
+import tempfile
+from pathlib import Path
+
 import cogent3
 import cogent3.app.typing as c3_types
 import yaml
-import os
-import tempfile
 from _piqtree import iq_simulate_alignment
+
 from piqtree.iqtree._decorator import iqtree_func
 
 iq_simulate_alignment = iqtree_func(iq_simulate_alignment, hide_files=True)
@@ -38,7 +40,7 @@ def simulate_alignment(
     partition_info: list[str] | None, optional
         Partition information (by default None and will be set to []).
     partition_type: str | None, optional
-        If provided, partition type must be ‘equal’, ‘proportion’, or ‘unlinked’ (by default None and will be set to "").
+        If provided, partition type must be 'equal', 'proportion', or 'unlinked' (by default None and will be set to "").
     seq_length: int | None, optional
         The length of sequences (by default None and will be set to 1000).
     insertion_rate: float | None, optional
@@ -60,10 +62,12 @@ def simulate_alignment(
         The simulated alignment and the content of the log file.
 
     """
-    
+
     # Convert the trees to Newick strings
-    newick_trees = [tree.get_newick(with_distances=True, semicolon=True) for tree in trees]
-    
+    newick_trees = [
+        tree.get_newick(with_distances=True, semicolon=True) for tree in trees
+    ]
+
     # Handle cases where some input variables are None
     if partition_info is None:
         partition_info = []
@@ -101,15 +105,18 @@ def simulate_alignment(
             deletion_size_distribution,
         ),
     )
-    
+
     # Extract the simulated alignment and the content of the log file from the YAML result
-    #cogent3.make_aligned_seqs dictionary
+    # cogent3.make_aligned_seqs dictionary
     with tempfile.NamedTemporaryFile(mode="w+", delete=False) as tmp:
         tmp.write(yaml_result["alignment"])
         tmp.flush()
-        aln = cogent3.load_aligned_seqs(tmp.name, format="phylip")#, new_type=True, moltype = 'text') #text for now
-    os.remove(tmp.name)
-    
+        aln = cogent3.load_aligned_seqs(
+            tmp.name,
+            format="phylip",
+        )  # , new_type=True, moltype = 'text') #text for now
+    Path(tmp.name).unlink()
+
     log_str = yaml_result["log"]
-    
+
     return aln, log_str

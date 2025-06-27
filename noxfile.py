@@ -1,5 +1,5 @@
 import os
-import shutil
+import tempfile
 from pathlib import Path
 
 import nox
@@ -40,8 +40,10 @@ def ruff(session: nox.Session) -> None:
 
 @nox.session(python=_python_sessions)
 def test_docs(session: nox.Session) -> None:
-    doc_md_files = Path("docs").rglob("*.md")
-    doc_py_files = Path("docs").rglob("*.py")
+    doc_md_files = [path.resolve() for path in Path("docs").rglob("*.md")]
+    doc_py_files = [path.resolve() for path in Path("docs").rglob("*.py")]
+
+    doctest_setup_path = Path("docs/scripts/prepare_doc_test_data.py").resolve()
 
     posargs = list(session.posargs)
     posargs.extend(["--markdown-docs", *doc_md_files])
@@ -50,15 +52,12 @@ def test_docs(session: nox.Session) -> None:
     install_spec = ".[test]"
     session.install(install_spec)
 
-    try:
-        session.run("python", "docs/scripts/prepare_doc_test_data.py", env=env)
+    with tempfile.TemporaryDirectory() as tmpdir:
+        session.chdir(tmpdir)
+
+        session.run("python", doctest_setup_path, env=env)
         session.run("pytest", *posargs, env=env)
 
         session.install("cogent3[extra]", "diverse-seq")
         for py_file in doc_py_files:
             session.run("python", py_file, env=env, silent=True)
-    finally:
-        Path("my_alignment.fasta").unlink(missing_ok=True)
-        Path("my_protein.fasta").unlink(missing_ok=True)
-
-        shutil.rmtree("data")

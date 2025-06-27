@@ -9,6 +9,7 @@ import cogent3.app.typing as c3_types
 import yaml
 from _piqtree import iq_simulate_alignment
 
+from piqtree.distribution import IndelDistribution
 from piqtree.iqtree._decorator import iqtree_func
 from piqtree.model import Model
 
@@ -22,8 +23,8 @@ def simulate_alignment(
     rand_seed: int | None = None,
     insertion_rate: float = 0.0,
     deletion_rate: float = 0.0,
-    insertion_size_distribution: str = "POW{1.7/100}",
-    deletion_size_distribution: str = "POW{1.7/100}",
+    insertion_size_distribution: IndelDistribution | str = "POW{1.7/100}",
+    deletion_size_distribution: IndelDistribution | str = "POW{1.7/100}",
     root_seq: str | None = None,
     partition_info: list[str] | None = None,
     partition_type: Literal["equal", "proportion", "unlinked"] | None = None,
@@ -99,8 +100,8 @@ def simulate_alignment(
             deletion_rate,
             root_seq,
             num_threads,
-            insertion_size_distribution,
-            deletion_size_distribution,
+            str(insertion_size_distribution),
+            str(deletion_size_distribution),
         ),
     )
 

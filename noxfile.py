@@ -1,4 +1,5 @@
 import os
+import shutil
 from pathlib import Path
 
 import nox
@@ -39,10 +40,11 @@ def ruff(session: nox.Session) -> None:
 
 @nox.session(python=_python_sessions)
 def test_docs(session: nox.Session) -> None:
-    md_files = Path("docs").rglob("*.md")
+    doc_md_files = Path("docs").rglob("*.md")
+    doc_py_files = Path("docs").rglob("*.py")
 
     posargs = list(session.posargs)
-    posargs.extend(["--markdown-docs", *md_files])
+    posargs.extend(["--markdown-docs", *doc_md_files])
     env = os.environ.copy()
 
     install_spec = ".[test]"
@@ -51,6 +53,12 @@ def test_docs(session: nox.Session) -> None:
     try:
         session.run("python", "docs/scripts/prepare_doc_test_data.py", env=env)
         session.run("pytest", *posargs, env=env)
+
+        session.install("cogent3[extra]", "diverse-seq")
+        for py_file in doc_py_files:
+            session.run("python", py_file, env=env, silent=True)
     finally:
         Path("my_alignment.fasta").unlink(missing_ok=True)
         Path("protein.fasta").unlink(missing_ok=True)
+
+        shutil.rmtree("data")

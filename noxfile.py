@@ -59,6 +59,6 @@ def test_docs(session: nox.Session) -> None:
             session.run("python", py_file, env=env, silent=True)
     finally:
         Path("my_alignment.fasta").unlink(missing_ok=True)
-        Path("protein.fasta").unlink(missing_ok=True)
+        Path("my_protein.fasta").unlink(missing_ok=True)
 
         shutil.rmtree("data")

@@ -12,6 +12,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 elif [[ "$OSTYPE" == "msys"* || "$OSTYPE" == "cygwin"* ]]; then
     echo "Building for Windows."
 
+    echo "My PATH is: $PATH"
+
     if [[ -n "$BOOST_ROOT" ]]; then
         export Boost_INCLUDE_DIR="${BOOST_ROOT}"
         export Boost_LIBRARY_DIRS="${BOOST_ROOT}"

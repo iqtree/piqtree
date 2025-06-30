@@ -9,11 +9,13 @@ echo "Boost_LIBRARY_DIRS: $Boost_LIBRARY_DIRS"
 choco install -y llvm --version=14.0.6 --allow-downgrade
 choco install -y eigen 
 
-llvm_tools_dir=("${ChocolateyInstall}/lib/llvm/tools/"*/)
-LLVM_BIN="${llvm_tools_dir%/}/bin"
-
+CHOCO_UNIX="$(cygpath "${ChocolateyInstall}")"
+for d in "${CHOCO_UNIX}/lib/llvm/tools/"*/; do
+  LLVM_TOOLS_DIR="$d"
+  break
+done
+LLVM_BIN="${LLVM_TOOLS_DIR%/}/bin"
 export PATH="$LLVM_BIN:$PATH"
-
 echo "Using LLVM from: $LLVM_BIN"
 
 # Build IQ-TREE

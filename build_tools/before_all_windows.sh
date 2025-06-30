@@ -10,21 +10,10 @@ choco install -y llvm --version=14.0.6 --allow-downgrade
 choco install -y eigen 
 
 CHOCO_UNIX="$(cygpath "${ChocolateyInstall}")"
-for d in ${CHOCO_UNIX}/lib/llvm/tools/*/; do
-  LLVM_TOOLS_DIR="$d"
-  break
-done
+echo "Chocolatey install root: $CHOCO_UNIX"
 
-LLVM_BIN="${LLVM_TOOLS_DIR%/}/bin"
-export PATH="$LLVM_BIN:$PATH"
-
-export CC=clang.exe
-export CXX=clang++.exe
-
-echo "Using LLVM from: $LLVM_BIN"
-echo "Contents of LLVM_BIN:"
-ls -la "$LLVM_BIN"
-echo "Current PATH: $PATH"
+echo "Listing contents of ${CHOCO_UNIX}/lib/llvm/tools:"
+find "${CHOCO_UNIX}/lib/llvm/tools" || true
 
 # Build IQ-TREE
 bash build_tools/build_iqtree.sh

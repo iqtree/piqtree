@@ -10,10 +10,11 @@ choco install -y llvm --version=14.0.6 --allow-downgrade
 choco install -y eigen 
 
 CHOCO_UNIX="$(cygpath "${ChocolateyInstall}")"
-for d in "${CHOCO_UNIX}/lib/llvm/tools/"*/; do
+for d in ${CHOCO_UNIX}/lib/llvm/tools/*/; do
   LLVM_TOOLS_DIR="$d"
   break
 done
+
 LLVM_BIN="${LLVM_TOOLS_DIR%/}/bin"
 export PATH="$LLVM_BIN:$PATH"
 

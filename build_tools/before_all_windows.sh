@@ -15,10 +15,5 @@ export PATH="$LLVM_BIN:$PATH"
 export CC=clang.exe
 export CXX=clang++.exe
 
-echo "Using LLVM from: $LLVM_BIN"
-echo "Contents of LLVM_BIN:"
-ls -la "$LLVM_BIN"
-echo "Current PATH: $PATH"
-
 # Build IQ-TREE
 bash build_tools/build_iqtree.sh

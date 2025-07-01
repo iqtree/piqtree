@@ -6,17 +6,19 @@ An alignment can be simulated using `simulate_alignment`, given a list of trees 
 
 ### Basic Usage
 
-Construct `cogent3` alignment and tree objects, then fit branch lengths to a new tree.
+Construct `cogent3` tree(s), choose the model and random seed, then simulate an alignment using AliSim.
 
 ```python
-from cogent3 import load_aligned_seqs, make_tree
-from piqtree import fit_tree
+from piqtree import simulate_alignment
+import cogent3
 
-aln = load_aligned_seqs("my_alignment.fasta", moltype="dna")
-tree = make_tree("((Human, Chimpanzee), Rhesus, Mouse);")
+tree = cogent3.make_tree("((A:0.1,B:0.2):0.1,(C:0.3,D:0.4):0.2,E:0.5);")
+trees = [tree]
 
-fitted_tree = fit_tree(aln, tree, model="F81")
-log_likelihood = fitted_tree.params["lnL"]
+res = simulate_alignment(trees, "JC", 1)
+
+print(res[0]) # Prints the alignment
+print(res[1]) # Prints logs
 ```
 
 ### Multithreading

@@ -15,7 +15,7 @@ class Model:
         freq_type: str | FreqType | None = None,
         rate_model: str | RateModel | None = None,
         *,
-        invariant_sites: bool | float = False,
+        invariable_sites: bool | float = False,
     ) -> None:
         """Construct Model class.
 
@@ -29,7 +29,7 @@ class Model:
         rate_model : str | RateModel | None, optional
             Rate heterogeneity across sites model, by default
             no Gamma, and no FreeRate.
-        invariant_sites : bool | float, optional
+        invariable_sites : bool | float, optional
             Invariable sites, by default False.
             If a float in range [0,1) specifies the proportion of invariable sites.
 
@@ -37,8 +37,8 @@ class Model:
         self.submod_type = get_substitution_model(submod_type)
         self.freq_type = get_freq_type(freq_type) if freq_type else None
         self.rate_type = (
-            get_rate_type(rate_model, invariant_sites=invariant_sites)
-            if rate_model is not None or invariant_sites
+            get_rate_type(rate_model, invariable_sites=invariable_sites)
+            if rate_model is not None or invariable_sites
             else None
         )
 
@@ -80,28 +80,28 @@ class Model:
         return self.rate_type.rate_model if self.rate_type else None
 
     @property
-    def invariant_sites(self) -> bool:
-        """Whether invariant sites are used.
+    def invariable_sites(self) -> bool:
+        """Whether invariable sites are used.
 
         Returns
         -------
         bool
-            True if invariant sites are used by the model, False otherwise.
+            True if invariable sites are used by the model, False otherwise.
 
         """
-        return self.rate_type.invariant_sites if self.rate_type else False
+        return self.rate_type.invariable_sites if self.rate_type else False
 
     @property
-    def proportion_invariant_sites(self) -> float | None:
-        """The proportion of invariant sites if specified.
+    def proportion_invariable_sites(self) -> float | None:
+        """The proportion of invariable sites if specified.
 
         Returns
         -------
         float | None
-            The proportion of invariant sites if specified, None otherwise.
+            The proportion of invariable sites if specified, None otherwise.
 
         """
-        return self.rate_type.proportion_invariant if self.rate_type else None
+        return self.rate_type.proportion_invariable if self.rate_type else None
 
 
 def make_model(iqtree_str: str) -> Model:
@@ -123,7 +123,7 @@ def make_model(iqtree_str: str) -> Model:
     sub_mod_str, components = iqtree_str.split("+", maxsplit=1)
 
     freq_type = None
-    invariant_sites: float | bool | None = None
+    invariable_sites: float | bool | None = None
     rate_model = None
 
     for component in components.split("+"):
@@ -133,10 +133,10 @@ def make_model(iqtree_str: str) -> Model:
                 raise ValueError(msg)
             freq_type = component
         elif component.startswith("I"):
-            if invariant_sites is not None:
-                msg = f"Model {iqtree_str!r} contains multiple specifications for invariant sites."
+            if invariable_sites is not None:
+                msg = f"Model {iqtree_str!r} contains multiple specifications for invariable sites."
                 raise ValueError(msg)
-            invariant_sites = _parse_invariant_sites(component)
+            invariable_sites = _parse_invariable_sites(component)
 
         elif component.startswith(("G", "R")):
             if rate_model is not None:
@@ -147,25 +147,25 @@ def make_model(iqtree_str: str) -> Model:
             msg = f"Model {iqtree_str!r} contains unexpected component."
             raise ValueError(msg)
 
-    if invariant_sites is None:
-        invariant_sites = False
+    if invariable_sites is None:
+        invariable_sites = False
 
-    return Model(sub_mod_str, freq_type, rate_model, invariant_sites=invariant_sites)
+    return Model(sub_mod_str, freq_type, rate_model, invariable_sites=invariable_sites)
 
 
-def _parse_invariant_sites(component: str) -> bool | float:
+def _parse_invariable_sites(component: str) -> bool | float:
     # Assumes that component starts with "I"
     remainder = component[1:]
     if len(remainder) == 0:
         return True
 
     if remainder[0] != "{" or remainder[-1] != "}":
-        msg = f"Invalid specification for proportion of invariant sites, got '{component}'."
+        msg = f"Invalid specification for proportion of invariable sites, got '{component}'."
         raise ValueError(msg)
 
     number_part = remainder[1:-1]
     try:
         return float(number_part)
     except ValueError:
-        msg = f"Failed to read proportion of invariant sites, got '{component}'"
+        msg = f"Failed to read proportion of invariable sites, got '{component}'"
         raise ValueError(msg) from None

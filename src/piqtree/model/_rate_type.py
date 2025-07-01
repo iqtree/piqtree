@@ -20,14 +20,14 @@ class RateType:
     def __init__(
         self,
         *,
-        invariant_sites: bool | float = False,
+        invariable_sites: bool | float = False,
         rate_model: RateModel | None = None,
     ) -> None:
         """Rate heterogeneity across sites model.
 
         Parameters
         ----------
-        invariant_sites : bool | float, optional
+        invariable_sites : bool | float, optional
             Invariable sites, by default False.
             If a float in range [0,1) specifies the proportion of invariable sites.
         rate_model : RateModel | None, optional
@@ -35,15 +35,15 @@ class RateType:
 
         """
 
-        if not isinstance(invariant_sites, bool):
-            if not (0 <= invariant_sites < 1):
+        if not isinstance(invariable_sites, bool):
+            if not (0 <= invariable_sites < 1):
                 msg = "The proportion of invaraint sites must be in the range [0,1)"
                 raise ValueError(msg)
-            self.invariant_sites = True
-            self.proportion_invariant: float | None = invariant_sites
+            self.invariable_sites = True
+            self.proportion_invariable: float | None = invariable_sites
         else:
-            self.invariant_sites = invariant_sites
-            self.proportion_invariant = None
+            self.invariable_sites = invariable_sites
+            self.proportion_invariable = None
 
         self.rate_model = rate_model
 
@@ -56,14 +56,14 @@ class RateType:
             String parsable by IQ-TREE for the rate heterogeneity model.
 
         """
-        rate_type_str = "I" if self.invariant_sites else ""
-        if self.proportion_invariant is not None:
-            rate_type_str += f"{{{self.proportion_invariant}}}"
+        rate_type_str = "I" if self.invariable_sites else ""
+        if self.proportion_invariable is not None:
+            rate_type_str += f"{{{self.proportion_invariable}}}"
 
         if self.rate_model is None:
             return rate_type_str
         # Invariant sites and model need to be joined by a '+'
-        if self.invariant_sites:
+        if self.invariable_sites:
             rate_type_str += "+"
         return rate_type_str + self.rate_model.iqtree_str()
 
@@ -124,30 +124,30 @@ class FreeRateModel(RateModel):
 
 ALL_BASE_RATE_TYPES = [
     RateType(),
-    RateType(invariant_sites=True),
+    RateType(invariable_sites=True),
     RateType(rate_model=DiscreteGammaModel()),
-    RateType(invariant_sites=True, rate_model=DiscreteGammaModel()),
+    RateType(invariable_sites=True, rate_model=DiscreteGammaModel()),
     RateType(rate_model=FreeRateModel()),
-    RateType(invariant_sites=True, rate_model=FreeRateModel()),
+    RateType(invariable_sites=True, rate_model=FreeRateModel()),
 ]
 
 _BASE_RATE_TYPE_DESCRIPTIONS = {
     RateType().iqtree_str(): "no invariable sites, no rate heterogeneity model.",
     RateType(
-        invariant_sites=True,
+        invariable_sites=True,
     ).iqtree_str(): "allowing for a proportion of invariable sites.",
     RateType(
         rate_model=DiscreteGammaModel(),
     ).iqtree_str(): "discrete Gamma model (Yang, 1994) with default 4 rate categories. The number of categories can be changed with e.g. +G8.",
     RateType(
-        invariant_sites=True,
+        invariable_sites=True,
         rate_model=DiscreteGammaModel(),
     ).iqtree_str(): "invariable site plus discrete Gamma model (Gu et al., 1995).",
     RateType(
         rate_model=FreeRateModel(),
     ).iqtree_str(): "FreeRate model (Yang, 1995; Soubrier et al., 2012) that generalizes the +G model by relaxing the assumption of Gamma-distributed rates. The number of categories can be specified with e.g. +R6 (default 4 categories if not specified). The FreeRate model typically fits data better than the +G model and is recommended for analysis of large data sets.",
     RateType(
-        invariant_sites=True,
+        invariable_sites=True,
         rate_model=FreeRateModel(),
     ).iqtree_str(): "invariable site plus FreeRate model.",
 }
@@ -161,29 +161,29 @@ def get_description(rate_type: RateType) -> str:
 def get_rate_type(
     rate_model: str | RateModel | None = None,
     *,
-    invariant_sites: bool | float = False,
+    invariable_sites: bool | float = False,
 ) -> RateType:
-    """Make a RateType from a chosen rate model and invariant sites.
+    """Make a RateType from a chosen rate model and invariable sites.
 
     Parameters
     ----------
     rate_model : str | RateModel | None, optional
         The chosen rate model, by default None.
-    invariant_sites : bool | float, optional
+    invariable_sites : bool | float, optional
         Invariable sites, by default False.
         If a float in range [0,1) specifies the proportion of invariable sites.
 
     Returns
     -------
     RateType
-        RateType generated from the rate model with invariant sites.
+        RateType generated from the rate model with invariable sites.
 
     """
     if isinstance(rate_model, RateModel):
-        return RateType(rate_model=rate_model, invariant_sites=invariant_sites)
+        return RateType(rate_model=rate_model, invariable_sites=invariable_sites)
 
     if rate_model is None:
-        return RateType(invariant_sites=invariant_sites)
+        return RateType(invariable_sites=invariable_sites)
 
     if not isinstance(rate_model, str):
         msg = f"Unexpected type for rate_model: {type(rate_model)}"
@@ -203,13 +203,13 @@ def get_rate_type(
     if stripped_rate_model[0] == "G":
         return RateType(
             rate_model=DiscreteGammaModel(rate_categories=rate_categories),
-            invariant_sites=invariant_sites,
+            invariable_sites=invariable_sites,
         )
 
     if stripped_rate_model[0] == "R":
         return RateType(
             rate_model=FreeRateModel(rate_categories=rate_categories),
-            invariant_sites=invariant_sites,
+            invariable_sites=invariable_sites,
         )
 
     msg = f"Unexpected value for rate_model {rate_model!r}"

@@ -86,8 +86,8 @@ A boolean flag can be specified when constructing the [`Model`](../api/model/Mod
 ```python
 from piqtree import Model
 
-without_invar_sites = Model("TIM", invariant_sites=False) # Default
-with_invar_sites = Model("TIM", invariant_sites=True)
+without_invar_sites = Model("TIM", invariable_sites=False) # Default
+with_invar_sites = Model("TIM", invariable_sites=True)
 ```
 
 #### Discrete Gamma Model
@@ -102,7 +102,7 @@ from piqtree.model import DiscreteGammaModel
 k81_discrete_gamma_4 = Model("K81", rate_model=DiscreteGammaModel())
 
 # 8 rate categories, with invariable sites
-k81_invar_discrete_gamma_8 = Model("K81", rate_model=DiscreteGammaModel(8), invariant_sites=True)
+k81_invar_discrete_gamma_8 = Model("K81", rate_model=DiscreteGammaModel(8), invariable_sites=True)
 ```
 
 #### FreeRate Model
@@ -117,7 +117,7 @@ from piqtree.model import FreeRateModel
 sym_discrete_gamma_4 = Model("SYM", rate_model=FreeRateModel())
 
 # 8 rate categories, with invariable sites
-sym_invar_discrete_gamma_8 = Model("SYM", rate_model=FreeRateModel(8), invariant_sites=True)
+sym_invar_discrete_gamma_8 = Model("SYM", rate_model=FreeRateModel(8), invariable_sites=True)
 ```
 
 ### Making Model Classes from IQ-TREE Strings

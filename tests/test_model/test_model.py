@@ -25,7 +25,7 @@ from piqtree.model import (
     ],
 )
 @pytest.mark.parametrize("freq_type", [None, *list(FreqType)])
-@pytest.mark.parametrize("invariant_sites", [False, True])
+@pytest.mark.parametrize("invariable_sites", [False, True])
 @pytest.mark.parametrize(
     "rate_model",
     [
@@ -39,15 +39,15 @@ from piqtree.model import (
 def test_make_model(
     sub_mod: SubstitutionModel,
     freq_type: FreqType,
-    invariant_sites: bool,
+    invariable_sites: bool,
     rate_model: RateModel,
 ) -> None:
-    model = Model(sub_mod, freq_type, rate_model, invariant_sites=invariant_sites)
+    model = Model(sub_mod, freq_type, rate_model, invariable_sites=invariable_sites)
     expected = str(model)
 
     # Check the expected string is approximately generated correctly
-    assert invariant_sites == model.invariant_sites
-    if invariant_sites:
+    assert invariable_sites == model.invariable_sites
+    if invariable_sites:
         assert "+I" in expected
     else:
         assert "+I" not in expected
@@ -108,11 +108,11 @@ def test_multiple_freq_type() -> None:
         make_model("GTR+FO+FO")
 
 
-def test_multiple_invariant_sites() -> None:
+def test_multiple_invariable_sites() -> None:
     with pytest.raises(
         ValueError,
         match=re.escape(
-            "Model 'GTR+I+I' contains multiple specifications for invariant sites.",
+            "Model 'GTR+I+I' contains multiple specifications for invariable sites.",
         ),
     ):
         make_model("GTR+I+I")

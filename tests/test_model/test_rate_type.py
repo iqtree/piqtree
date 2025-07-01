@@ -14,7 +14,7 @@ def test_rate_model_uninstantiable() -> None:
 
 
 @pytest.mark.parametrize(
-    ("invariant_sites", "rate_model", "iqtree_str"),
+    ("invariable_sites", "rate_model", "iqtree_str"),
     [
         (False, None, ""),
         (True, None, "I"),
@@ -45,45 +45,45 @@ def test_rate_model_uninstantiable() -> None:
     ],
 )
 def test_get_rate_type(
-    invariant_sites: bool,
+    invariable_sites: bool,
     rate_model: RateModel | None,
     iqtree_str: str,
 ) -> None:
-    model = get_rate_type(invariant_sites=invariant_sites, rate_model=rate_model)
+    model = get_rate_type(invariable_sites=invariable_sites, rate_model=rate_model)
     assert model.iqtree_str() == iqtree_str
 
     if rate_model is None:
-        model = get_rate_type(invariant_sites=invariant_sites)
+        model = get_rate_type(invariable_sites=invariable_sites)
         assert model.iqtree_str() == iqtree_str
 
-    if not invariant_sites:
+    if not invariable_sites:
         model = get_rate_type(rate_model=rate_model)
         assert model.iqtree_str() == iqtree_str
 
 
-@pytest.mark.parametrize("invariant_sites", [True, False])
+@pytest.mark.parametrize("invariable_sites", [True, False])
 @pytest.mark.parametrize(
     "bad_rate_model",
     ["M", "T46", "R2D2"],
 )
 def test_invalid_rate_model_name(
-    invariant_sites: bool,
+    invariable_sites: bool,
     bad_rate_model: str,
 ) -> None:
     with pytest.raises(
         ValueError,
         match=f"Unexpected value for rate_model {bad_rate_model!r}",
     ):
-        _ = get_rate_type(invariant_sites=invariant_sites, rate_model=bad_rate_model)
+        _ = get_rate_type(invariable_sites=invariable_sites, rate_model=bad_rate_model)
 
 
-@pytest.mark.parametrize("invariant_sites", [True, False])
+@pytest.mark.parametrize("invariable_sites", [True, False])
 @pytest.mark.parametrize(
     "bad_rate_model",
     [4, 3.15, ["R3", "G"]],
 )
 def test_invalid_rate_model_type(
-    invariant_sites: bool,
+    invariable_sites: bool,
     bad_rate_model: float | list,
 ) -> None:
     with pytest.raises(
@@ -91,6 +91,6 @@ def test_invalid_rate_model_type(
         match=f"Unexpected type for rate_model: {type(bad_rate_model)}",
     ):
         _ = get_rate_type(
-            invariant_sites=invariant_sites,
+            invariable_sites=invariable_sites,
             rate_model=bad_rate_model,  # type: ignore[arg-type]
         )

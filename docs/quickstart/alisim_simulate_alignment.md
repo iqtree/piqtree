@@ -1,7 +1,6 @@
-# Fit branch lengths to a tree topology from an alignment
+# Execute AliSim simulation and output the alignment
 
-Branch lengths can be fitted to a tree from a cogent3 alignment object
-using [`fit_tree`](../api/tree/fit_tree.md).
+An alignment can be simulated using `simulate_alignment`, given a list of trees and a model
 
 ## Usage
 

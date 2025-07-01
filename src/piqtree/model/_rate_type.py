@@ -20,20 +20,31 @@ class RateType:
     def __init__(
         self,
         *,
-        invariant_sites: bool = False,
+        invariant_sites: bool | float = False,
         rate_model: RateModel | None = None,
     ) -> None:
         """Rate heterogeneity across sites model.
 
         Parameters
         ----------
-        invariant_sites : bool, optional
-            Invariable Sites Model, by default False.
+        invariant_sites : bool | float, optional
+            Invariable sites, by default False.
+            If a float in range [0,1) specifies the proportion of invariable sites.
         rate_model : RateModel | None, optional
             Discrete Gamma Model or FreeRate Model, by default None.
 
         """
-        self.invariant_sites = invariant_sites
+
+        if not isinstance(invariant_sites, bool):
+            if not (0 <= invariant_sites < 1):
+                msg = "The proportion of invaraint sites must be in the range [0,1)"
+                raise ValueError(msg)
+            self.invariant_sites = True
+            self.proportion_invariant: float | None = invariant_sites
+        else:
+            self.invariant_sites = invariant_sites
+            self.proportion_invariant = None
+
         self.rate_model = rate_model
 
     def iqtree_str(self) -> str:
@@ -46,6 +57,9 @@ class RateType:
 
         """
         rate_type_str = "I" if self.invariant_sites else ""
+        if self.proportion_invariant is not None:
+            rate_type_str += f"{{{self.proportion_invariant}}}"
+
         if self.rate_model is None:
             return rate_type_str
         # Invariant sites and model need to be joined by a '+'
@@ -147,7 +161,7 @@ def get_description(rate_type: RateType) -> str:
 def get_rate_type(
     rate_model: str | RateModel | None = None,
     *,
-    invariant_sites: bool = False,
+    invariant_sites: bool | float = False,
 ) -> RateType:
     """Make a RateType from a chosen rate model and invariant sites.
 
@@ -155,8 +169,9 @@ def get_rate_type(
     ----------
     rate_model : str | RateModel | None, optional
         The chosen rate model, by default None.
-    invariant_sites : bool, optional
-        Whether to use invariant sites, by default False.
+    invariant_sites : bool | float, optional
+        Invariable sites, by default False.
+        If a float in range [0,1) specifies the proportion of invariable sites.
 
     Returns
     -------

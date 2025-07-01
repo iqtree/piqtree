@@ -1,3 +1,5 @@
+import re
+
 import pytest
 
 from piqtree.model import (
@@ -64,7 +66,7 @@ def test_get_rate_type(
 @pytest.mark.parametrize("invariable_sites", [True, False])
 @pytest.mark.parametrize(
     "bad_rate_model",
-    ["M", "T46", "R2D2"],
+    ["M", "T46"],
 )
 def test_invalid_rate_model_name(
     invariable_sites: bool,
@@ -75,6 +77,18 @@ def test_invalid_rate_model_name(
         match=f"Unexpected value for rate_model {bad_rate_model!r}",
     ):
         _ = get_rate_type(invariable_sites=invariable_sites, rate_model=bad_rate_model)
+
+
+def test_bad_rate_categories() -> None:
+    bad_rate_model = "R2D2"
+    expected_error = re.escape(
+        f"Invalid specification for rate categories {bad_rate_model!r}",
+    )
+    with pytest.raises(
+        ValueError,
+        match=expected_error,
+    ):
+        _ = get_rate_type(invariable_sites=True, rate_model=bad_rate_model)
 
 
 @pytest.mark.parametrize("invariable_sites", [True, False])

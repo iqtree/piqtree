@@ -73,13 +73,19 @@ class RateType:
 
 
 class DiscreteGammaModel(RateModel):
-    def __init__(self, rate_categories: int | None = None) -> None:
+    def __init__(
+        self,
+        rate_categories: int | None = None,
+        alpha: float | None = None,
+    ) -> None:
         """Discrete Gamma Model.
 
         Parameters
         ----------
         rate_categories : int, optional
             The number of rate categories, by default 4.
+        alpha : float | None, optional
+            The Gamma shape parameter - fixed if not None, by default None
 
         References
         ----------
@@ -89,11 +95,17 @@ class DiscreteGammaModel(RateModel):
 
         """
         self.rate_categories = rate_categories
+        self.alpha = alpha
 
     def iqtree_str(self) -> str:
-        if self.rate_categories is None:
-            return "G"
-        return f"G{self.rate_categories}"
+        out_str = "G"
+
+        if self.rate_categories is not None:
+            out_str += str(self.rate_categories)
+
+        if self.alpha is not None:
+            out_str += f"{{{self.alpha}}}"
+        return out_str
 
 
 class FreeRateModel(RateModel):
@@ -190,27 +202,72 @@ def get_rate_type(
         raise TypeError(msg)
 
     stripped_rate_model = rate_model.lstrip("+")
-    if len(stripped_rate_model) == 1:
-        rate_categories = None
+
+    rate_model_char = stripped_rate_model[0]
+    if rate_model_char == "G":
+        rate_model = _parse_discrete_gamma_model(stripped_rate_model)
+    elif rate_model_char == "R":
+        rate_model = _parse_free_rate_model(stripped_rate_model)
     else:
-        integer_part = stripped_rate_model[1:]
-        if not integer_part.isdigit():
-            msg = f"Unexpected value for rate_model {rate_model!r}"
-            raise ValueError(msg)
+        msg = f"Unexpected value for rate_model {rate_model!r}"
+        raise ValueError(msg)
 
-        rate_categories = int(integer_part)
+    return RateType(
+        rate_model=rate_model,
+        invariable_sites=invariable_sites,
+    )
 
-    if stripped_rate_model[0] == "G":
-        return RateType(
-            rate_model=DiscreteGammaModel(rate_categories=rate_categories),
-            invariable_sites=invariable_sites,
-        )
 
-    if stripped_rate_model[0] == "R":
-        return RateType(
-            rate_model=FreeRateModel(rate_categories=rate_categories),
-            invariable_sites=invariable_sites,
-        )
+def _parse_discrete_gamma_model(rate_model_str: str) -> DiscreteGammaModel:
+    # Assumes it starts with G
+    if len(rate_model_str) == 1:
+        return DiscreteGammaModel()
 
-    msg = f"Unexpected value for rate_model {rate_model!r}"
-    raise ValueError(msg)
+    rate_categories = _parse_rate_categories(rate_model_str)
+    parameter_start = rate_model_str.find("{")
+
+    # If there is no parameterisation
+    if parameter_start == -1:
+        return DiscreteGammaModel(rate_categories=rate_categories)
+
+    if not rate_model_str.endswith("}"):
+        msg = f"Missing end bracket for parameterisation '{rate_model_str}'"
+        raise ValueError(msg)
+
+    try:
+        alpha = float(rate_model_str[parameter_start + 1 : -1])
+    except ValueError:
+        msg = f"Parameterisation of Discrete Gamma Model is not a number '{rate_model_str}'"
+        raise ValueError(msg) from None
+
+    return DiscreteGammaModel(rate_categories=rate_categories, alpha=alpha)
+
+
+def _parse_free_rate_model(rate_model_str: str) -> FreeRateModel:
+    # Assumes it starts with R
+
+    if len(rate_model_str) == 1:
+        return FreeRateModel()
+
+    rate_categories = _parse_rate_categories(rate_model_str)
+    return FreeRateModel(rate_categories=rate_categories)
+
+
+def _parse_rate_categories(rate_model_str: str) -> int | None:
+    # Assume that the rate model str starts with a G or an R
+    parameters_start = rate_model_str.find("{")
+
+    # There is no {} style parameterisation
+    if parameters_start == -1:
+        categories_str = rate_model_str[1:]
+    else:
+        categories_str = rate_model_str[1:parameters_start]
+
+    if len(categories_str) == 0:
+        return None
+
+    try:
+        return int(categories_str)
+    except ValueError:
+        msg = f"Invalid specification for rate categories {rate_model_str!r}"
+        raise ValueError(msg) from None

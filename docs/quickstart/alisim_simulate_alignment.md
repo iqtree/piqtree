@@ -42,7 +42,7 @@ print(res[1]) # Prints logs
 
 ### Other (Optional) Input Parameters
 
-Apart from the parameters above, simulate_alignment also allows specifying several other parameters described below:
+Apart from the parameters above, `simulate_alignment` also allows specifying several other parameters described below:
 - `partition_info`: partition_info: list[str] | None. Partition information (by default None and will be set to []).
 - `partition_type`: str | None. If provided, partition type must be ‘equal’, ‘proportion’, or ‘unlinked’ (by default None and will be set to "").
 - `seq_length`: int | None. The length of sequences (by default None and will be set to 1000).

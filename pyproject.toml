@@ -76,16 +76,16 @@ doc = [
 ]
 
 [project.entry-points."cogent3.app"]
-piqtree_phylo = "piqtree._app:piqtree_phylo"
-piqtree_fit = "piqtree._app:piqtree_fit"
-piqtree_random_tree = "piqtree._app:piqtree_random_tree"
-piqtree_jc_dists = "piqtree._app:piqtree_jc_dists"
-piqtree_nj = "piqtree._app:piqtree_nj"
-piqtree_mfinder = "piqtree._app:piqtree_mfinder"
-piqtree_consensus = "piqtree._app:piqtree_consensus"
+piq_build_tree = "piqtree._app:piq_build_tree"
+piq_fit_tree = "piqtree._app:piq_fit_tree"
+piq_random_tree = "piqtree._app:piq_random_tree"
+piq_jc_distances = "piqtree._app:piq_jc_distances"
+piq_nj_tree = "piqtree._app:piq_nj_tree"
+piq_model_finder = "piqtree._app:piq_model_finder"
+piq_consensus_tree = "piqtree._app:piq_consensus_tree"
 
 [project.entry-points."cogent3.hook"]
-quick_tree = "piqtree._app:piqtree_nj"
+quick_tree = "piqtree._app:piq_nj_tree"
 
 [tool.setuptools.dynamic]
 version = { attr = "piqtree.__version__" }

@@ -9,8 +9,8 @@ from piqtree._app import _ALL_APP_NAMES
 
 def test_pickle() -> None:
     app_args = {
-        "piqtree_phylo": ("JC",),
-        "piqtree_fit": (make_tree("(a,b,(c,d));"), "JC"),
+        "piq_build_tree": ("JC",),
+        "piq_fit_tree": (make_tree("(a,b,(c,d));"), "JC"),
     }
     for app_name in _ALL_APP_NAMES:
         app = get_app(app_name, *app_args.get(app_name, ()))

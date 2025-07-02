@@ -22,7 +22,7 @@ from piqtree.model import Model
 
 
 @composable.define_app
-class piqtree_phylo:
+class piq_build_tree:
     @extend_docstring_from(build_tree)
     def __init__(
         self,
@@ -53,7 +53,7 @@ class piqtree_phylo:
 
 
 @composable.define_app
-class piqtree_fit:
+class piq_fit_tree:
     @extend_docstring_from(fit_tree)
     def __init__(
         self,
@@ -82,7 +82,7 @@ class piqtree_fit:
 
 @composable.define_app
 @extend_docstring_from(random_tree)
-def piqtree_random_tree(
+def piq_random_tree(
     num_taxa: int,
     tree_mode: TreeGenMode,
     rand_seed: int | None = None,
@@ -91,7 +91,7 @@ def piqtree_random_tree(
 
 
 @composable.define_app
-class piqtree_jc_dists:
+class piq_jc_distances:
     @extend_docstring_from(jc_distances)
     def __init__(
         self,
@@ -113,7 +113,7 @@ class piqtree_jc_dists:
 
 @composable.define_app
 @extend_docstring_from(nj_tree)
-def piqtree_nj(
+def piq_nj_tree(
     dists: c3_types.PairwiseDistanceType,
     *,
     allow_negative: bool = False,
@@ -126,7 +126,7 @@ def piqtree_nj(
 
 @composable.define_app
 @extend_docstring_from(model_finder)
-def piqtree_mfinder(
+def piq_model_finder(
     aln: c3_types.AlignedSeqsType,
 ) -> ModelFinderResult | c3_types.SerialisableType:
     return model_finder(aln)
@@ -134,7 +134,7 @@ def piqtree_mfinder(
 
 @composable.define_app
 @extend_docstring_from(consensus_tree)
-def piqtree_consensus(
+def piq_consensus_tree(
     trees: Iterable[cogent3.PhyloNode],
     *,
     min_support: float = 0.5,
@@ -143,11 +143,11 @@ def piqtree_consensus(
 
 
 _ALL_APP_NAMES = [
-    "piqtree_phylo",
-    "piqtree_fit",
-    "piqtree_random_tree",
-    "piqtree_jc_dists",
-    "piqtree_nj",
-    "piqtree_mfinder",
-    "piqtree_consensus",
+    "piq_build_tree",
+    "piq_fit_tree",
+    "piq_random_tree",
+    "piq_jc_distances",
+    "piq_nj_tree",
+    "piq_model_finder",
+    "piq_consensus_tree",
 ]

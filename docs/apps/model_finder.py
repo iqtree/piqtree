@@ -1,5 +1,5 @@
 # %% [markdown]
-# We use the `piqtree_mfinder` app to rank models. This is the python binding to the IQ-TREE ModelFinder tool.
+# We use the `piq_model_finder` app to rank models. This is the python binding to the IQ-TREE ModelFinder tool.
 
 # %%
 from cogent3 import app_help, get_app, load_aligned_seqs
@@ -10,13 +10,13 @@ aln_path = download_dataset("example.phy.gz", dest_dir="data")
 aln = load_aligned_seqs(aln_path, moltype="dna", format="phylip")
 
 # %% [markdown]
-# Get help and then apply `piqtree_mfinder`.
+# Get help and then apply `piq_model_finder`.
 
 # %%
-app_help("piqtree_mfinder")
+app_help("piq_model_finder")
 
 # %%
-mfinder = get_app("piqtree_mfinder")
+mfinder = get_app("piq_model_finder")
 ranked = mfinder(aln)
 ranked
 
@@ -37,9 +37,9 @@ ranked.model_stats[selected]
 # ## Using the best model
 # You can apply the selected model to a phylogenetic analysis.
 # > **Note**
-# > The process is the same for both the `piqtree_phylo` and the `piqtree_fit` apps.
+# > The process is the same for both the `piq_build_tree` and the `piq_fit_tree` apps.
 
 # %%
-fit = get_app("piqtree_phylo", selected)
+fit = get_app("piq_build_tree", selected)
 fitted = fit(aln)
 fitted

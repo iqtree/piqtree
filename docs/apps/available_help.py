@@ -12,9 +12,9 @@ available_apps("piqtree")
 # %%
 from cogent3 import app_help
 
-app_help("piqtree_phylo")
+app_help("piq_build_tree")
 
 # %%
 from cogent3 import app_help
 
-app_help("piqtree_fit")
+app_help("piq_fit_tree")

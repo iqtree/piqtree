@@ -107,6 +107,38 @@ class DiscreteGammaModel(RateModel):
             out_str += f"{{{self.alpha}}}"
         return out_str
 
+    @classmethod
+    def from_str(cls, rate_model_str: str) -> "DiscreteGammaModel":
+        if len(rate_model_str) == 0:
+            msg = "An empty string is not a DiscreteGammaModel."
+            raise ValueError(msg)
+
+        if rate_model_str[0] != "G":
+            msg = f"A DiscreteGammaModel must start with G but got {rate_model_str!r}."
+            raise ValueError(msg)
+
+        if len(rate_model_str) == 1:
+            return cls()
+
+        rate_categories = _parse_rate_categories(rate_model_str)
+        parameter_start = rate_model_str.find("{")
+
+        # If there is no parameterisation
+        if parameter_start == -1:
+            return cls(rate_categories=rate_categories)
+
+        if not rate_model_str.endswith("}"):
+            msg = f"Missing end bracket for parameterisation {rate_model_str!r}"
+            raise ValueError(msg)
+
+        try:
+            alpha = float(rate_model_str[parameter_start + 1 : -1])
+        except ValueError:
+            msg = f"Parameterisation of Discrete Gamma Model is not a number {rate_model_str!r}"
+            raise ValueError(msg) from None
+
+        return cls(rate_categories=rate_categories, alpha=alpha)
+
 
 class FreeRateModel(RateModel):
     def __init__(self, rate_categories: int | None = None) -> None:
@@ -132,6 +164,22 @@ class FreeRateModel(RateModel):
         if self.rate_categories is None:
             return "R"
         return f"R{self.rate_categories}"
+
+    @classmethod
+    def from_str(cls, rate_model_str: str) -> "FreeRateModel":
+        if len(rate_model_str) == 0:
+            msg = "An empty string is not a DiscreteGammaModel."
+            raise ValueError(msg)
+
+        if rate_model_str[0] != "R":
+            msg = f"A FreeRateModel must start with G but got {rate_model_str!r}."
+            raise ValueError(msg)
+
+        if len(rate_model_str) == 1:
+            return cls()
+
+        rate_categories = _parse_rate_categories(rate_model_str)
+        return cls(rate_categories=rate_categories)
 
 
 ALL_BASE_RATE_TYPES = [
@@ -205,9 +253,9 @@ def get_rate_type(
 
     rate_model_char = stripped_rate_model[0]
     if rate_model_char == "G":
-        rate_model = _parse_discrete_gamma_model(stripped_rate_model)
+        rate_model = DiscreteGammaModel.from_str(stripped_rate_model)
     elif rate_model_char == "R":
-        rate_model = _parse_free_rate_model(stripped_rate_model)
+        rate_model = FreeRateModel.from_str(stripped_rate_model)
     else:
         msg = f"Unexpected value for rate_model {rate_model!r}"
         raise ValueError(msg)
@@ -216,41 +264,6 @@ def get_rate_type(
         rate_model=rate_model,
         invariable_sites=invariable_sites,
     )
-
-
-def _parse_discrete_gamma_model(rate_model_str: str) -> DiscreteGammaModel:
-    # Assumes it starts with G
-    if len(rate_model_str) == 1:
-        return DiscreteGammaModel()
-
-    rate_categories = _parse_rate_categories(rate_model_str)
-    parameter_start = rate_model_str.find("{")
-
-    # If there is no parameterisation
-    if parameter_start == -1:
-        return DiscreteGammaModel(rate_categories=rate_categories)
-
-    if not rate_model_str.endswith("}"):
-        msg = f"Missing end bracket for parameterisation '{rate_model_str}'"
-        raise ValueError(msg)
-
-    try:
-        alpha = float(rate_model_str[parameter_start + 1 : -1])
-    except ValueError:
-        msg = f"Parameterisation of Discrete Gamma Model is not a number '{rate_model_str}'"
-        raise ValueError(msg) from None
-
-    return DiscreteGammaModel(rate_categories=rate_categories, alpha=alpha)
-
-
-def _parse_free_rate_model(rate_model_str: str) -> FreeRateModel:
-    # Assumes it starts with R
-
-    if len(rate_model_str) == 1:
-        return FreeRateModel()
-
-    rate_categories = _parse_rate_categories(rate_model_str)
-    return FreeRateModel(rate_categories=rate_categories)
 
 
 def _parse_rate_categories(rate_model_str: str) -> int | None:

@@ -6,16 +6,16 @@ import piqtree
 from piqtree import ModelFinderResult, jc_distances, make_model
 
 
-def test_piqtree_phylo(four_otu: Alignment) -> None:
+def test_piq_build_tree(four_otu: Alignment) -> None:
     expected = make_tree("(Human,Chimpanzee,(SpermWhale,HumpbackW));")
-    app = get_app("piqtree_phylo", model="JC")
+    app = get_app("piq_build_tree", model="JC")
     got = app(four_otu)
     assert expected.same_topology(got)
     assert got.source == four_otu.source
 
 
-def test_piqtree_phylo_support(four_otu: Alignment) -> None:
-    app = get_app("piqtree_phylo", model=make_model("JC"), bootstrap_reps=1000)
+def test_piq_build_tree_support(four_otu: Alignment) -> None:
+    app = get_app("piq_build_tree", model=make_model("JC"), bootstrap_reps=1000)
     got = app(four_otu)
     supports = [
         node.params.get("support", None)
@@ -25,11 +25,11 @@ def test_piqtree_phylo_support(four_otu: Alignment) -> None:
     assert all(supports)
 
 
-def test_piqtree_fit(three_otu: Alignment) -> None:
+def test_piq_fit_tree(three_otu: Alignment) -> None:
     tree = make_tree(tip_names=three_otu.names)
     app = get_app("model", "JC69", tree=tree)
     expected = app(three_otu)
-    piphylo = get_app("piqtree_fit", tree=tree, model="JC")
+    piphylo = get_app("piq_fit_tree", tree=tree, model="JC")
     got = piphylo(three_otu)
     assert got.params["lnL"] == pytest.approx(expected.lnL)
     assert got.source == three_otu.source
@@ -37,15 +37,15 @@ def test_piqtree_fit(three_otu: Alignment) -> None:
 
 @pytest.mark.parametrize("num_taxa", [10, 50, 100])
 @pytest.mark.parametrize("tree_mode", list(piqtree.TreeGenMode))
-def test_piqtree_random_tree(num_taxa: int, tree_mode: piqtree.TreeGenMode) -> None:
-    app = get_app("piqtree_random_tree", tree_mode=tree_mode, rand_seed=1)
+def test_piq_random_tree(num_taxa: int, tree_mode: piqtree.TreeGenMode) -> None:
+    app = get_app("piq_random_tree", tree_mode=tree_mode, rand_seed=1)
 
     tree = app(num_taxa)
     assert len(tree.tips()) == num_taxa
 
 
-def test_piqtree_jc_distances(five_otu: Alignment) -> None:
-    app = get_app("piqtree_jc_dists")
+def test_piq_jc_distances(five_otu: Alignment) -> None:
+    app = get_app("piq_jc_distances")
     dists = app(five_otu)
 
     assert (
@@ -72,26 +72,26 @@ def test_piqtree_jc_distances(five_otu: Alignment) -> None:
     assert dists.source == five_otu.source
 
 
-def test_piqtree_nj(five_otu: Alignment) -> None:
+def test_piq_nj_tree(five_otu: Alignment) -> None:
     dists = jc_distances(five_otu)
 
     expected = make_tree("(((Human, Chimpanzee), Rhesus), Manatee, Dugong);")
 
-    app = get_app("piqtree_nj")
+    app = get_app("piq_nj_tree")
 
     actual = app(dists)
 
     assert expected.same_topology(actual)
 
 
-def test_mfinder(five_otu: Alignment) -> None:
-    app = get_app("piqtree_mfinder")
+def test_piq_model_finder(five_otu: Alignment) -> None:
+    app = get_app("piq_model_finder")
     got = app(five_otu)
     assert isinstance(got, ModelFinderResult)
 
 
-def test_mfinder_result_roundtrip(five_otu: Alignment) -> None:
-    app = get_app("piqtree_mfinder")
+def test_piq_model_finder_result_roundtrip(five_otu: Alignment) -> None:
+    app = get_app("piq_model_finder")
     got = app(five_otu)
     rd = got.to_rich_dict()
     inflated = ModelFinderResult.from_rich_dict(rd)
@@ -103,10 +103,10 @@ def tree_equal(tree1: PhyloNode, tree2: PhyloNode) -> bool:
     return str(tree1.sorted()) == str(tree2.sorted())
 
 
-def test_consesus_tree(five_trees: list[PhyloNode]) -> None:
-    app_majority = get_app("piqtree_consensus")
-    app_strict = get_app("piqtree_consensus", min_support=1)
-    app_0_3 = get_app("piqtree_consensus", min_support=0.3)
+def test_piq_consesus_tree(five_trees: list[PhyloNode]) -> None:
+    app_majority = get_app("piq_consensus_tree")
+    app_strict = get_app("piq_consensus_tree", min_support=1)
+    app_0_3 = get_app("piq_consensus_tree", min_support=0.3)
 
     expected_majority = make_tree("((a,b),(((e,f),d),c))")
     got_majority = app_majority(five_trees)

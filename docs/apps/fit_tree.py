@@ -1,5 +1,5 @@
 # %% [markdown]
-# We evaluate a support for a specific phylogeny using `piqtree_fit`.
+# We evaluate a support for a specific phylogeny using `piq_fit_tree`.
 # For this simple case, we will assess the support for a specific phylogeny using the GTR model on one alignment.
 
 # %%
@@ -20,13 +20,13 @@ tree = cogent3.load_tree(tree_path)
 tree.get_figure().show()
 
 # %% [markdown]
-# We now take a look at the help for the `piqtree_fit` app.
+# We now take a look at the help for the `piq_fit_tree` app.
 
 # %%
 
 from cogent3 import app_help
 
-app_help("piqtree_fit")
+app_help("piq_fit_tree")
 
 # %% [markdown]
 # We fit a GTR model and estimate the nucleotide frequencies by maximum likelihood.
@@ -34,7 +34,7 @@ app_help("piqtree_fit")
 # %%
 from cogent3 import get_app
 
-fit_gtr = get_app("piqtree_fit", tree, model="GTR+FO")
+fit_gtr = get_app("piq_fit_tree", tree, model="GTR+FO")
 fit_gtr
 
 # %% [markdown]

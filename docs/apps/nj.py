@@ -1,5 +1,5 @@
 # %% [markdown]
-# The Neighbour-Joining method uses genetic distances to build a phylogenetic tree. `piqtree` provides only `piqtree_jc_dists` for this. `cogent3` includes many more methods. The  results of either can be used to build a tree. For divergent sequences we will use Lake's paralinear measure as it accomodates divergent sequence compositions.
+# The Neighbour-Joining method uses genetic distances to build a phylogenetic tree. `piqtree` provides only `piq_jc_distances` for this. `cogent3` includes many more methods. The  results of either can be used to build a tree. For divergent sequences we will use Lake's paralinear measure as it accomodates divergent sequence compositions.
 
 # %%
 import cogent3
@@ -18,16 +18,16 @@ dists = aln.distance_matrix(calc="paralinear")
 dists
 
 # %% [markdown]
-# Get help on the `piqtree_nj` app.
+# Get help on the `piq_nj_tree` app.
 
 # %%
-cogent3.app_help("piqtree_nj")
+cogent3.app_help("piq_nj_tree")
 
 # %% [markdown]
 # Make an app and apply it to the distance matrix.
 
 # %%
-nj = cogent3.get_app("piqtree_nj")
+nj = cogent3.get_app("piq_nj_tree")
 tree = nj(dists)
 
 # %% [markdown]
@@ -43,11 +43,11 @@ tree.get_figure().show()
 
 # %% [markdown]
 # ## Combining the piqtree dist and nj apps
-# We can combine the `piqtree_jc_dists` and `piqtree_nj` apps to build a tree from an alignment in one step.
+# We can combine the `piq_jc_distances` and `piq_nj_tree` apps to build a tree from an alignment in one step.
 
 # %%
-jc = cogent3.get_app("piqtree_jc_dists")
-nj = cogent3.get_app("piqtree_nj")
+jc = cogent3.get_app("piq_jc_distances")
+nj = cogent3.get_app("piq_nj_tree")
 app = jc + nj
 tree = app(aln)
 tree.get_figure().show()

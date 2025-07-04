@@ -1,4 +1,6 @@
+import itertools
 from abc import ABC, abstractmethod
+from collections.abc import Sequence
 
 
 class RateModel(ABC):
@@ -141,7 +143,14 @@ class DiscreteGammaModel(RateModel):
 
 
 class FreeRateModel(RateModel):
-    def __init__(self, rate_categories: int | None = None) -> None:
+    default_rate_categories = 4
+
+    def __init__(
+        self,
+        rate_categories: int | None = None,
+        weights: Sequence[float] | None = None,
+        rates: Sequence[float] | None = None,
+    ) -> None:
         """FreeRate Model.
 
         Parameters
@@ -160,26 +169,86 @@ class FreeRateModel(RateModel):
         """
         self.rate_categories = rate_categories
 
+        if (weights is None) ^ (rates is None):
+            msg = "Must specify both rates and weights or neither."
+            raise ValueError(msg)
+
+        check_rate_categories = (
+            rate_categories
+            if rate_categories is not None
+            else FreeRateModel.default_rate_categories
+        )
+
+        if weights is None or rates is None:
+            self.weights = None
+            self.rates = None
+        else:
+            if (
+                len(weights) != check_rate_categories
+                or len(rates) != check_rate_categories
+            ):
+                msg = f"Expected {check_rate_categories} rates and weights but got {len(weights)} and {len(rates)} respectively."
+                raise ValueError(msg)
+
+            self.weights = list(weights)
+            self.rates = list(rates)
+
     def iqtree_str(self) -> str:
-        if self.rate_categories is None:
-            return "R"
-        return f"R{self.rate_categories}"
+        base = "R" if self.rate_categories is None else f"R{self.rate_categories}"
+
+        if self.weights is None or self.rates is None:
+            return base
+
+        weights_and_rates = itertools.chain.from_iterable(
+            zip(self.weights, self.rates, strict=True),
+        )
+
+        return f"{base}{{{','.join(str(val) for val in weights_and_rates)}}}"
 
     @classmethod
     def from_str(cls, rate_model_str: str) -> "FreeRateModel":
         if len(rate_model_str) == 0:
-            msg = "An empty string is not a DiscreteGammaModel."
+            msg = "An empty string is not a FreeRateModel."
             raise ValueError(msg)
 
         if rate_model_str[0] != "R":
-            msg = f"A FreeRateModel must start with G but got {rate_model_str!r}."
+            msg = f"A FreeRateModel must start with R but got {rate_model_str!r}."
             raise ValueError(msg)
 
         if len(rate_model_str) == 1:
             return cls()
 
         rate_categories = _parse_rate_categories(rate_model_str)
-        return cls(rate_categories=rate_categories)
+        parameter_start = rate_model_str.find("{")
+
+        # If there is no parameterisation
+        if parameter_start == -1:
+            return cls(rate_categories=rate_categories)
+
+        if not rate_model_str.endswith("}"):
+            msg = f"Missing end bracket for parameterisation {rate_model_str!r}"
+            raise ValueError(msg)
+
+        try:
+            weights_and_rates = [
+                float(part.strip())
+                for part in rate_model_str[parameter_start + 1 : -1].split(",")
+            ]
+        except ValueError:
+            msg = f"Unable to parse parameters for FreeRateModel: {rate_model_str!r}."
+            raise ValueError(msg) from None
+
+        expected_params = 2 * (
+            cls.default_rate_categories if rate_categories is None else rate_categories
+        )
+        if len(weights_and_rates) != expected_params:
+            msg = f"Expected {expected_params} parameters but got {len(weights_and_rates)}."
+            raise ValueError(msg)
+
+        weights = weights_and_rates[::2]
+        rates = weights_and_rates[1::2]
+
+        return cls(rate_categories=rate_categories, weights=weights, rates=rates)
 
 
 ALL_BASE_RATE_TYPES = [

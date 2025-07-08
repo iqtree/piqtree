@@ -47,8 +47,9 @@ class CustomBaseFreq:
 
         For AA models the order of the frequencies are:
 
-         A   R   N   D   C   Q   E   G   H   I   L   K   M   F   P   S   T   W   Y   V
-        Ala Arg Asn Asp Cys Gln Glu Gly His Ile Leu Lys Met Phe Pro Ser Thr Trp Tyr Val
+        | A   | R   | N   | D   | C   | Q  | E  | G  | H  | I  | L   | K   | M   | F   | P   | S   | T   | W   | Y   | V   |
+        |-----|-----|-----|-----|-----|----|----|----|----|----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+        | Ala | Arg | Asn | Asp | Cys | Gln| Glu| Gly| His| Ile| Leu | Lys | Met | Phe | Pro | Ser | Thr | Trp | Tyr | Val |
 
         IQ-TREE normalises the frequencies if they do not sum to one.
 

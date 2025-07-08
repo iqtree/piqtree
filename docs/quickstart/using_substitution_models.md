@@ -55,16 +55,17 @@ nq_yeast_model_2 = Model(AaModel.NQ_yeast)
 
 ### Base Frequencies
 
-Three types of base frequencies can be specified using either the [`FreqType`](../api/model/FreqType.md), or strings.
-If not specified, it uses the chosen model's default.
+Three types of base frequencies can be specified using the [`FreqType`](../api/model/FreqType.md) enum, or additionally the [`CustomBaseFreq`](../api/model/FreqType.md) for fixing base frequencies. Alternatively the IQ-TREE string representation can be used.
 
-- [`F`](../api/model/FreqType.md#piqtree.model.FreqType.F): Empirical base frequencies.
+If not specified, the chosen model's default settings are used.
+
+- [`F`](../api/model/FreqType.md#piqtree.model.FreqType.F): Empirical base frequencies. String representation also used to fix base frequencies.
 - [`FQ`](../api/model/FreqType.md#piqtree.model.FreqType.FQ): Equal base frequencies.
 - [`FO`](../api/model/FreqType.md#piqtree.model.FreqType.FO): Optimised base frequencies by maximum-likelihood.
 
 ```python
 from piqtree import Model
-from piqtree.model import FreqType
+from piqtree.model import CustomBaseFreq, FreqType
 
 # Default for the GTR model
 empirical_freqs_1 = Model("GTR", freq_type="F")
@@ -75,6 +76,9 @@ equal_freqs_2 = Model("GTR", freq_type=FreqType.FQ)
 
 opt_freqs_1 = Model("GTR", freq_type="FO")
 opt_freqs_2 = Model("GTR", freq_type=FreqType.FO)
+
+custom_freqs_1 = Model("GTR", freq_type="F{0.1,0.2,0.3,0.4}")
+custom_freqs_2 = Model("GTR", freq_type=CustomBaseFreq([0.1, 0.2, 0.3, 0.4]))
 ```
 
 ### Rate Heterogeneity

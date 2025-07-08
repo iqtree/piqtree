@@ -184,7 +184,6 @@ class LieModelInstance(SubstitutionModel):
         ):
             msg = f"Invalid Lie Model pairing prefix: '{self.pairing}'"
             raise ValueError(msg)
-        self.model_params = tuple(self.model_params)
 
     @staticmethod
     def model_type() -> str:

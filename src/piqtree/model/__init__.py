@@ -1,6 +1,6 @@
 """Models available in IQ-TREE."""
 
-from ._freq_type import FreqType, get_freq_type
+from ._freq_type import CustomBaseFreq, FreqType, get_freq_type
 from ._model import Model, make_model
 from ._options import available_freq_type, available_models, available_rate_type
 from ._rate_type import (
@@ -21,6 +21,7 @@ from ._substitution_model import (
 
 __all__ = [
     "AaModel",
+    "CustomBaseFreq",
     "DiscreteGammaModel",
     "FreeRateModel",
     "FreqType",

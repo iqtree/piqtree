@@ -7,6 +7,7 @@ from cogent3.core.alignment import Alignment
 import piqtree
 from piqtree.exceptions import IqTreeError
 from piqtree.model import (
+    CustomBaseFreq,
     DiscreteGammaModel,
     FreeRateModel,
     FreqType,
@@ -22,7 +23,7 @@ from piqtree.model import (
 def check_build_tree(
     aln: Alignment,
     dna_model: SubstitutionModel,
-    freq_type: FreqType | None = None,
+    freq_type: FreqType | CustomBaseFreq | None = None,
     rate_model: RateModel | None = None,
     *,
     invariable_sites: bool = False,

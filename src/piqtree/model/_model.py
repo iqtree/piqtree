@@ -1,4 +1,4 @@
-from piqtree.model._freq_type import FreqType, get_freq_type
+from piqtree.model._freq_type import CustomBaseFreq, FreqType, get_freq_type
 from piqtree.model._rate_type import RateModel, get_rate_type
 from piqtree.model._substitution_model import SubstitutionModel, get_substitution_model
 
@@ -12,7 +12,7 @@ class Model:
     def __init__(
         self,
         submod_type: str | SubstitutionModel,
-        freq_type: str | FreqType | None = None,
+        freq_type: str | FreqType | CustomBaseFreq | None = None,
         rate_model: str | RateModel | None = None,
         *,
         invariable_sites: bool | float = False,
@@ -23,7 +23,7 @@ class Model:
         ----------
         submod_type : str | SubstitutionModel
             The substitution model to use
-        freq_type : str | FreqType | None, optional
+        freq_type : str | FreqType | CustomBaseFreq | None, optional
             State frequency specification, by default None. (defaults
             to empirical base frequencies if not specified by model).
         rate_model : str | RateModel | None, optional

@@ -101,7 +101,7 @@ class StandardDnaModelInstance(SubstitutionModel):
         return self.dna_model
 
     @staticmethod
-    def iter_available_models() -> Sequence["LieModelInstance"]:
+    def iter_available_models() -> Sequence["StandardDnaModel"]:
         return StandardDnaModel.iter_available_models()
 
     @staticmethod

@@ -69,6 +69,34 @@ class SubstitutionModel:
         raise NotImplementedError
 
 
+@dataclass(frozen=True)
+class StandardDnaModelInstance(SubstitutionModel):
+    dna_model: "StandardDnaModel"
+    model_params: Sequence[float] | None = None
+
+    @staticmethod
+    def model_type() -> str:
+        return "nucleotide"
+
+    def iqtree_str(self) -> str:
+        params = (
+            f"{{{','.join(map(str, self.model_params))}}}" if self.model_params else ""
+        )
+        return f"{self.dna_model.value}{params}"
+
+    @staticmethod
+    def iter_available_models() -> Sequence["LieModelInstance"]:
+        return StandardDnaModel.iter_available_models()
+
+    @staticmethod
+    def num_available_models() -> int:
+        return StandardDnaModel.num_available_models()
+
+    @property
+    def description(self) -> str:
+        return StandardDnaModel._descriptions()[self.dna_model]  # noqa: SLF001
+
+
 @unique
 class StandardDnaModel(SubstitutionModel, Enum):
     """Standard DNA substitution models."""
@@ -102,6 +130,12 @@ class StandardDnaModel(SubstitutionModel, Enum):
     GTR = "GTR"
     STRSYM = "STRSYM"
     UNREST = "UNREST"
+
+    def __call__(
+        self,
+        model_params: Sequence[float] | None = None,
+    ) -> StandardDnaModelInstance:
+        return StandardDnaModelInstance(self, model_params)
 
     @staticmethod
     def model_type() -> str:

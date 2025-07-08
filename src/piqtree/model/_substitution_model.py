@@ -165,6 +165,7 @@ lie_model_pairing = Literal["RY", "WS", "MK"]
 class LieModelInstance(SubstitutionModel):
     lie_model: "LieModel"
     pairing: lie_model_pairing | None = None
+    model_params: Sequence[float] | None = None
 
     valid_pairings: ClassVar[
         tuple[lie_model_pairing, lie_model_pairing, lie_model_pairing]
@@ -183,15 +184,18 @@ class LieModelInstance(SubstitutionModel):
         ):
             msg = f"Invalid Lie Model pairing prefix: '{self.pairing}'"
             raise ValueError(msg)
+        self.model_params = tuple(self.model_params)
 
     @staticmethod
     def model_type() -> str:
         return "nucleotide"
 
     def iqtree_str(self) -> str:
-        if self.pairing:
-            return f"{self.pairing}{self.lie_model.value}"
-        return self.lie_model.value
+        prefix = self.pairing if self.pairing else ""
+        params = (
+            f"{{{','.join(map(str, self.model_params))}}}" if self.model_params else ""
+        )
+        return f"{prefix}{self.lie_model.value}{params}"
 
     @staticmethod
     def iter_available_models() -> Sequence["LieModelInstance"]:
@@ -252,8 +256,12 @@ class LieModel(SubstitutionModel, Enum):
     LIE_10_34 = "10.34"
     LIE_12_12 = "12.12"
 
-    def __call__(self, pairing: lie_model_pairing | None = None) -> LieModelInstance:
-        return LieModelInstance(self, pairing)
+    def __call__(
+        self,
+        pairing: lie_model_pairing | None = None,
+        model_params: Sequence[float] | None = None,
+    ) -> LieModelInstance:
+        return LieModelInstance(self, pairing, model_params)
 
     @staticmethod
     def model_type() -> str:

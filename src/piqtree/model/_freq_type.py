@@ -82,7 +82,7 @@ class CustomBaseFreq:
             raise ValueError(msg)
 
         if base_freq_str[1] != "{" or base_freq_str[-1] != "}":
-            msg = f"A CustomBaseFreq must be parameterised with {{}} but got {base_freq_str!r}"
+            msg = f"A CustomBaseFreq must be parameterised with {{}} but got {base_freq_str!r}."
             raise ValueError(msg)
 
         try:
@@ -120,13 +120,13 @@ def get_freq_type(
     if isinstance(base_freq_str, (FreqType, CustomBaseFreq)):
         return base_freq_str
 
-    base_freq_str = base_freq_str.lstrip("+")
+    shortened = base_freq_str.lstrip("+")
 
     with contextlib.suppress(KeyError):
-        return FreqType[base_freq_str]
+        return FreqType[shortened]
 
-    with contextlib.suppress(ValueError):
-        return CustomBaseFreq.from_str(base_freq_str)
+    if shortened.startswith("F{"):
+        return CustomBaseFreq.from_str(shortened)
 
-    msg = f"Unknown state frequency type: {base_freq_str!r}"
+    msg = f"Unknown state frequency type: {base_freq_str!r}."
     raise ValueError(msg)

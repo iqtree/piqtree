@@ -20,6 +20,7 @@ def test_rate_model_uninstantiable() -> None:
     [
         (False, None, ""),
         (True, None, "I"),
+        (0.1, None, "I{0.1}"),
         (False, DiscreteGammaModel(), "G"),
         (True, DiscreteGammaModel(), "I+G"),
         (False, FreeRateModel(), "R"),
@@ -28,10 +29,14 @@ def test_rate_model_uninstantiable() -> None:
         (True, DiscreteGammaModel(8), "I+G8"),
         (False, FreeRateModel(8), "R8"),
         (True, FreeRateModel(8), "I+R8"),
-        (False, DiscreteGammaModel(42), "G42"),
-        (True, DiscreteGammaModel(42), "I+G42"),
-        (False, FreeRateModel(42), "R42"),
-        (True, FreeRateModel(42), "I+R42"),
+        (False, DiscreteGammaModel(2, 0.5), "G2{0.5}"),
+        (0.3, DiscreteGammaModel(3, 0.7), "I{0.3}+G3{0.7}"),
+        (False, FreeRateModel(2, [0.3, 0.7], [0.1, 0.9]), "R2{0.3,0.1,0.7,0.9}"),
+        (
+            0.2,
+            FreeRateModel(3, [0.2, 0.3, 0.5], [2, 0.1, 1.3]),
+            "I{0.2}+R3{0.2,2,0.3,0.1,0.5,1.3}",
+        ),
         (False, "G", "G"),
         (True, "+G", "I+G"),
         (False, "+R", "R"),
@@ -47,7 +52,7 @@ def test_rate_model_uninstantiable() -> None:
     ],
 )
 def test_get_rate_type(
-    invariable_sites: bool,
+    invariable_sites: bool | float,
     rate_model: RateModel | None,
     iqtree_str: str,
 ) -> None:
@@ -108,3 +113,97 @@ def test_invalid_rate_model_type(
             invariable_sites=invariable_sites,
             rate_model=bad_rate_model,  # type: ignore[arg-type]
         )
+
+
+def test_discrete_empty_str() -> None:
+    with pytest.raises(
+        ValueError,
+        match=re.escape("An empty string is not a DiscreteGammaModel."),
+    ):
+        _ = DiscreteGammaModel.from_str("")
+
+
+def test_discrete_bad_start() -> None:
+    rate_model_str = "R"
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            f"A DiscreteGammaModel must start with G but got {rate_model_str!r}.",
+        ),
+    ):
+        _ = DiscreteGammaModel.from_str(rate_model_str)
+
+
+def test_discrete_missing_bracket() -> None:
+    rate_model_str = "G{0.5"
+    with pytest.raises(
+        ValueError,
+        match=re.escape(f"Missing end bracket for parameterisation {rate_model_str!r}"),
+    ):
+        _ = DiscreteGammaModel.from_str(rate_model_str)
+
+
+def test_discrete_bad_parameter() -> None:
+    rate_model_str = "G{cat}"
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            f"Parameterisation of Discrete Gamma Model is not a number {rate_model_str!r}",
+        ),
+    ):
+        _ = DiscreteGammaModel.from_str(rate_model_str)
+
+
+def test_free_empty_str() -> None:
+    with pytest.raises(
+        ValueError,
+        match=re.escape("An empty string is not a FreeRateModel."),
+    ):
+        _ = FreeRateModel.from_str("")
+
+
+def test_free_bad_start() -> None:
+    rate_model_str = "G"
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            f"A FreeRateModel must start with R but got {rate_model_str!r}.",
+        ),
+    ):
+        _ = FreeRateModel.from_str(rate_model_str)
+
+
+def test_free_missing_bracket() -> None:
+    rate_model_str = "R2{0.5,1,0.5,1"
+    with pytest.raises(
+        ValueError,
+        match=re.escape(f"Missing end bracket for parameterisation {rate_model_str!r}"),
+    ):
+        _ = FreeRateModel.from_str(rate_model_str)
+
+
+def test_free_bad_parameter() -> None:
+    rate_model_str = "R2{0.5,cat,0.5,1}"
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            f"Unable to parse parameters for FreeRateModel: {rate_model_str!r}.",
+        ),
+    ):
+        _ = FreeRateModel.from_str(rate_model_str)
+
+
+def test_free_bad_number_of_parameters() -> None:
+    rate_model_str = "R2{0.5,1,0.5,1,0.5,1}"
+    with pytest.raises(
+        ValueError,
+        match=re.escape("Expected 4 parameters but got 6."),
+    ):
+        _ = FreeRateModel.from_str(rate_model_str)
+
+    rate_model_str = "R2{0.5,1,0.5}"
+    with pytest.raises(
+        ValueError,
+        match=re.escape("Expected 4 parameters but got 3."),
+    ):
+        _ = FreeRateModel.from_str(rate_model_str)

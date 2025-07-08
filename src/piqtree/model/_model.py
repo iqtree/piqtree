@@ -22,7 +22,7 @@ class Model:
         Parameters
         ----------
         submod_type : str | SubstitutionModel
-            The substitution model to use
+            The substitution model to use.
         freq_type : str | FreqType | CustomBaseFreq | None, optional
             State frequency specification, by default None. (defaults
             to empirical base frequencies if not specified by model).

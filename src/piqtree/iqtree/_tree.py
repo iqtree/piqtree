@@ -40,23 +40,25 @@ def _insert_edge_pars(tree: cogent3.PhyloNode, **kwargs: dict) -> None:
 
 
 def _edge_pars_for_cogent3(tree: cogent3.PhyloNode, model: Model) -> None:
+    base_model = model.submod_type.base_model
+
     rate_pars = tree.params["edge_pars"]["rates"]
     motif_pars = {"mprobs": tree.params["edge_pars"]["mprobs"]}
     # renames parameters to conform to cogent3's naming conventions
-    if model.submod_type in {StandardDnaModel.JC, StandardDnaModel.F81}:
+    if base_model in {StandardDnaModel.JC, StandardDnaModel.F81}:
         # skip rate_pars since rate parameters are constant in JC and F81
         _insert_edge_pars(
             tree,
             **motif_pars,
         )
         return
-    if model.submod_type in {StandardDnaModel.K80, StandardDnaModel.HKY}:
+    if base_model in {StandardDnaModel.K80, StandardDnaModel.HKY}:
         rate_pars = {"kappa": rate_pars["A/G"]}
 
-    elif model.submod_type is StandardDnaModel.TN:
+    elif base_model is StandardDnaModel.TN:
         rate_pars = {"kappa_r": rate_pars["A/G"], "kappa_y": rate_pars["C/T"]}
 
-    elif model.submod_type is StandardDnaModel.GTR:
+    elif base_model is StandardDnaModel.GTR:
         del rate_pars["G/T"]
 
     # applies global rate parameters to each edge

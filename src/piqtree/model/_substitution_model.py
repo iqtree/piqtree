@@ -32,6 +32,18 @@ class SubstitutionModel:
         """
         raise NotImplementedError
 
+    @property
+    def base_model(self) -> "SubstitutionModel":
+        """Get the base model enum used by the model.
+
+        Returns
+        -------
+        SubstitutionModel
+            The enum of the model.
+
+        """
+        raise NotImplementedError
+
     @staticmethod
     def iter_available_models() -> Sequence["SubstitutionModel"]:
         """The available models for the model type.
@@ -83,6 +95,10 @@ class StandardDnaModelInstance(SubstitutionModel):
             f"{{{','.join(map(str, self.model_params))}}}" if self.model_params else ""
         )
         return f"{self.dna_model.value}{params}"
+
+    @property
+    def base_model(self) -> "StandardDnaModel":
+        return self.dna_model
 
     @staticmethod
     def iter_available_models() -> Sequence["LieModelInstance"]:
@@ -143,6 +159,10 @@ class StandardDnaModel(SubstitutionModel, Enum):
 
     def iqtree_str(self) -> str:
         return self.value
+
+    @property
+    def base_model(self) -> "StandardDnaModel":
+        return self
 
     @staticmethod
     def iter_available_models() -> Sequence["StandardDnaModel"]:
@@ -230,6 +250,10 @@ class LieModelInstance(SubstitutionModel):
         )
         return f"{prefix}{self.lie_model.value}{params}"
 
+    @property
+    def base_model(self) -> "LieModel":
+        return self.lie_model
+
     @staticmethod
     def iter_available_models() -> Sequence["LieModelInstance"]:
         return [
@@ -302,6 +326,10 @@ class LieModel(SubstitutionModel, Enum):
 
     def iqtree_str(self) -> str:
         return self.value
+
+    @property
+    def base_model(self) -> "LieModel":
+        return self
 
     @staticmethod
     def iter_available_models() -> Sequence[LieModelInstance]:
@@ -409,6 +437,10 @@ class AaModel(SubstitutionModel, Enum):
     def iqtree_str(self) -> str:
         return self.value
 
+    @property
+    def base_model(self) -> "AaModel":
+        return self
+
     @staticmethod
     def iter_available_models() -> Sequence["AaModel"]:
         return list(AaModel)
@@ -495,11 +527,17 @@ def get_substitution_model(name: str | SubstitutionModel) -> SubstitutionModel:
         msg = f"Unknown substitution model: {name!r}"
         raise ValueError(msg)
 
-    with contextlib.suppress(KeyError):
-        return StandardDnaModel[enum_name]
-
+    # No parameterisation of AaModels
     with contextlib.suppress(KeyError):
         return AaModel[enum_name]
+
+    model_params = _get_model_parameters(enum_name)
+
+    if model_params is not None:
+        enum_name = enum_name[: enum_name.find("{")]
+
+    with contextlib.suppress(KeyError):
+        return StandardDnaModel[enum_name](model_params)
 
     # Lie models
     prefix = _get_lie_prefix(enum_name)
@@ -507,7 +545,7 @@ def get_substitution_model(name: str | SubstitutionModel) -> SubstitutionModel:
         enum_name = enum_name[2:]
 
     with contextlib.suppress(KeyError):
-        return LieModel["LIE_" + enum_name](prefix)
+        return LieModel["LIE_" + enum_name](prefix, model_params)
 
     msg = f"Unknown substitution model: {name!r}"
     raise ValueError(msg)
@@ -518,3 +556,18 @@ def _get_lie_prefix(name: str) -> lie_model_pairing | None:
     if potential_prefix in LieModelInstance.valid_pairings:
         return cast("lie_model_pairing", potential_prefix)
     return None
+
+
+def _get_model_parameters(name: str) -> tuple[float, ...] | None:
+    params_start = name.find("{")
+    if params_start == -1:  # No params
+        return None
+
+    # The model is parameterised here
+    if name[-1] != "}":
+        msg = f"Missing closing bracket for parameterisation of {name!r}"
+        raise ValueError(msg)
+
+    return tuple(
+        float(param.strip()) for param in name[params_start + 1 : -1].split(",")
+    )

@@ -522,33 +522,40 @@ def get_substitution_model(name: str | SubstitutionModel) -> SubstitutionModel:
     if isinstance(name, SubstitutionModel):
         return name
 
-    enum_name = name.replace(".", "_")
-    if len(enum_name) == 0:
+    norm_name = _normalise_prefix(name)
+
+    if len(norm_name) == 0:
         msg = f"Unknown substitution model: {name!r}"
         raise ValueError(msg)
 
     # No parameterisation of AaModels
     with contextlib.suppress(KeyError):
-        return AaModel[enum_name]
+        return AaModel[norm_name]
 
-    model_params = _get_model_parameters(enum_name)
+    model_params = _get_model_parameters(norm_name)
 
     if model_params is not None:
-        enum_name = enum_name[: enum_name.find("{")]
+        norm_name = norm_name[: norm_name.find("{")]
 
     with contextlib.suppress(KeyError):
-        return StandardDnaModel[enum_name](model_params)
+        return StandardDnaModel[norm_name](model_params)
 
     # Lie models
-    prefix = _get_lie_prefix(enum_name)
+    prefix = _get_lie_prefix(norm_name)
     if prefix is not None:
-        enum_name = enum_name[2:]
+        norm_name = norm_name[2:]
 
     with contextlib.suppress(KeyError):
-        return LieModel["LIE_" + enum_name](prefix, model_params)
+        return LieModel["LIE_" + norm_name](prefix, model_params)
 
     msg = f"Unknown substitution model: {name!r}"
     raise ValueError(msg)
+
+
+def _normalise_prefix(name: str) -> str:
+    parts = name.split("{")
+    parts[0] = parts[0].replace(".", "_")
+    return "{".join(parts)
 
 
 def _get_lie_prefix(name: str) -> lie_model_pairing | None:

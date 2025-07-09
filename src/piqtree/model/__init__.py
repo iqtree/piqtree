@@ -15,6 +15,7 @@ from ._substitution_model import (
     LieModel,
     LieModelInstance,
     StandardDnaModel,
+    StandardDnaModelInstance,
     SubstitutionModel,
     get_substitution_model,
 )
@@ -31,6 +32,7 @@ __all__ = [
     "RateModel",
     "RateType",
     "StandardDnaModel",
+    "StandardDnaModelInstance",
     "SubstitutionModel",
     "available_freq_type",
     "available_models",

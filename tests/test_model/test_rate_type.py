@@ -6,6 +6,7 @@ from piqtree.model import (
     DiscreteGammaModel,
     FreeRateModel,
     RateModel,
+    RateType,
     get_rate_type,
 )
 
@@ -34,8 +35,8 @@ def test_rate_model_uninstantiable() -> None:
         (False, FreeRateModel(2, [0.3, 0.7], [0.1, 0.9]), "R2{0.3,0.1,0.7,0.9}"),
         (
             0.2,
-            FreeRateModel(3, [0.2, 0.3, 0.5], [2, 0.1, 1.3]),
-            "I{0.2}+R3{0.2,2,0.3,0.1,0.5,1.3}",
+            FreeRateModel(3, [0.2, 0.3, 0.5], [2.0, 0.1, 1.3]),
+            "I{0.2}+R3{0.2,2.0,0.3,0.1,0.5,1.3}",
         ),
         (False, "G", "G"),
         (True, "+G", "I+G"),
@@ -47,6 +48,8 @@ def test_rate_model_uninstantiable() -> None:
         (True, "R8", "I+R8"),
         (False, "+G42", "G42"),
         (True, "G42", "I+G42"),
+        (0.3, "+G2{0.5}", "I{0.3}+G2{0.5}"),
+        (0.2, "R3{0.2,2.0,0.3,0.1,0.5,1.3}", "I{0.2}+R3{0.2,2.0,0.3,0.1,0.5,1.3}"),
         (False, "R42", "R42"),
         (True, "+R42", "I+R42"),
     ],
@@ -79,7 +82,7 @@ def test_invalid_rate_model_name(
 ) -> None:
     with pytest.raises(
         ValueError,
-        match=f"Unexpected value for rate_model {bad_rate_model!r}",
+        match=re.escape(f"Unexpected value for rate_model {bad_rate_model!r}"),
     ):
         _ = get_rate_type(invariable_sites=invariable_sites, rate_model=bad_rate_model)
 
@@ -107,7 +110,7 @@ def test_invalid_rate_model_type(
 ) -> None:
     with pytest.raises(
         TypeError,
-        match=f"Unexpected type for rate_model: {type(bad_rate_model)}",
+        match=re.escape(f"Unexpected type for rate_model: {type(bad_rate_model)}"),
     ):
         _ = get_rate_type(
             invariable_sites=invariable_sites,
@@ -121,6 +124,17 @@ def test_discrete_empty_str() -> None:
         match=re.escape("An empty string is not a DiscreteGammaModel."),
     ):
         _ = DiscreteGammaModel.from_str("")
+
+
+def test_bad_invariable_sites() -> None:
+    for invar_p in (1, 1.5, -0.3):
+        with pytest.raises(
+            ValueError,
+            match=re.escape(
+                "The proportion of invaraint sites must be in the range [0,1)",
+            ),
+        ):
+            _ = RateType(invariable_sites=invar_p)
 
 
 def test_discrete_bad_start() -> None:
@@ -207,3 +221,43 @@ def test_free_bad_number_of_parameters() -> None:
         match=re.escape("Expected 4 parameters but got 3."),
     ):
         _ = FreeRateModel.from_str(rate_model_str)
+
+
+def test_free_missing_rates() -> None:
+    with pytest.raises(
+        ValueError,
+        match=re.escape("Must specify both rates and weights or neither."),
+    ):
+        _ = FreeRateModel(2, weights=[0.3, 0.7])
+
+
+def test_free_missing_weights() -> None:
+    with pytest.raises(
+        ValueError,
+        match=re.escape("Must specify both rates and weights or neither."),
+    ):
+        _ = FreeRateModel(3, rates=[0.3, 0.4, 0.3])
+
+
+def test_free_wrong_number_of_weights() -> None:
+    weights = [0.2, 0.5, 0.3]
+    rates = [0.6, 0.4]
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            f"Expected 2 rates and weights but got {len(weights)} and {len(rates)} respectively.",
+        ),
+    ):
+        _ = FreeRateModel(2, weights=weights, rates=rates)
+
+
+def test_free_wrong_number_of_rates() -> None:
+    weights = [0.2, 0.5, 0.3]
+    rates = [0.6, 0.4]
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            f"Expected 3 rates and weights but got {len(weights)} and {len(rates)} respectively.",
+        ),
+    ):
+        _ = FreeRateModel(3, weights=weights, rates=rates)

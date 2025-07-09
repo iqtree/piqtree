@@ -76,6 +76,7 @@ def test_model_params(model_str: str, params: Sequence[float]) -> None:
 
     assert model.iqtree_str() == iqtree_str
     assert isinstance(model, StandardDnaModelInstance)
+    assert model.model_params is not None
     for model_param, param in zip(model.model_params, params, strict=True):
         assert model_param == param
 
@@ -166,7 +167,7 @@ def test_base_does_not_work() -> None:
     with pytest.raises(NotImplementedError):
         _ = SubstitutionModel().iqtree_str()
     with pytest.raises(NotImplementedError):
-        _ = SubstitutionModel().base_model()
+        _ = SubstitutionModel().base_model
     with pytest.raises(NotImplementedError):
         _ = SubstitutionModel.iter_available_models()
     with pytest.raises(NotImplementedError):

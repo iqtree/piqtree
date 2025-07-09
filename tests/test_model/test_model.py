@@ -239,3 +239,29 @@ def test_unexpected_component() -> None:
         ),
     ):
         make_model("GTR+Z")
+
+
+def test_missing_invar_brackets() -> None:
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "Invalid specification for proportion of invariable sites, got 'I{0.5'.",
+        ),
+    ):
+        _ = make_model("GTR+I{0.5")
+
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "Invalid specification for proportion of invariable sites, got 'I0.3}'.",
+        ),
+    ):
+        _ = make_model("GTR+I0.3}")
+
+
+def test_invar_invalid_proportion() -> None:
+    with pytest.raises(
+        ValueError,
+        match=re.escape("Failed to read proportion of invariable sites, got 'I{cat}'"),
+    ):
+        _ = make_model("HKY+I{cat}")

@@ -10,6 +10,6 @@ The documentation is fetched by readthedocs from the "Build Docs" GitHub Action.
 - The testing, linting and type checking all pass on all supported platforms.
 - The code has been thoroughly tested (check what's been missed in the coverage report).
 - The documentation builds and appears correct.
-- The documentation has been updated on readthedocs (this must be triggered from readthedocs).
+- The latest version of the documentation has been updated on readthedocs (and appears correct).
 - The "Release" GitHub Action has correctly uploaded to Test PyPI.
 - The "Release" GitHub action has correctly uploaded to PyPI.

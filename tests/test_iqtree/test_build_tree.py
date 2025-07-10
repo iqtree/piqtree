@@ -5,6 +5,7 @@ from cogent3 import make_tree
 from cogent3.core.alignment import Alignment
 
 import piqtree
+from piqtree import make_model
 from piqtree.exceptions import IqTreeError
 from piqtree.model import (
     CustomBaseFreq,
@@ -20,6 +21,22 @@ from piqtree.model import (
 )
 
 
+def check_build_tree_model(
+    aln: Alignment,
+    model: Model,
+    *,
+    coerce_str: bool = False,
+) -> None:
+    expected = make_tree("(Human,Chimpanzee,(SpermWhale,HumpbackW));")
+
+    got = piqtree.build_tree(aln, str(model) if coerce_str else model)
+
+    # Check topology
+    assert expected.same_topology(got.unrooted())
+    # Check if branch lengths exist
+    assert all("length" in v.params for v in got.get_edge_vector())
+
+
 def check_build_tree(
     aln: Alignment,
     dna_model: SubstitutionModel,
@@ -29,8 +46,6 @@ def check_build_tree(
     invariable_sites: bool = False,
     coerce_str: bool = False,
 ) -> None:
-    expected = make_tree("(Human,Chimpanzee,(SpermWhale,HumpbackW));")
-
     model = Model(
         dna_model,
         freq_type=freq_type if freq_type else None,
@@ -38,11 +53,7 @@ def check_build_tree(
         rate_model=rate_model,
     )
 
-    got = piqtree.build_tree(aln, str(model) if coerce_str else model)
-    # Check topology
-    assert expected.same_topology(got.unrooted())
-    # Check if branch lengths exist
-    assert all("length" in v.params for v in got.get_edge_vector())
+    check_build_tree_model(aln, model, coerce_str=coerce_str)
 
 
 @pytest.mark.parametrize("dna_model", StandardDnaModel.iter_available_models())
@@ -109,3 +120,16 @@ def test_build_tree_bootstrapping(four_otu: Alignment) -> None:
 
     supported_node = max(tree.children, key=lambda x: len(x.children))
     assert "support" in supported_node.params
+
+
+@pytest.mark.parametrize(
+    "model_str",
+    [
+        "GTR{4.39,5.30,4.39,1.0,12.1}+F{0.1,0.2,0.3,0.4}+I{0.2}+G3{0.7}",
+        "GTR{4.39,5.30,4.39,1.0,12.1,3.2}+R3{0.1,0.8,0.2,0.5,0.7,0.6}",
+        "WS3.3b{0.5,-0.2}+F{0.6,0.1,0.2,0.1}+I{0.1}",
+    ],
+)
+def test_build_tree_paramaterisation(four_otu: Alignment, model_str: str) -> None:
+    model = make_model(model_str)
+    check_build_tree_model(four_otu, model)

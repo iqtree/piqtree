@@ -122,3 +122,21 @@ def test_fit_tree_str_model(
     check_motif_probs(got, expected.tree)
     check_rate_parameters(got, expected.tree)
     check_branch_lengths(got, expected.tree)
+
+
+@pytest.mark.parametrize(
+    "model_str",
+    [
+        "GTR{4.39,5.30,4.39,1.0,12.1}+F{0.1,0.2,0.3,0.4}+I{0.2}+G3{0.7}",
+        "GTR{4.39,5.30,4.39,1.0,12.1,3.2}+R3{0.1,0.8,0.2,0.5,0.7,0.6}",
+        "WS3.3b{0.5,-0.2}+F{0.6,0.1,0.2,0.1}+I{0.1}",
+    ],
+)
+def test_fit_tree_paramaterisation(three_otu: Alignment, model_str: str) -> None:
+    tree_topology = make_tree(tip_names=three_otu.names)
+
+    tree = piqtree.fit_tree(three_otu, tree_topology, model_str)
+
+    assert isinstance(tree.params["lnL"], float)
+    for node in tree.preorder(include_self=False):
+        assert node.length > 0

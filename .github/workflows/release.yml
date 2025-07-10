@@ -76,8 +76,6 @@ jobs:
           CIBW_BUILD: "*${{matrix.platform_id}}"
           CIBW_TEST_REQUIRES: pytest pytest-mock
           CIBW_TEST_COMMAND: pytest {package}/tests
-          CIBW_TEST_SKIP: "*-macosx_universal2:x86_64" # skip x86 on m1 mac
-          CIBW_SKIP: pp* # Disable building PyPy wheels on all platforms
 
       - name: Upload Wheels
         uses: actions/upload-artifact@v4

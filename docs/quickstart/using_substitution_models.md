@@ -51,7 +51,7 @@ lie_12_12_model_2 = Model(LieModel.LIE_12_12)
 
 #### Parameterisation of Lie Markov Models
 
-IQ-TREE supports the parameterisation of Lie Markov models. The first number (before the period) corresponds to the basis matrices used by the model. The first basis matrix is unparameterised, and the parameters refer to the weights (bounded between -0.98 and 0.98 exclusive) of the remaining basis matrices of the model.
+IQ-TREE supports the parameterisation of Lie Markov models. The first number (before the period) corresponds to the number of basis matrices used by the model. The first basis matrix is unparameterised, and the parameters refer to the weights (bounded between -0.98 and 0.98 exclusive) of the remaining basis matrices of the model.
 
 ```python
 from piqtree import Model

@@ -159,7 +159,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
     "FBT001", # allow bool pos args for parameterisation
     "D" # don't require docstring linting
 ]
-"docs/**/*.py" = ["B018", "E402", "ERA001", "INP001"]
+"docs/**/*.py" = ["B018", "E402", "ERA001", "INP001", "D"]
 "src/piqtree/_app/__init__.py" = [
     "N801" # apps follow function naming convention
 ]
@@ -173,8 +173,16 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 ]
 "setup.py" = [
     "S603", # allow subprocess invalidated input for brew install
-    "S607" # allow subprocess with partial path
+    "S607", # allow subprocess with partial path
+    "D" # Don't expect docstrings for setup.py
 ]
+"noxfile.py" = [
+    "D" # Don't expect docstrings for noxfile
+]
+"rtd_get_docs.py" = [
+    "D" # Don't expect docstrings for rtd file.
+]
+
 
 [tool.ruff.format]
 # Like Black, use double quotes for strings.

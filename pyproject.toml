@@ -49,7 +49,7 @@ Documentation = "https://piqtree.readthedocs.io"
 
 [project.optional-dependencies]
 dev = [
-    "cibuildwheel==2.23.3",
+    "cibuildwheel==3.0.1",
     "pybind11",
     "delvewheel",
     "scriv",

@@ -157,6 +157,10 @@ class FreeRateModel(RateModel):
         ----------
         rate_categories : int, optional
             The number of rate categories, by default 4.
+        weights : Sequence[float] | None, optional
+            The weights for each rate category, by default None
+        rates : Sequence[float] | None, optional
+            The rates for each rate category, by default None
 
         References
         ----------

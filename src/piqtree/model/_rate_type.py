@@ -31,7 +31,7 @@ class RateType:
         ----------
         invariable_sites : bool | float, optional
             Invariable sites, by default False.
-            If a float in range [0,1) specifies the proportion of invariable sites.
+            If a float in the range [0,1) specifies the proportion of invariable sites.
         rate_model : RateModel | None, optional
             Discrete Gamma Model or FreeRate Model, by default None.
 
@@ -304,7 +304,7 @@ def get_rate_type(
         The chosen rate model, by default None.
     invariable_sites : bool | float, optional
         Invariable sites, by default False.
-        If a float in range [0,1) specifies the proportion of invariable sites.
+        If a float in the range [0,1) specifies the proportion of invariable sites.
 
     Returns
     -------

@@ -6,6 +6,10 @@ Enums for available DNA (including Lie Markov Models) and amino acid models. Str
     options:
         show_if_no_docstring: true
 
+::: piqtree.model.StandardDnaModelInstance
+    options:
+        show_if_no_docstring: true
+
 ::: piqtree.model.LieModel
     options:
         show_if_no_docstring: true

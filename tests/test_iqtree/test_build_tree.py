@@ -142,3 +142,13 @@ def test_invalid_protein_base_freq(four_otu: Alignment) -> None:
 
     with pytest.raises(IqTreeError):
         _ = piqtree.build_tree(four_otu, model)
+
+
+def test_too_many_dna_params(four_otu: Alignment) -> None:
+    with pytest.raises(IqTreeError):
+        _ = piqtree.build_tree(four_otu, "GTR{4.39,5.30,4.39,1.0,12.1,3.2,1.5}")
+
+
+def test_too_few_dna_params(four_otu: Alignment) -> None:
+    with pytest.raises(IqTreeError):
+        _ = piqtree.build_tree(four_otu, "GTR{4.39,5.30,4.39,1.0}")

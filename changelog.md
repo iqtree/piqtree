@@ -1,4 +1,61 @@
 
+<a id='changelog-0.6.0'></a>
+# Changes in release "0.6.0"
+
+## Contributors
+
+- @rmcar17 and @thomaskf enabled windows support for piqtree!
+
+- @rmcar17 ensured `nj_tree` raises an appropriate error on NaN input.
+
+- @rmcar17 reworked `random_trees` and the related app to become `random_tree`, returning a single tree.
+
+- @rmcar17 and @thomaskf integrated IQ-TREE 3 into piqtree.
+
+- @rmcar17 added support for Lie Markov Model prefixes.
+
+- @rmcar17 added the STRSYM and UNREST models.
+
+- @rmcar17 added source tracking for the inputs of apps.
+
+- @rmcar17 and @thomaskf integrated consensus tree contruction into `piqtree`.
+
+- @rmcar17 added support for the parameterisation of currently supported models, base frequencies, and rate heterogeneity.
+
+## ENH
+
+- Added windows support!
+
+- Add `random_tree` and `piqtree_random_tree`. The function and app have the same parameters as the `random_trees` and `piqtree_random_trees` versions, except the `num_trees` argument has been removed.
+
+- `piqtree` now uses IQ-TREE 3 for its internal library.
+
+- Add support for Lie Markov Model prefixes.
+
+- Add the STRSYM and UNREST models.
+
+- `piqtree` apps now track the sources of their inputs.
+
+- Add a method for building consensus trees with specifiable support parameters.
+
+- Add a consensus tree app.
+
+- Substitution models, base frequencies, and models for rateheterogeneity can now be parameterised.
+
+## BUG
+
+- An error is now raised when calling `nj_tree` with NaN distances instead of failing silently.
+
+## API
+
+- Split Lie Markov Models out of the standard dna enum.
+
+- Remove unused `rand_seed` from `fit_tree`.
+
+- All apps have been renamed to take the form `piq_<func_name>`.
+
+- `random_trees` and `piqtree_random_trees` have been removed in favour of `random_tree` and `piq_random_tree`. Looping can be used if multiple trees are needed.
+
 <a id='changelog-0.5.0'></a>
 # Changes in release "0.5.0"
 

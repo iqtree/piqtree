@@ -3,6 +3,7 @@ from cogent3.core.alignment import Alignment
 
 import piqtree
 from piqtree import make_model
+from piqtree.exceptions import IqTreeError
 from piqtree.model import (
     AaModel,
     Model,
@@ -43,7 +44,14 @@ def test_str_protein_build_tree(protein_four_otu: Alignment, aa_model: AaModel) 
 
 
 def test_parameterised_model(protein_four_otu: Alignment) -> None:
-    base_freq_values = map(str, [0.05] * 20)
+    base_freq_values = ["0.05"] * 20
 
     model = make_model(f"rtREV+F{{{','.join(base_freq_values)}}}+I{{0.2}}+G3{{1.2}}")
     check_build_tree_model(protein_four_otu, model)
+
+
+def test_invalid_protein_base_freq(protein_four_otu: Alignment) -> None:
+    model = "FLAVI+F{0.2,0.3,0.4,0.1}"
+
+    with pytest.raises(IqTreeError):
+        _ = piqtree.build_tree(protein_four_otu, model)

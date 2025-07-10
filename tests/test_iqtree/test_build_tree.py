@@ -133,3 +133,12 @@ def test_build_tree_bootstrapping(four_otu: Alignment) -> None:
 def test_build_tree_paramaterisation(four_otu: Alignment, model_str: str) -> None:
     model = make_model(model_str)
     check_build_tree_model(four_otu, model)
+
+
+def test_invalid_protein_base_freq(four_otu: Alignment) -> None:
+    base_freqs = ["0.05"] * 20
+
+    model = f"K81+F{{{','.join(base_freqs)}}}"
+
+    with pytest.raises(IqTreeError):
+        _ = piqtree.build_tree(four_otu, model)

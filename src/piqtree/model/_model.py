@@ -116,6 +116,7 @@ def make_model(iqtree_str: str) -> Model:
     -------
     Model
         The equivalent Model class.
+
     """
     if "+" not in iqtree_str:
         return Model(iqtree_str)

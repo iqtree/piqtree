@@ -36,7 +36,6 @@ class RateType:
             Discrete Gamma Model or FreeRate Model, by default None.
 
         """
-
         if not isinstance(invariable_sites, bool):
             if not (0 <= invariable_sites < 1):
                 msg = "The proportion of invaraint sites must be in the range [0,1)"

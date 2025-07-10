@@ -27,6 +27,7 @@ class ModelResultValue:
         Number of free parameters in the model.
     tree_length
         Length of the tree (sum of branch lengths).
+
     """
 
     lnL: float  # noqa: N815
@@ -62,6 +63,7 @@ class ModelFinderResult:
         The best BIC model.
     model_stats:
         Semi-processed representation of raw_data.
+
     """
 
     source: str
@@ -147,6 +149,7 @@ def model_finder(
     -------
     ModelFinderResult | c3_types.SerialisableType
         Collection of data returned from IQ-TREE's ModelFinder.
+
     """
     source = aln.info.source
     if rand_seed is None:

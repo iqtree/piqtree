@@ -22,13 +22,13 @@ class SubstitutionModel:
         raise NotImplementedError
 
     def iqtree_str(self) -> str:
-        """The IQ-TREE representation of the model.
-
+        """Get the IQ-TREE representation of the model.
 
         Returns
         -------
         str
             The IQ-TREE representation of the model.
+
         """
         raise NotImplementedError
 
@@ -46,25 +46,25 @@ class SubstitutionModel:
 
     @staticmethod
     def iter_available_models() -> Sequence["SubstitutionModel"]:
-        """The available models for the model type.
-
+        """Get the available models for the model type.
 
         Returns
         -------
         Iterable["SubstitutionModel"]:
             The available models.
+
         """
         raise NotImplementedError
 
     @staticmethod
     def num_available_models() -> int:
-        """The number of available models for the model type.
-
+        """Get the number of available models for the model type.
 
         Returns
         -------
         int:
             The number of available models.
+
         """
         raise NotImplementedError
 
@@ -164,6 +164,7 @@ class StandardDnaModel(SubstitutionModel, Enum):
         -------
         StandardDnaModelInstance
             The parameterised model.
+
         """
         return StandardDnaModelInstance(self, model_params)
 
@@ -352,6 +353,7 @@ class LieModel(SubstitutionModel, Enum):
         -------
         LieModelInstance
             The parameterised Lie Markov Model.
+
         """
         return LieModelInstance(self, pairing, model_params)
 

@@ -27,6 +27,7 @@ def robinson_foulds(trees: Sequence[cogent3.PhyloNode]) -> np.ndarray:
     -------
     np.ndarray
         Pairwise Robinson-Foulds distances.
+
     """
     pairwise_distances = np.zeros((len(trees), len(trees)))
     for i in range(1, len(trees)):

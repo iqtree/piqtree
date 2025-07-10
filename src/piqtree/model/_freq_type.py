@@ -39,7 +39,7 @@ class FreqType(Enum):
 
 class CustomBaseFreq:
     def __init__(self, frequencies: Sequence[float]) -> None:
-        """Custom base frequency specification.
+        """Create a custom base frequency specification.
 
         For DNA models the order of the frequencies are:
 
@@ -57,6 +57,7 @@ class CustomBaseFreq:
         ----------
         frequencies : Sequence[float]
             The fixed base frequencies.
+
         """
         self.frequencies = frequencies
 

@@ -31,7 +31,7 @@ class Model:
             no Gamma, and no FreeRate.
         invariable_sites : bool | float, optional
             Invariable sites, by default False.
-            If a float in the range [0,1) specifies the proportion of invariable sites.
+            If a float in the range [0,1), specifies the proportion of invariable sites.
 
         """
         self.submod_type = get_substitution_model(submod_type)

@@ -1,6 +1,6 @@
 import pytest
 from cogent3 import PhyloNode, get_app, make_tree
-from cogent3.core.new_alignment import Alignment
+from cogent3.core.alignment import Alignment
 
 import piqtree
 from piqtree import ModelFinderResult, jc_distances, make_model

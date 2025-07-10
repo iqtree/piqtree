@@ -79,9 +79,9 @@ nq_yeast_model_2 = Model(AaModel.NQ_yeast)
 
 ### Base Frequencies
 
-Three types of base frequencies can be specified using the [`FreqType`](../api/model/FreqType.md) enum, or additionally the [`CustomBaseFreq`](../api/model/FreqType.md) for fixing base frequencies. Alternatively the IQ-TREE string representation can be used.
+Three types of base frequencies can be specified using the [`FreqType`](../api/model/FreqType.md) enum, or alternatively the [`CustomBaseFreq`](../api/model/FreqType.md) class can be used to fix base frequencies. Otherwise, the IQ-TREE string representation can be used.
 
-If not specified, the chosen model's default settings are used.
+If base frequencies are not specified, the chosen model's default settings are used.
 
 - [`F`](../api/model/FreqType.md#piqtree.model.FreqType.F): Empirical base frequencies. String representation also used to fix base frequencies.
 - [`FQ`](../api/model/FreqType.md#piqtree.model.FreqType.FQ): Equal base frequencies.

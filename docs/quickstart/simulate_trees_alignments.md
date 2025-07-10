@@ -1,14 +1,14 @@
 # Simulate trees and alignments using msprime and AliSim
 
-A set of coalescent trees and their corresponding alignments can be simulated using `sim_ancestry` from `msprime` and `simulate_alignment` from `AliSim`.
+A set of coalescent trees and their corresponding alignments can be simulated using `sim_ancestry` from `msprime` and `simulate_alignment` from the `piqtree`'s version of `AliSim`.
 
 ## Usage
 
 ### Basic Example
 
-The following pipeline simulates a set of trees independently under the coalescent model with a given population size and recombination rate using `msprime`, then rescales the branch lengths of the trees to substitution units, and finally simulates a set of alignments for the rescaled trees using `AliSim` with a given substitution model and random seed.
+The following pipeline simulates a set of trees independently under the coalescent model with a given population size and recombination rate using `msprime`, then rescales the branch lengths of the trees to substitution units, and finally simulates a set of alignments for the rescaled trees using the `piqtree`'s version of `AliSim` with a given substitution model and random seed.
 
-The example below shows the pipeline for generating one tree/alignment for 10 taxa.
+The example below shows the pipeline for generating one pair of tree/alignment for 10 taxa.
 
 ```python
 from piqtree import simulate_alignment
@@ -61,21 +61,22 @@ print(res[1]) # Prints logs
 ### Description of Parameters for Tree Simulation
 
 The `sim_ancestry` function in `msprime` can simulate trees under different population genetics models, including the coalescent model with recombination. We explain the parameters used above as well as other useful parameters:
-- `samples`: an integer representing the number of sampled individuals in a population
-- `recombination_rate`: uniform and non-uniform rates of recombination along the genome
-- `population_size`: sets the size of the single constant sized population
-- `ploidy`: sets the number of nodes per sample individual, as well as the time scale for continuous time coalescent models. The default value of ploidy is 2, assuming diploid populations.
-- `sequence_length`: determines the total length of the sequence
-- `model`: determines the model under which the ancestral history of the sample is generated. The default model is standard coalescent, but other models such as [Discrete Time Wright-Fisher](https://tskit.dev/msprime/docs/stable/api.html#msprime.DiscreteTimeWrightFisher) are supported.
-- `num_replicates`: number of independent simulation replicates (e.g., gene trees).
-
+- `samples`: int | dict. Represents the number of sampled individuals in a population.
+- `recombination_rate`: float | None. Uniform and non-uniform rates of recombination along the genome.
+- `population_size`: int | None. Sets the size of the single constant sized population.
+- `ploidy`: int | None. Sets the number of nodes per sample individual, as well as the time scale for continuous time coalescent models. The default value of ploidy is 2, assuming diploid populations.
+- `sequence_length`: int | None. Determines the total length of the sequence.
+- `model`: str | None. Determines the model under which the ancestral history of the sample is generated. The default model is standard coalescent, but other models such as [Discrete Time Wright-Fisher].(https://tskit.dev/msprime/docs/stable/api.html#msprime.DiscreteTimeWrightFisher) are supported.
+- `num_replicates`: int | None. Number of independent simulation replicates (e.g., gene trees).
 
 For further information about the usage of these parameters, see https://tskit.dev/msprime/docs/stable/ancestry.html.
 
 ### Description of Parameters for Alignment Simulation
 
-Apart from the parameters above, `simulate_alignment` also allows specifying several other parameters described below:
-- `partition_info`: partition_info: list[str] | None. Partition information (by default None and will be set to []).
+In addition to the input set of trees, `simulate_alignment` allows for specifying several parameters:
+- `subst_model`: str | None. Sequence substitution model.
+- `num_threads`: int | None. Number of threads (by default None and will be set to 1).
+- `partition_info`: list[str] | None. Partition information (by default None and will be set to []).
 - `partition_type`: str | None. If provided, partition type must be ‘equal’, ‘proportion’, or ‘unlinked’ (by default None and will be set to "").
 - `seq_length`: int | None. The length of sequences (by default None and will be set to 1000).
 - `insertion_rate`: float | None. The insertion rate (by default None and will be set to 0.0).

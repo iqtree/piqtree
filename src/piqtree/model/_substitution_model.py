@@ -151,6 +151,20 @@ class StandardDnaModel(SubstitutionModel, Enum):
         self,
         model_params: Sequence[float] | None = None,
     ) -> StandardDnaModelInstance:
+        """Parameterise the model.
+
+        If parameters are not supplied, the model is not parameterised.
+
+        Parameters
+        ----------
+        model_params : Sequence[float] | None, optional
+            The relative substitution rates, by default None
+
+        Returns
+        -------
+        StandardDnaModelInstance
+            The parameterised model.
+        """
         return StandardDnaModelInstance(self, model_params)
 
     @staticmethod
@@ -318,6 +332,27 @@ class LieModel(SubstitutionModel, Enum):
         pairing: lie_model_pairing | None = None,
         model_params: Sequence[float] | None = None,
     ) -> LieModelInstance:
+        """Parameterise the model.
+
+        If parameters are not supplied, the model is not parameterised.
+
+        Parameters
+        ----------
+        pairing : Literal["RY", "WS", "MK"] | None, optional
+            The pairing type.
+            RY: purine-pyrimidine pairing
+            WS: weak-strong pairing
+            MK: aMino-Keto pairing
+            by default None (unparameterised uses RY).
+        model_params : Sequence[float] | None, optional
+            The weights of the basis matrices, the weights should be
+            bounded between -0.98 and 0.98 exclusive, by default None.
+
+        Returns
+        -------
+        LieModelInstance
+            The parameterised Lie Markov Model.
+        """
         return LieModelInstance(self, pairing, model_params)
 
     @staticmethod

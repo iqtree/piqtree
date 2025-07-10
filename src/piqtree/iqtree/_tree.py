@@ -325,6 +325,9 @@ def nj_tree(
     ----------
     pairwise_distances : c3_types.PairwiseDistanceType
         Pairwise distances to construct neighbour joining tree from.
+    allow_negative : bool, optional
+        Whether to allow negative branch lengths in the output.
+        Coerces to 0 if not allowed, by default False.
 
     Returns
     -------

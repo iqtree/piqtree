@@ -8,4 +8,3 @@
 from piqtree import available_freq_type
 
 available_freq_type()
-

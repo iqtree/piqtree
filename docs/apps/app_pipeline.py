@@ -34,7 +34,7 @@ from cogent3 import get_app
 outpath = pathlib.Path("data/delme.sqlitedb")
 outpath.unlink(missing_ok=True)
 
-loader = get_app("load_aligned", format="fasta", moltype="dna")
+loader = get_app("load_aligned", format_name="fasta", moltype="dna")
 divergent = get_app("dvs_nmost", n=10, k=6)
 just_nucs = get_app("omit_degenerates")  # has to go after the divergent selector
 min_length = get_app("min_length", length=600)

@@ -7,7 +7,7 @@ from cogent3 import app_help, get_app, load_aligned_seqs
 from piqtree import download_dataset
 
 aln_path = download_dataset("example.phy.gz", dest_dir="data")
-aln = load_aligned_seqs(aln_path, moltype="dna", format="phylip")
+aln = load_aligned_seqs(aln_path, moltype="dna", format_name="phylip")
 
 # %% [markdown]
 # Get help and then apply `piq_model_finder`.

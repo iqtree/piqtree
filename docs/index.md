@@ -23,9 +23,8 @@ You get the vanilla version of `piqtree` by running the following command.
 pip install piqtree
 ```
 
-To get visualisation support with plotly, use the `[extra]` option.
+To get Jupyter and visualisation support (with plotly) use the `[extra]` option.
 
 ```bash
 pip install "piqtree[extra]"
 ```
-

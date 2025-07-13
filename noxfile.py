@@ -5,7 +5,7 @@ from pathlib import Path
 import nox
 
 _py_versions = range(11, 14)
-_python_sessions = [f"3.{v}" + (".5" if v == 13 else "") for v in _py_versions]
+_python_sessions = [f"3.{v}" for v in _py_versions]
 
 
 @nox.session(python=_python_sessions)

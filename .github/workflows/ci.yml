@@ -69,7 +69,7 @@ jobs:
       - name: Run Nox Testing
         run: |
           pip install nox
-          nox --force-python python -s test -- --cov --cov-report=lcov:${{matrix.os}}-${{matrix.python-version}}.lcov --cov-report=term --cov-append --durations=20
+          nox -s test-${{ matrix.python-version }} -- --cov --cov-report=lcov:${{matrix.os}}-${{matrix.python-version}}.lcov --cov-report=term --cov-append --durations=20
   
       - name: Coveralls Parallel
         if: matrix.os != 'macos-13'
@@ -114,7 +114,7 @@ jobs:
       - name: "Run Type Checking for ${{ matrix.python-version }}" 
         run: |
           pip install nox
-          nox --force-python python -s type_check
+          nox -s type_check-${{ matrix.python-version }}
 
   lint:
     name: Linting
@@ -139,7 +139,7 @@ jobs:
       - name: "Run Linting for ${{ matrix.python-version }}" 
         run: |
           pip install nox
-          nox --force-python python -s ruff -- src tests
+          nox -s ruff-${{ matrix.python-version }}
 
   test-docs:
     name: Test Code Blocks in Docs
@@ -165,4 +165,4 @@ jobs:
       - name: Test Code Blocks in Docs
         run: |
           pip install nox
-          nox --force-python python -s test_docs
+          nox -s test_docs-${{ matrix.python-version }}

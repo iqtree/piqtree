@@ -4,7 +4,7 @@ A set of coalescent trees and their corresponding alignments can be simulated us
 
 ## Usage
 
-### Basic Example
+### Example for Single Population
 
 The following pipeline simulates a set of trees independently under the coalescent model with a given population size and recombination rate using `msprime`, then rescales the branch lengths of the trees to substitution units, and finally simulates a set of alignments for the rescaled trees using the `piqtree`'s version of `AliSim` with a given substitution model and random seed.
 
@@ -56,6 +56,51 @@ res = simulate_alignment(
 print(res[0]) # Prints the alignment
 print(res[1]) # Prints logs
 
+```
+
+### Example for Multiple Populations/Species
+
+```python
+import msprime
+
+# Step 1: Demography from species tree
+demog = msprime.Demography.from_species_tree(
+    "(((human:5.6,chimp:5.6):3.0,gorilla:8.6):9.4,orangutan:18.0)",
+    time_units="myr",
+    generation_time=20,
+    initial_size=10_000,
+)
+
+# Step 2: Create labeled samples (2 individuals per population)
+species_list = ["human", "chimp", "gorilla", "orangutan"]
+samples = []
+for species in species_list:
+    samples.append(msprime.SampleSet(3, population=species, time=0))
+print(samples)
+
+
+
+# Step 3: Simulate
+ts = msprime.sim_ancestry(
+    samples=samples,
+    demography=demog,
+    sequence_length=10000,
+    recombination_rate=1e-08,
+    random_seed=42
+)
+
+# Step 4: Extract sample names
+sample_labels = {}
+sample_index = 0
+for species in species_list:
+    for i in range(2*3):  # 2 samples per species
+        sample_labels[sample_index] = f"{species}_{i+1}"
+        sample_index += 1
+
+
+for i, tree in enumerate(ts.trees()):
+    newick = tree.as_newick(node_labels=sample_labels)
+    print(f"Tree {i}:\n{newick}\n")
 ```
 
 ### Description of Parameters for Tree Simulation

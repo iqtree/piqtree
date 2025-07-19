@@ -1,4 +1,20 @@
 
+<a id='changelog-0.6.1'></a>
+# Changes in release "0.6.1"
+
+## Contributors
+
+- @GavinHuttley docs
+- @rmcar17 dependencies
+
+## BUG
+
+- Pin build dependencies to workaround bug an upstream bug.
+
+## DOC
+
+- Update examples to the latest Cogent3 API.
+
 <a id='changelog-0.6.0'></a>
 # Changes in release "0.6.0"
 

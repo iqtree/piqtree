@@ -9,7 +9,7 @@
 
 ## BUG
 
-- Pin build dependencies to workaround bug an upstream bug.
+- Pin build dependencies for reproducible builds and use new delvewheel `get_all_needed` API.
 
 ## DOC
 

@@ -37,7 +37,6 @@ def include_dlls() -> None:
         "raise",
         False,  # noqa: FBT003
         False,  # noqa: FBT003
-        0,
     )
 
     for dll_path in needed_dll_paths:

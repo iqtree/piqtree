@@ -64,7 +64,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Build Wheels
-        uses: pypa/cibuildwheel@v3.0.1
+        uses: pypa/cibuildwheel@v3.1.2
         env: # Can specify per os - e.g. CIBW_BEFORE_ALL_LINUX, CIBW_BEFORE_ALL_MACOS, CIBW_BEFORE_ALL_WINDOWS 
           CIBW_BEFORE_ALL_LINUX: ./build_tools/before_all_linux.sh
           CIBW_BEFORE_ALL_MACOS: ./build_tools/before_all_mac.sh

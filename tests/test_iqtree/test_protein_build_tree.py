@@ -18,9 +18,8 @@ def check_build_tree_model(
     coerce_str: bool = False,
 ) -> None:
     got = piqtree.build_tree(aln, str(model) if coerce_str else model, rand_seed=1)
-
     # Check if all branch lengths exist
-    assert all("length" in v.params for v in got.get_edge_vector())
+    assert all(v.length is not None for v in got.get_edge_vector(include_root=False))
 
 
 def check_build_tree(

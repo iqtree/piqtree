@@ -71,7 +71,7 @@ doc = [
     "jupytext",
     "piqtree[test]",
     "cogent3[extra]",
-    "diverse-seq",
+    "diverse-seq>=2025.7.10",
     "jupyter",
     "ipywidgets"
 ]

@@ -60,47 +60,78 @@ print(res[1]) # Prints logs
 
 ### Example for Multiple Populations/Species
 
+The following pipeline extends the previous example by simulating a set of gene trees generated under the multi-species coalescent model given a species tree with four species `human`, `chimp`, `gorilla` and `orangutan`. 
+
+
 ```python
 import msprime
+from piqtree import simulate_alignment
+import cogent3
 
-# Step 1: Demography from species tree
-demog = msprime.Demography.from_species_tree(
-    "(((human:5.6,chimp:5.6):3.0,gorilla:8.6):9.4,orangutan:18.0)",
-    time_units="myr",
-    generation_time=20,
-    initial_size=10_000,
-)
+# Sets simulation parameters
+seq_length = 2000
+recombination_rate = 1e-8
+num_individual = 6
+population_size = 10000
+generation_time = 20
+num_threads = 5
+seed = 1
 
-# Step 2: Create labeled samples (2 individuals per population)
 species_list = ["human", "chimp", "gorilla", "orangutan"]
-samples = []
+species_tree = "(((human:5.6,chimp:5.6):3.0,gorilla:8.6):9.4,orangutan:18.0)"
+samples, sample_labels, sample_index = [], {}, 0
 for species in species_list:
-    samples.append(msprime.SampleSet(3, population=species, time=0))
+    samples.append(msprime.SampleSet(num_individual/2, population=species, time=0))
 print(samples)
-
-
-
-# Step 3: Simulate
-ts = msprime.sim_ancestry(
-    samples=samples,
-    demography=demog,
-    sequence_length=10000,
-    recombination_rate=1e-08,
-    random_seed=42
-)
-
-# Step 4: Extract sample names
-sample_labels = {}
-sample_index = 0
 for species in species_list:
-    for i in range(2*3):  # 2 samples per species
+    for i in range(num_individual):
         sample_labels[sample_index] = f"{species}_{i+1}"
         sample_index += 1
 
+# Create demography from species tree
+demog = msprime.Demography.from_species_tree(
+    species_tree,
+    time_units="myr",
+    generation_time=generation_time,
+    initial_size=population_size)
 
-for i, tree in enumerate(ts.trees()):
-    newick = tree.as_newick(node_labels=sample_labels)
+
+# Simulates gene trees given the demography under the coalescent model
+ts = msprime.sim_ancestry(
+    samples=samples,
+    demography=demog,
+    sequence_length=seq_length,
+    recombination_rate=recombination_rate,
+    random_seed=seed)
+
+gene_trees = []
+
+for i, t in enumerate(ts.trees()):
+    newick = t.as_newick(node_labels=sample_labels)
+    tree = cogent3.make_tree(newick)
     print(f"Tree {i}:\n{newick}\n")
+
+    # Rescales branch lengths to substitution units
+    scaling_factor = 1.0 / (2 * population_size)
+    for node in tree.preorder():
+        if node.length is not None:
+            node.length *= scaling_factor
+
+    gene_trees.append(tree)
+    print(tree.get_newick(with_distances=True, semicolon=True)) # Prints the rescaled simulated tree
+
+
+# Simulates alignment from the rescaled simulated tree using AliSim
+# TODO: add partition model
+res = simulate_alignment(
+        trees = gene_trees,
+        subst_model = "JC",
+        seed = seed,
+        num_threads = num_threads,
+        seq_length = seq_length)
+
+print(res[0]) # Prints the alignment
+print(res[1]) # Prints logs
 ```
 
 ### Description of Parameters for Tree Simulation

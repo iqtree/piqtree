@@ -17,8 +17,8 @@ def jc_model() -> str:
 )
 @pytest.mark.parametrize("seed", [1, 3])
 @pytest.mark.parametrize("seq_length", [None, 2000])
-@pytest.mark.parametrize("insertion_rate", [None, 0.5])
-@pytest.mark.parametrize("deletion_rate", [None, 0.5])
+@pytest.mark.parametrize("insertion_rate", [None, 0.02])
+@pytest.mark.parametrize("deletion_rate", [None, 0.04])
 @pytest.mark.parametrize("num_threads", [None, 5])
 def test_simulate_alignment_single_tree_jc(
     tree: cogent3.PhyloNode,

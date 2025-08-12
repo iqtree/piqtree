@@ -54,8 +54,8 @@ def check_rate_parameters(got: PhyloNode, expected: PhyloNode) -> None:
 
 
 def check_branch_lengths(got: PhyloNode, expected: PhyloNode) -> None:
-    got = got.get_distances()
-    expected = expected.get_distances()
+    got = got.tip_to_tip_distances()
+    expected = expected.tip_to_tip_distances()
     # make sure the distance matrices have the same name order
     # so we can just compare entire numpy arrays
     expected = expected.take_dists(got.names)

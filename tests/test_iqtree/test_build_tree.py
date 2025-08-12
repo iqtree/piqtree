@@ -118,7 +118,7 @@ def test_build_tree_bootstrapping(four_otu: Alignment) -> None:
     )
 
     supported_node = max(tree.children, key=lambda x: len(x.children))
-    assert "support" in supported_node.params
+    assert supported_node.support is not None
 
 
 @pytest.mark.parametrize(

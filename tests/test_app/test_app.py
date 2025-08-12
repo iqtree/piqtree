@@ -18,7 +18,7 @@ def test_piq_build_tree_support(four_otu: Alignment) -> None:
     app = get_app("piq_build_tree", model=make_model("JC"), bootstrap_reps=1000)
     got = app(four_otu)
     supports = [
-        node.params.get("support", None)
+        node.support
         for node in got.postorder()
         if not node.is_tip() and node.name != "root"
     ]

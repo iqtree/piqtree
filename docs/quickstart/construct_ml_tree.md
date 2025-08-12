@@ -22,7 +22,7 @@ log_likelihood = tree.params["lnL"]
 ### Ultrafast Bootstrap
 
 To perform ultrafast bootstrapping, the number of replicates can be specified. The number of replicates must be at least 1000.
-The support for each node in the tree object can be accessed from `#!py3 node.params["support"]`.
+The support for each node in the tree object can be accessed from `#!py3 node.support`.
 
 ```python
 from cogent3 import load_aligned_seqs

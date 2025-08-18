@@ -30,7 +30,7 @@ jobs:
           platform_id: win_amd64
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
           submodules: recursive
@@ -87,7 +87,7 @@ jobs:
     name: Fetch or Build IQ-TREE Static Library
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
           submodules: recursive
@@ -105,7 +105,7 @@ jobs:
     needs: build-iqtree
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           submodules: recursive

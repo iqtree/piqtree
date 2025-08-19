@@ -71,21 +71,22 @@ import cogent3
 # Sets simulation parameters
 seq_length = 2000
 recombination_rate = 1e-8
-num_individual = 6
-population_size = 10000
+population_size = 100_000 # larger population sizes create conditions with more gene tree discordance
 generation_time = 20
 num_threads = 5
 seed = 1
+num_genes = 10
 
 species_list = ["human", "chimp", "gorilla", "orangutan"]
+num_ind_per_species = [1, 2, 1, 3] # sets varying number of individuals per species
 species_tree = "(((human:5.6,chimp:5.6):3.0,gorilla:8.6):9.4,orangutan:18.0)"
+
 samples, sample_labels, sample_index = [], {}, 0
-for species in species_list:
-    samples.append(msprime.SampleSet(num_individual/2, population=species, time=0))
-print(samples)
-for species in species_list:
-    for i in range(num_individual):
-        sample_labels[sample_index] = f"{species}_{i+1}"
+for i in range(len(species_list)):
+    samples.append(msprime.SampleSet(num_ind_per_species[i], population=species_list[i], time=0))
+for i in range(len(species_list)):
+    for j in range(2*num_ind_per_species[i]):  # 2 samples per species
+        sample_labels[sample_index] = f"{species_list[i]}_{j+1}"
         sample_index += 1
 
 # Create demography from species tree
@@ -95,18 +96,22 @@ demog = msprime.Demography.from_species_tree(
     generation_time=generation_time,
     initial_size=population_size)
 
+gene_trees, rescaled_trees = [], []
 
 # Simulates gene trees given the demography under the coalescent model
-ts = msprime.sim_ancestry(
-    samples=samples,
-    demography=demog,
-    sequence_length=seq_length,
-    recombination_rate=recombination_rate,
-    random_seed=seed)
+for i in range(num_genes):
+    ts = msprime.sim_ancestry(
+        samples=samples,
+        demography=demog,
+        model=msprime.StandardCoalescent(),
+        sequence_length=seq_length,
+        recombination_rate=recombination_rate,
+        random_seed=seed+i)
+    for t in ts.trees():
+        gene_trees.append(t)
+        break
 
-gene_trees = []
-
-for i, t in enumerate(ts.trees()):
+for i, t in enumerate(gene_trees):
     newick = t.as_newick(node_labels=sample_labels)
     tree = cogent3.make_tree(newick)
     print(f"Tree {i}:\n{newick}\n")
@@ -117,9 +122,8 @@ for i, t in enumerate(ts.trees()):
         if node.length is not None:
             node.length *= scaling_factor
 
-    gene_trees.append(tree)
-    print(tree.get_newick(with_distances=True, semicolon=True)) # Prints the rescaled simulated tree
-
+    rescaled_trees.append(tree)
+    print(tree.get_newick(with_distances=True, semicolon=True) + '\n') # Prints the rescaled simulated tree
 
 # Simulates alignment from the rescaled simulated tree using AliSim
 # TODO: add partition model

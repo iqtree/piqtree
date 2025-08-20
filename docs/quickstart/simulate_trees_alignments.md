@@ -125,17 +125,30 @@ for i, t in enumerate(gene_trees):
     rescaled_trees.append(tree)
     print(tree.get_newick(with_distances=True, semicolon=True) + '\n') # Prints the rescaled simulated tree
 
+# creates partition file
+partition_info = '#nexus\n begin sets;\n\t'
+for i in range(len(rescaled_trees)):
+    partition_info += 'charset gene_'+str(i+1)+' = DNA, '+ str(seq_length*i+1) + '-' + str(seq_length*i+seq_length) +';\n\t'
+partition_info += 'charpartition mine = '
+for i in range(len(rescaled_trees)-1):
+    partition_info += 'JC:gene_'+str(i+1)+',\n\t'
+partition_info += 'JC:gene_'+str(len(rescaled_trees))+';\n'
+partition_info += 'end;'
+print(partition_info)
+
 # Simulates alignment from the rescaled simulated tree using AliSim
-# TODO: add partition model
 res = simulate_alignment(
-        trees = gene_trees,
-        subst_model = "JC",
-        seed = seed,
+        trees = rescaled_trees,
+        partition_info=partition_info,
+        partition_type="unlinked",
+        rand_seed = seed,
+        model='JC',
         num_threads = num_threads,
-        seq_length = seq_length)
+        length = seq_length)
 
 print(res[0]) # Prints the alignment
 print(res[1]) # Prints logs
+
 ```
 
 ### Description of Parameters for Tree Simulation

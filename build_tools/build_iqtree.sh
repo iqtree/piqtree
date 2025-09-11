@@ -7,7 +7,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     echo $LDFLAGS    
     echo $CPPFLAGS
     echo $CXXFLAGS    
-    cmake -DBUILD_LIB=ON -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
+    cmake -DBUILD_LIB=ON -DCMAKE_C_COMPILER="${CC}" -DCMAKE_CXX_COMPILER="${CXX}" ..
     gmake -j
 elif [[ "$OSTYPE" == "msys"* || "$OSTYPE" == "cygwin"* ]]; then
     echo "Building for Windows."

@@ -33,7 +33,7 @@ jobs:
         run: sha256sum "$TARBALL" > "$TARBALL.sha256"
 
       - name: Upload Full Source and SHA256 to GitHub Release
-        uses: softprops/action-gh-release@v2.3.2
+        uses: softprops/action-gh-release@v2.3.3
         with:
           files: |
             ${{ env.TARBALL }}

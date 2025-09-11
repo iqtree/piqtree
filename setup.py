@@ -51,10 +51,6 @@ def setup_macos() -> None:
     brew_prefix_llvm = get_brew_prefix("llvm")
     brew_prefix_libomp = get_brew_prefix("libomp")
 
-    # Use Homebrew's clang/clang++
-    os.environ["CC"] = str(brew_prefix_llvm / "bin" / "clang")
-    os.environ["CXX"] = str(brew_prefix_llvm / "bin" / "clang++")
-
     # Define OpenMP flags and libraries for macOS
     extra_compile_args.extend(["-Xpreprocessor", "-fopenmp"])
     extra_libs.extend(["z", "omp"])

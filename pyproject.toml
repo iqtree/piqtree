@@ -60,7 +60,7 @@ dev = [
 ]
 test = ["pytest", "pytest-cov", "pytest-markdown-docs", "pytest-mock", "nox"]
 lint = ["ruff==0.13.0"]
-typing = ["mypy==1.18.1", "piqtree[stubs]", "piqtree[test]"]
+typing = ["mypy==1.18.2", "piqtree[stubs]", "piqtree[test]"]
 stubs = ["types-PyYAML", "types-requests"]
 extra = ["cogent3[extra]"]
 doc = [

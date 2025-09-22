@@ -124,6 +124,45 @@ def test_fit_tree_str_model(
     check_branch_lengths(got, expected.tree)
 
 
+def test_fit_tree_fixed_branch_length(
+    three_otu: Alignment,
+) -> None:
+    tree_topology: PhyloNode = make_tree(tip_names=three_otu.names)
+    lengths = (0.1, 0.2, 0.3)
+    for i, node in enumerate(tree_topology.postorder(include_self=False)):
+        node.length = lengths[i]
+
+    with_fixed = piqtree.fit_tree(
+        three_otu,
+        tree_topology,
+        "GTR",
+        fixed_branch_lengths=True,
+    )
+    without_fixed = piqtree.fit_tree(
+        three_otu,
+        tree_topology,
+        "GTR",
+        fixed_branch_lengths=False,
+    )
+
+    assert "lnL" in with_fixed.params
+    assert "lnL" in without_fixed.params
+
+    assert with_fixed.params["lnL"] != pytest.approx(without_fixed.params["lnL"])
+
+    for fixed_node, not_fixed_node, original_node in zip(
+        with_fixed.postorder(include_self=False),
+        without_fixed.postorder(include_self=False),
+        tree_topology.postorder(include_self=False),
+        strict=True,
+    ):
+        assert fixed_node.name == not_fixed_node.name
+        assert not_fixed_node.name == original_node.name
+
+        assert fixed_node.length == original_node.length
+        assert not_fixed_node.length != original_node.length
+
+
 @pytest.mark.parametrize(
     "model_str",
     [

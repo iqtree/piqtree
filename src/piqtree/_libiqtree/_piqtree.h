@@ -76,14 +76,16 @@ extern "C" StringResult build_tree(StringArray& names,
 /*
  * Perform phylogenetic analysis on the input alignment
  * With restriction to the input toplogy
- * num_thres -- number of cpu threads to be used, default: 1; 0 - auto detection
- * of the optimal number of cpu threads output: results in YAML format with the
- * details of parameters
+ * blfix -- whether to fix the branch length as those on the given tree,
+ * default: false num_thres -- number of cpu threads to be used, default: 1; 0 -
+ * auto detection of the optimal number of cpu threads output: results in YAML
+ * format with the details of parameters
  */
 extern "C" StringResult fit_tree(StringArray& names,
                                  StringArray& seqs,
                                  const char* model,
                                  const char* intree,
+                                 bool blfix = false,
                                  int rand_seed = 0,
                                  int num_thres = 1);
 

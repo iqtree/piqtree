@@ -269,8 +269,10 @@ def fit_tree(
     tree: cogent3.PhyloNode,
     model: Model | str,
     num_threads: int | None = None,
+    *,
+    fixed_branch_lengths: bool = False,
 ) -> cogent3.PhyloNode:
-    """Fit branch lengths to a tree.
+    """Fit branch lengths and likelihood for a tree.
 
     Given a sequence alignment and a fixed topology,
     uses IQ-TREE to fit branch lengths to the tree.
@@ -286,6 +288,9 @@ def fit_tree(
     num_threads: int | None, optional
         Number of threads for IQ-TREE to use, by default None (single-threaded).
         If 0 is specified, IQ-TREE attempts to find the optimal number of threads.
+    fixed_branch_lengths: bool, optional
+        If True, evaluates likelihood using the branch lengths on the tree.
+        Otherwise, fits branch lengths as part of this process.
 
     Returns
     -------
@@ -304,7 +309,15 @@ def fit_tree(
     newick = get_newick(tree)
 
     yaml_result = yaml.safe_load(
-        iq_fit_tree(names, seqs, str(model), newick, 0, num_threads),
+        iq_fit_tree(
+            names,
+            seqs,
+            str(model),
+            newick,
+            fixed_branch_lengths,
+            0,
+            num_threads,
+        ),
     )
     tree = _process_tree_yaml(yaml_result, names)
 

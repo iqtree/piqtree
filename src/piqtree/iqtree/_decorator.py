@@ -1,12 +1,13 @@
 """Decorators for IQ-TREE functions."""
 
+import io
 import os
 import pathlib
 import sys
 import tempfile
 from collections.abc import Callable
 from functools import wraps
-from typing import TypeVar
+from typing import Any, TypeVar
 
 from typing_extensions import ParamSpec
 
@@ -14,6 +15,27 @@ from piqtree.exceptions import IqTreeError
 
 Param = ParamSpec("Param")
 RetType = TypeVar("RetType")
+
+
+def _fd_or_fallback(stream: Any, fallback_fd: int) -> int:
+    """Return the file descriptor for the stream, or a fallback file descriptor.
+
+    Parameters
+    ----------
+    stream : stdout or stderr stream
+        The io stream.
+    fallback_fd : int
+        Fallback file descriptor.
+
+    Returns
+    -------
+    int
+        The file descriptor for the stream, or the fallback on error.
+    """
+    try:
+        return stream.fileno()
+    except io.UnsupportedOperation:
+        return fallback_fd
 
 
 def iqtree_func(
@@ -50,9 +72,13 @@ def iqtree_func(
         sys.stdout.flush()
         sys.stderr.flush()
 
+        # Fetch file descriptors
+        out_fd = _fd_or_fallback(sys.stdout, 1)
+        err_fd = _fd_or_fallback(sys.stderr, 2)
+
         # Save original stdout and stderr file descriptors
-        original_stdout_fd = os.dup(sys.stdout.fileno())
-        original_stderr_fd = os.dup(sys.stderr.fileno())
+        saved_stdout_fd = os.dup(out_fd)
+        saved_stderr_fd = os.dup(err_fd)
 
         # Open /dev/null (or NUL on Windows) as destination for stdout and stderr
         devnull_fd = os.open(os.devnull, os.O_WRONLY)
@@ -64,8 +90,8 @@ def iqtree_func(
 
         try:
             # Replace stdout and stderr with /dev/null
-            os.dup2(devnull_fd, sys.stdout.fileno())
-            os.dup2(devnull_fd, sys.stderr.fileno())
+            os.dup2(devnull_fd, out_fd)
+            os.dup2(devnull_fd, err_fd)
 
             # Call the wrapped function
             return func(*args, **kwargs)
@@ -77,11 +103,13 @@ def iqtree_func(
             sys.stderr.flush()
 
             # Restore stdout and stderr
-            os.dup2(original_stdout_fd, sys.stdout.fileno())
-            os.dup2(original_stderr_fd, sys.stderr.fileno())
+            os.dup2(saved_stdout_fd, out_fd)
+            os.dup2(saved_stderr_fd, err_fd)
 
-            # Close the devnull file descriptor
+            # Close the devnull file descriptor, and duplicated file descriptors
             os.close(devnull_fd)
+            os.close(saved_stdout_fd)
+            os.close(saved_stderr_fd)
 
             if hide_files:
                 os.chdir(original_dir)

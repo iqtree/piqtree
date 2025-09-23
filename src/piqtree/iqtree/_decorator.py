@@ -7,7 +7,7 @@ import sys
 import tempfile
 from collections.abc import Callable
 from functools import wraps
-from typing import Any, TypeVar
+from typing import TypeVar
 
 from typing_extensions import ParamSpec
 
@@ -17,7 +17,7 @@ Param = ParamSpec("Param")
 RetType = TypeVar("RetType")
 
 
-def _fd_or_fallback(stream: Any, fallback_fd: int) -> int:
+def _fd_or_fallback(stream: object, fallback_fd: int) -> int:
     """Return the file descriptor for the stream, or a fallback file descriptor.
 
     Parameters
@@ -33,7 +33,7 @@ def _fd_or_fallback(stream: Any, fallback_fd: int) -> int:
         The file descriptor for the stream, or the fallback on error.
     """
     try:
-        return stream.fileno()
+        return stream.fileno()  # type: ignore[attr-defined]
     except io.UnsupportedOperation:
         return fallback_fd
 

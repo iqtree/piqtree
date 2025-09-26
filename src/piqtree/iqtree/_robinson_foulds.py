@@ -7,6 +7,7 @@ import numpy as np
 from _piqtree import iq_robinson_fould
 
 from piqtree.iqtree._decorator import iqtree_func
+from piqtree.util import get_newick
 
 iq_robinson_fould = iqtree_func(iq_robinson_fould)
 
@@ -32,7 +33,7 @@ def robinson_foulds(trees: Sequence[cogent3.PhyloNode]) -> np.ndarray:
     pairwise_distances = np.zeros((len(trees), len(trees)))
     for i in range(1, len(trees)):
         for j in range(i):
-            rf = iq_robinson_fould(str(trees[i]), str(trees[j]))
+            rf = iq_robinson_fould(get_newick(trees[i]), get_newick(trees[j]))
             pairwise_distances[i, j] = rf
             pairwise_distances[j, i] = rf
     return pairwise_distances

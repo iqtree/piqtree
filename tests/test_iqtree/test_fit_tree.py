@@ -140,3 +140,21 @@ def test_fit_tree_paramaterisation(three_otu: Alignment, model_str: str) -> None
     assert isinstance(tree.params["lnL"], float)
     for node in tree.preorder(include_self=False):
         assert node.length > 0
+
+
+def test_special_characters(three_otu: Alignment) -> None:
+    def _renamer(before: str) -> str:
+        if before == three_otu.names[0]:
+            return r"_F''<.'_l_?|\y}_F_o_!@#$%^&*x_''"
+        return before
+
+    three_otu = three_otu.rename_seqs(_renamer)
+
+    to_fit = make_tree(tip_names=three_otu.names)
+    tree = piqtree.fit_tree(three_otu, to_fit, "GTR")
+
+    assert isinstance(tree.params["lnL"], float)
+    for node in tree.preorder(include_self=False):
+        assert node.length > 0
+
+    assert set(three_otu.names) == set(tree.get_tip_names())

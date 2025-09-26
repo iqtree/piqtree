@@ -12,6 +12,7 @@ from cogent3 import PhyloNode, make_tree
 from piqtree.exceptions import ParseIqTreeError
 from piqtree.iqtree._decorator import iqtree_func
 from piqtree.model import Model, StandardDnaModel, make_model
+from piqtree.util import get_newick
 
 iq_build_tree = iqtree_func(iq_build_tree, hide_files=True)
 iq_fit_tree = iqtree_func(iq_fit_tree, hide_files=True)
@@ -300,7 +301,7 @@ def fit_tree(
 
     names = aln.names
     seqs = [str(seq) for seq in aln.iter_seqs(names)]
-    newick = str(tree)
+    newick = get_newick(tree)
 
     yaml_result = yaml.safe_load(
         iq_fit_tree(names, seqs, str(model), newick, 0, num_threads),
@@ -402,6 +403,6 @@ def consensus_tree(
         msg = "Trees must be on same taxa set."
         raise ValueError(msg)
 
-    newick_trees = [str(tree) for tree in trees]
+    newick_trees = [get_newick(tree) for tree in trees]
 
     return make_tree(iq_consensus_tree(newick_trees, min_support))

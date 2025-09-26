@@ -52,7 +52,7 @@ runs:
 
     - name: Install Boost
       if: runner.os == 'Windows' && steps.cache.outputs.cache-hit != 'true'
-      uses: MarkusJx/install-boost@6d8df42f57de83c5b326b5b83e7b35d650030103
+      uses: MarkusJx/install-boost@8ba8b2fac59ef3d91a838bb4aa53ceabd33d1aa3
       id: install-boost
       with:
         boost_version: 1.84.0

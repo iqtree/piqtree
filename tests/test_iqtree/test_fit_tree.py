@@ -150,7 +150,7 @@ def test_special_characters(three_otu: Alignment) -> None:
 
     three_otu = three_otu.rename_seqs(_renamer)
 
-    to_fit = make_tree(tip_names=three_otu.names)
+    to_fit = make_tree(r"(_F''<.'_l_?|\y}_F_o_!@#$%^&*x_'', (Rhesus, Mouse))")
     tree = piqtree.fit_tree(three_otu, to_fit, "GTR")
 
     assert isinstance(tree.params["lnL"], float)

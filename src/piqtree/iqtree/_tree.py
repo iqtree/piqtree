@@ -291,7 +291,7 @@ def fit_tree(
     bl_fixed: bool, optional
         If True, evaluates likelihood using the provided branch lengths on the tree.
         Branch lengths will be treated as constant in this case. Otherwise if False,
-        branch lengths are fitted to the tree whether provided or not.
+        branch lengths are fitted to the tree whether provided or not. By default False.
 
     Returns
     -------

@@ -61,10 +61,12 @@ class piq_fit_tree:
         model: Model | str,
         *,
         num_threads: int | None = None,
+        bl_fixed: bool = False,
     ) -> None:
         self._tree = tree
         self._model = model
         self._num_threads = num_threads
+        self._bl_fixed = bl_fixed
 
     def main(
         self,
@@ -75,6 +77,7 @@ class piq_fit_tree:
             self._tree,
             self._model,
             self._num_threads,
+            bl_fixed=self._bl_fixed,
         )
         tree.source = getattr(aln, "source", None)
         return tree

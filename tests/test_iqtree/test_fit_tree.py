@@ -136,13 +136,13 @@ def test_fit_tree_fixed_branch_length(
         three_otu,
         tree_topology,
         "GTR",
-        fixed_branch_lengths=True,
+        bl_fixed=True,
     )
     without_fixed = piqtree.fit_tree(
         three_otu,
         tree_topology,
         "GTR",
-        fixed_branch_lengths=False,
+        bl_fixed=False,
     )
 
     assert "lnL" in with_fixed.params

@@ -52,7 +52,7 @@ jobs:
 
       - name: Install Boost
         if: runner.os == 'Windows'
-        uses: MarkusJx/install-boost@2.5.1
+        uses: MarkusJx/install-boost@v2.5.1
         id: install-boost
         with:
           boost_version: 1.84.0

@@ -1,4 +1,21 @@
 
+<a id='changelog-0.7.0'></a>
+# Changes in release "0.7.0"
+
+## Contributors
+
+- @rmcar17, fixed a jupyter bug on windows and unwanted behaviour when taxon names contained underscores.
+- @thomaskf and @rmcar17 implemented the ability to fix certain branch lengths when using `fit_tree`.
+
+## ENH
+
+- Add an option to fix branch lengths when using `fit_tree` called `bl_fixed`.
+
+## BUG
+
+- `piqtree` now works in jupyter notebooks on windows platforms, like it already does for the others.
+- Fix unexpected behaviour when taxon names contain underscores when using `fit_tree`.
+
 <a id='changelog-0.6.1'></a>
 # Changes in release "0.6.1"
 

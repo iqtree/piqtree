@@ -21,7 +21,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-13, macos-14, windows-latest] # Intel linux, Intel Mac, ARM Mac, Windows
+        os: [ubuntu-latest, macos-15-intel, macos-15, windows-latest] # Intel linux, Intel Mac, ARM Mac, Windows
 
     steps:
       - uses: actions/checkout@v5
@@ -43,7 +43,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-13, macos-14, windows-latest] # Intel linux, Intel Mac, ARM Mac, Windows
+        os: [ubuntu-latest, macos-15-intel, macos-15, windows-latest] # Intel linux, Intel Mac, ARM Mac, Windows
         python-version: ["3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v5
@@ -72,7 +72,7 @@ jobs:
           nox -s test-${{ matrix.python-version }} -- --cov --cov-report=lcov:${{matrix.os}}-${{matrix.python-version}}.lcov --cov-report=term --cov-append --durations=20
   
       - name: Coveralls Parallel
-        if: matrix.os != 'macos-13'
+        if: matrix.os != 'macos-15-intel'
         uses: coverallsapp/github-action@v2
         with:
           parallel: true

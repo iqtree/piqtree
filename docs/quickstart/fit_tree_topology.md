@@ -41,6 +41,23 @@ model = "HKY+I+R3"
 fitted_tree = fit_tree(aln, tree, model, num_threads=4)
 ```
 
+### Fixed branch lengths
+
+The likelihood for a tree with specified branch lengths may be calculated
+by using the `bl_fixed` argument. When set to True, specified branch lengths
+are not optimised and the likelihood for the tree is calculated.
+
+```python
+from cogent3 import load_aligned_seqs, make_tree
+from piqtree import fit_tree
+
+aln = load_aligned_seqs("my_alignment.fasta", moltype="dna")
+tree = make_tree("((Human:0.1, Chimpanzee:0.15):0.2, Rhesus:0.3, Mouse:0.5);")
+
+tree_with_likelihood = fit_tree(aln, tree, model="GTR", bl_fixed=True)
+log_likelihood = tree_with_likelihood.params["lnL"]
+```
+
 ## See also
 
 - For how to specify a `Model`, see ["Use different kinds of substitution models"](using_substitution_models.md).

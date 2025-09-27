@@ -290,8 +290,9 @@ def fit_tree(
         If 0 is specified, IQ-TREE attempts to find the optimal number of threads.
     bl_fixed: bool, optional
         If True, evaluates likelihood using the provided branch lengths on the tree.
-        Branch lengths will be treated as constant in this case. Otherwise if False,
-        branch lengths are fitted to the tree whether provided or not. By default False.
+        Branch lengths will be treated as constant in this case, with any unspecified
+        branch lengths still being optimised. Otherwise if False, branch lengths are
+        fitted to the tree whether provided or not. By default False.
 
     Returns
     -------

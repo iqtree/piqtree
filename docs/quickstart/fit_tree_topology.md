@@ -45,7 +45,8 @@ fitted_tree = fit_tree(aln, tree, model, num_threads=4)
 
 The likelihood for a tree with specified branch lengths may be calculated
 by using the `bl_fixed` argument. When set to True, specified branch lengths
-are not optimised and the likelihood for the tree is calculated.
+are not optimised and the likelihood for the tree is calculated. Any unspecified
+branch lengths will still be optimised.
 
 ```python
 from cogent3 import load_aligned_seqs, make_tree

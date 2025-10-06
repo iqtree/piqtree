@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0", "pybind11==3.0.1", "delvewheel==1.11.1"]
+requires = ["setuptools>=61.0", "pybind11==3.0.1", "delvewheel==1.11.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -52,7 +52,7 @@ Documentation = "https://piqtree.readthedocs.io"
 dev = [
     "cibuildwheel==3.2.0",
     "pybind11==3.0.1",
-    "delvewheel==1.11.1",
+    "delvewheel==1.11.2",
     "scriv",
     "piqtree[test]",
     "piqtree[lint]",

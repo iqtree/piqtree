@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "piqtree"
 dependencies = ["cogent3>=2025.7.10a8", "pyyaml", "requests"]
-requires-python = ">=3.11, <3.14"
+requires-python = ">=3.12"
 
 authors = [
     { name = "Gavin Huttley" },
@@ -36,9 +36,9 @@ classifiers = [
 
     "Programming Language :: C++",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 
     "Typing :: Typed"
 ]
@@ -126,7 +126,7 @@ exclude = [
 line-length = 88
 indent-width = 4
 
-target-version = "py311"
+target-version = "py312"
 
 [tool.ruff.lint]
 # Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.

@@ -1,0 +1,151 @@
+name: Backfill missing Python Wheels to Old Releases
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to build from (e.g. v0.7.0)
+        required: true
+      python_minor_version:
+        description: Python minor version to backfill (e.g. for 3.14 enter 14)
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-wheels:
+    name: Build Wheels for ${{matrix.platform_id}} on ${{matrix.os}}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        # manylinux x86_64
+        - os: ubuntu-latest
+          platform_id: manylinux_x86_64
+        
+        # MacOS x86_64
+        - os: macos-15-intel
+          platform_id: macosx_x86_64
+
+        # MacOS arm64
+        - os: macos-15
+          platform_id: macosx_arm64
+
+        # Windows x86_64
+        - os: windows-latest
+          platform_id: win_amd64
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.inputs.tag }}  
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Set up QEMU for Linux ARM builds
+        if: ${{runner.os == 'Linux' && endsWith(matrix.platform_id, '_aarch64')}}
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
+      - name: Set macOS Deployment Target
+        if: runner.os == 'macOS'
+        run: |
+          if [[ "${{ matrix.os }}" == "macos-15-intel" ]]; then
+            echo "MACOSX_DEPLOYMENT_TARGET=15.0" >> $GITHUB_ENV
+          elif [[ "${{ matrix.os }}" == "macos-15" ]]; then
+            echo "MACOSX_DEPLOYMENT_TARGET=15.0" >> $GITHUB_ENV
+          fi
+
+      - name: Install Boost
+        if: runner.os == 'Windows'
+        uses: MarkusJx/install-boost@v2.5.1
+        id: install-boost
+        with:
+          boost_version: 1.84.0
+          platform_version: 2022
+          toolset: mingw
+
+      - name: Setup MSVC Developer Command Prompt
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+    
+      - name: Build Wheels
+        uses: pypa/cibuildwheel@v3.2.0
+        env: # Can specify per os - e.g. CIBW_BEFORE_ALL_LINUX, CIBW_BEFORE_ALL_MACOS, CIBW_BEFORE_ALL_WINDOWS 
+          CIBW_BEFORE_ALL_LINUX: ./build_tools/before_all_linux.sh
+          CIBW_BEFORE_ALL_MACOS: ./build_tools/before_all_mac.sh
+          CIBW_BEFORE_ALL_WINDOWS: bash ./build_tools/before_all_windows.sh
+          CIBW_ENVIRONMENT_WINDOWS: Boost_INCLUDE_DIR='${{ steps.install-boost.outputs.BOOST_ROOT }}/include' Boost_LIBRARY_DIRS='${{ steps.install-boost.outputs.BOOST_ROOT }}/lib'
+          CIBW_ARCHS_LINUX: ${{endsWith(matrix.platform_id, '_x86_64') && 'x86_64' || 'aarch64'}} 
+          CIBW_ARCHS_MACOS: ${{endsWith(matrix.platform_id, 'universal2') && 'universal2' || 'auto'}} 
+          CIBW_ARCHS_WINDOWS: ${{endsWith(matrix.platform_id, '_amd64') && 'AMD64' || 'ARM64'}} 
+          CIBW_BUILD: cp3${{ github.event.inputs.python_minor_version }}-${{ matrix.platform_id }}
+          CIBW_TEST_REQUIRES: pytest pytest-mock
+          CIBW_TEST_COMMAND: pytest {package}/tests
+
+      - name: Upload Wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-${{ matrix.platform_id }}
+          path: ./wheelhouse/*.whl
+  
+  build-iqtree:
+    name: Fetch or Build IQ-TREE Static Library
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - id: build
+        uses: ./.github/actions/build-iqtree
+        with:
+          os: ubuntu-latest
+    
+    outputs:
+      iqtree-sha: ${{steps.build.outputs.iqtree-sha}}
+        
+
+  release-test:
+    name: Release to Test PyPI
+    needs: [build-wheels]
+    environment: release
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+
+    steps:      
+      - name: Download Artifacts
+        uses: actions/download-artifact@v5
+        with:
+          pattern: cibw-*
+          path: dist
+          merge-multiple: true
+
+      - name: Publish Package Distributions to Test PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+  
+  release:
+    name: Release to PyPI
+    needs: release-test
+    environment: release
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+
+    steps:      
+      - name: Download Artifacts
+        uses: actions/download-artifact@v5
+        with:
+          pattern: cibw-*
+          path: dist
+          merge-multiple: true
+
+      - name: Publish Package Distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

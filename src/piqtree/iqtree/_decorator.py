@@ -7,14 +7,8 @@ import sys
 import tempfile
 from collections.abc import Callable
 from functools import wraps
-from typing import TypeVar
-
-from typing_extensions import ParamSpec
 
 from piqtree.exceptions import IqTreeError
-
-Param = ParamSpec("Param")
-RetType = TypeVar("RetType")
 
 
 def _fd_or_fallback(stream: object, fallback_fd: int) -> int:
@@ -38,26 +32,26 @@ def _fd_or_fallback(stream: object, fallback_fd: int) -> int:
         return fallback_fd
 
 
-def iqtree_func(
-    func: Callable[Param, RetType],
+def iqtree_func[**P, R](
+    func: Callable[P, R],
     *,
     hide_files: bool | None = False,
-) -> Callable[Param, RetType]:
+) -> Callable[P, R]:
     """IQ-TREE function wrapper.
 
     Hides stdout and stderr, as well as any output files.
 
     Parameters
     ----------
-    func : Callable[Param, RetType]
+    func : Callable[P, R]
         The IQ-TREE library function.
     hide_files : bool | None, optional
         Whether hiding output files is necessary, by default False.
 
     Returns
     -------
-    Callable[Param, RetType]
-        The wrappe IQ-TREE function.
+    Callable[P, R]
+        The wrapped IQ-TREE function.
 
     Raises
     ------
@@ -67,7 +61,7 @@ def iqtree_func(
     """
 
     @wraps(func)
-    def wrapper_iqtree_func(*args: Param.args, **kwargs: Param.kwargs) -> RetType:
+    def wrapper_iqtree_func(*args: P.args, **kwargs: P.kwargs) -> R:
         # Flush stdout and stderr
         sys.stdout.flush()
         sys.stderr.flush()

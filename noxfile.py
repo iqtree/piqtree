@@ -4,7 +4,7 @@ from pathlib import Path
 
 import nox
 
-_py_versions = range(11, 14)
+_py_versions = range(12, 15)
 _python_sessions = [f"3.{v}" for v in _py_versions]
 
 

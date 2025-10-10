@@ -194,6 +194,8 @@ PYBIND11_MODULE(_piqtree, m) {
   m.def("iq_nj_tree", &build_njtree,
         "Build neighbour-joining tree from distance matrix.");
   m.def("iq_consensus_tree", &consensus_tree,
-        "Copmute a consensus tree from a sequence of trees.");
+        "Compute a consensus tree from a sequence of trees.");
+  m.def("iq_simulate_alignment", &simulate_alignment,
+        "Simulate an alignment with AliSim.");
   m.def("mine", &mine, "The meaning of life, the universe (and everything)!");
 }

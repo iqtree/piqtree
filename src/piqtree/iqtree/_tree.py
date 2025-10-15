@@ -21,6 +21,20 @@ iq_consensus_tree = iqtree_func(iq_consensus_tree, hide_files=True)
 
 # the order defined in IQ-TREE
 RATE_PARS = "A/C", "A/G", "A/T", "C/G", "C/T", "G/T"
+RATE_PARS_UNREST = (
+    "A/C",
+    "A/G",
+    "A/T",
+    "C/A",
+    "C/G",
+    "C/T",
+    "G/A",
+    "G/C",
+    "G/T",
+    "T/A",
+    "T/C",
+    "T/G",
+)
 MOTIF_PARS = "A", "C", "G", "T"
 
 
@@ -136,6 +150,35 @@ def _parse_lie_model(
             tree.params[lie_model_name]["model_parameters"] = model_parameters
 
 
+def _parse_unrest_model(tree: cogent3.PhyloNode, tree_yaml: dict) -> None:
+    model_fits = tree_yaml.get("ModelUnrest", {})
+
+    state_freq_str = model_fits.get("state_freq", "")
+    rate_str = model_fits.get("rates", "")
+
+    # Parse state frequencies
+    if state_freq_str:
+        state_freq_list = [
+            float(value) for value in state_freq_str.replace(" ", "").split(",")
+        ]
+        tree.params["edge_pars"] = {
+            "mprobs": dict(zip(MOTIF_PARS, state_freq_list, strict=True)),
+        }
+    else:
+        msg = "IQ-TREE output malformated, motif parameters not found."
+        raise ParseIqTreeError(msg)
+
+    # Parse rates
+    if rate_str:
+        rate_list = [float(value) for value in rate_str.replace(" ", "").split(",")]
+        tree.params["edge_pars"]["rates"] = dict(
+            zip(RATE_PARS_UNREST, rate_list, strict=True),
+        )
+    else:
+        msg = "IQ-TREE output malformated, rate parameters not found."
+        raise ParseIqTreeError(msg)
+
+
 def _tree_equal(node1: PhyloNode, node2: PhyloNode) -> bool:
     children_group1 = node1.children
     children_group2 = node2.children
@@ -178,6 +221,9 @@ def _process_tree_yaml(
     # parse non-Lie DnaModel parameters
     if "ModelDNA" in tree_yaml:
         _parse_nonlie_model(tree, tree_yaml)
+
+    if "ModelUnrest" in tree_yaml:
+        _parse_unrest_model(tree, tree_yaml)
 
     # parse Lie DnaModel parameters, handling various Lie model names
     elif key := next(

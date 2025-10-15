@@ -20,6 +20,7 @@ iq_nj_tree = iqtree_func(iq_nj_tree, hide_files=True)
 iq_consensus_tree = iqtree_func(iq_consensus_tree, hide_files=True)
 
 # the order defined in IQ-TREE
+# assume UNREST model has 12 rates, GTR and simpler models always have 6 rates present
 RATE_PARS = "A/C", "A/G", "A/T", "C/G", "C/T", "G/T"
 RATE_PARS_UNREST = (
     "A/C",
@@ -156,7 +157,7 @@ def _parse_unrest_model(tree: cogent3.PhyloNode, tree_yaml: dict) -> None:
     state_freq_str = model_fits.get("state_freq", "")
     rate_str = model_fits.get("rates", "")
 
-    # Parse state frequencies
+    # parse state frequencies
     if state_freq_str:
         state_freq_list = [
             float(value) for value in state_freq_str.replace(" ", "").split(",")
@@ -168,7 +169,7 @@ def _parse_unrest_model(tree: cogent3.PhyloNode, tree_yaml: dict) -> None:
         msg = "IQ-TREE output malformated, motif parameters not found."
         raise ParseIqTreeError(msg)
 
-    # Parse rates
+    # parse rates
     if rate_str:
         rate_list = [float(value) for value in rate_str.replace(" ", "").split(",")]
         tree.params["edge_pars"]["rates"] = dict(

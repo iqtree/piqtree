@@ -42,4 +42,4 @@ class IndelLavalette(IndelDistribution):
         self.max_size = max_size
 
     def iqtree_str(self) -> str:
-        return f"LAV{{{self.exponent}/{self.max_size}}}"
+        return f"LAV{{{self.a}/{self.max_size}}}"

@@ -142,6 +142,24 @@ def lie_dna_model() -> dict[str, Any]:
     }
 
 
+@pytest.fixture
+def unrest_model() -> dict[str, Any]:
+    return {
+        "CandidateSet": {
+            0: "-6736.94578464 (0:0.0063211201,1:0.0029675780,(2:0.0228519739,3:0.3072009029):0.01373649616);",
+            1: "-6757.78815651 (0:0.0063607954,(1:0.0030079874,2:0.0365597715):2.296825575e-06,3:0.3208135518);",
+            2: "-6758.07765021 (0:0.0063826033,(1:0.0021953253,3:0.3207201830):0.0001145372551,2:0.0365362763);",
+        },
+        "ModelUnrest": {
+            "rates": "0.9543854572, 2.942336813, 0.5526681694, 0.7599462192, 0.897052927, 3.38882313, 4.630689862, 0.7223043133, 0.4970030179, 0.8401385788, 2.854877074, 1",
+            "state_freq": "0.3234606464, 0.2202693695, 0.2343932981, 0.221876686",
+        },
+        "PhyloTree": {
+            "newick": "(0:0.0063211201,1:0.0029675780,(2:0.0228519739,3:0.3072009029):0.01373649616);",
+        },
+    }
+
+
 def test_newick_not_in_candidates(
     newick_not_in_candidates: list[dict[str, Any]],
 ) -> None:
@@ -225,6 +243,14 @@ def test_lie_dna_model_motif_absent(
         match=re.escape("IQ-TREE output malformated, motif parameters not found."),
     ):
         _ = _process_tree_yaml(lie_dna_model, ["a", "b", "c", "d"])
+
+
+def test_unrest_model(
+    unrest_model: dict[str, Any],
+) -> None:
+    tree = _process_tree_yaml(unrest_model, ["a", "b", "c", "d"])
+    assert tree.params["edge_pars"]["rates"]
+    assert tree.params["edge_pars"]["mprobs"]
 
 
 @pytest.mark.parametrize(

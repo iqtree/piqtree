@@ -2,9 +2,9 @@
 
 from collections.abc import Sequence
 
-import cogent3
 import numpy as np
 from _piqtree import iq_robinson_fould
+from cogent3.core.tree import PhyloNode
 
 from piqtree.iqtree._decorator import iqtree_func
 from piqtree.util import get_newick
@@ -12,7 +12,7 @@ from piqtree.util import get_newick
 iq_robinson_fould = iqtree_func(iq_robinson_fould)
 
 
-def robinson_foulds(trees: Sequence[cogent3.PhyloNode]) -> np.ndarray:
+def robinson_foulds(trees: Sequence[PhyloNode]) -> np.ndarray:
     """Pairwise Robinson-Foulds distance between a sequence of trees.
 
     For the given collection of trees, returns a numpy array containing
@@ -20,7 +20,7 @@ def robinson_foulds(trees: Sequence[cogent3.PhyloNode]) -> np.ndarray:
 
     Parameters
     ----------
-    trees : Sequence[cogent3.PhyloNode]
+    trees : Sequence[PhyloNode]
         The sequence of trees to calculate the pairwise Robinson-Foulds
         distances of.
 

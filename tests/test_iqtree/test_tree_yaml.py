@@ -4,6 +4,7 @@ from typing import Any
 import pytest
 from cogent3 import make_tree
 
+from piqtree import make_model
 from piqtree.exceptions import ParseIqTreeError
 from piqtree.iqtree._tree import _process_tree_yaml, _tree_equal
 
@@ -142,6 +143,24 @@ def lie_dna_model() -> dict[str, Any]:
     }
 
 
+@pytest.fixture
+def unrest_model() -> dict[str, Any]:
+    return {
+        "CandidateSet": {
+            0: "-6736.94578464 (0:0.0063211201,1:0.0029675780,(2:0.0228519739,3:0.3072009029):0.01373649616);",
+            1: "-6757.78815651 (0:0.0063607954,(1:0.0030079874,2:0.0365597715):2.296825575e-06,3:0.3208135518);",
+            2: "-6758.07765021 (0:0.0063826033,(1:0.0021953253,3:0.3207201830):0.0001145372551,2:0.0365362763);",
+        },
+        "ModelUnrest": {
+            "rates": "0.9543854572, 2.942336813, 0.5526681694, 0.7599462192, 0.897052927, 3.38882313, 4.630689862, 0.7223043133, 0.4970030179, 0.8401385788, 2.854877074, 1",
+            "state_freq": "0.3234606464, 0.2202693695, 0.2343932981, 0.221876686",
+        },
+        "PhyloTree": {
+            "newick": "(0:0.0063211201,1:0.0029675780,(2:0.0228519739,3:0.3072009029):0.01373649616);",
+        },
+    }
+
+
 def test_newick_not_in_candidates(
     newick_not_in_candidates: list[dict[str, Any]],
 ) -> None:
@@ -150,10 +169,7 @@ def test_newick_not_in_candidates(
             ParseIqTreeError,
             match=re.escape("IQ-TREE output malformated, likelihood not found."),
         ):
-            _ = _process_tree_yaml(
-                yaml,
-                ["a", "b", "c", "d"],
-            )
+            _ = _process_tree_yaml(yaml, ["a", "b", "c", "d"], make_model("JC"))
 
 
 def test_non_lie_dna_with_rate_model(
@@ -167,7 +183,6 @@ def test_non_lie_dna_with_rate_model(
             "A/T": 1.0,
             "C/G": 1.0,
             "C/T": 3.82025079,
-            "G/T": 1,
         },
         "mprobs": {
             "A": 0.3628523161,
@@ -177,8 +192,13 @@ def test_non_lie_dna_with_rate_model(
         },
     }
     rate_params = {"gamma_shape": 1.698497993, "p_invar": 1.002841144e-06}
-    tree = _process_tree_yaml(non_lie_dna_with_rate_model, ["a", "b", "c", "d"])
-    assert tree.params["edge_pars"] == edge_params
+    tree = _process_tree_yaml(
+        non_lie_dna_with_rate_model,
+        ["a", "b", "c", "d"],
+        make_model("GTR+I+G"),
+    )
+    for rate, value in edge_params["rates"].items():
+        assert tree[0].params[rate] == value
     assert tree.params["RateGammaInvar"] == rate_params
 
 
@@ -190,7 +210,11 @@ def test_non_lie_dna_model_motif_absent(
         ParseIqTreeError,
         match=re.escape("IQ-TREE output malformated, motif parameters not found."),
     ):
-        _ = _process_tree_yaml(non_lie_dna_with_rate_model, ["a", "b", "c", "d"])
+        _ = _process_tree_yaml(
+            non_lie_dna_with_rate_model,
+            ["a", "b", "c", "d"],
+            make_model("GTR+I+G"),
+        )
 
 
 def test_non_lie_dna_model_rate_absent(
@@ -201,7 +225,11 @@ def test_non_lie_dna_model_rate_absent(
         ParseIqTreeError,
         match=re.escape("IQ-TREE output malformated, rate parameters not found."),
     ):
-        _ = _process_tree_yaml(non_lie_dna_with_rate_model, ["a", "b", "c", "d"])
+        _ = _process_tree_yaml(
+            non_lie_dna_with_rate_model,
+            ["a", "b", "c", "d"],
+            make_model("GTR+I+G"),
+        )
 
 
 def test_lie_dna_model(
@@ -212,7 +240,7 @@ def test_lie_dna_model(
         "model_parameters": 0.4841804549,
         "mprobs": {"A": 0.25, "C": 0.25, "G": 0.25, "T": 0.25},
     }
-    tree = _process_tree_yaml(lie_dna_model, ["a", "b", "c", "d"])
+    tree = _process_tree_yaml(lie_dna_model, ["a", "b", "c", "d"], make_model("RY2.2b"))
     assert tree.params["ModelLieMarkovRY2.2b"] == model_parameters
 
 
@@ -224,7 +252,19 @@ def test_lie_dna_model_motif_absent(
         ParseIqTreeError,
         match=re.escape("IQ-TREE output malformated, motif parameters not found."),
     ):
-        _ = _process_tree_yaml(lie_dna_model, ["a", "b", "c", "d"])
+        _ = _process_tree_yaml(
+            lie_dna_model,
+            ["a", "b", "c", "d"],
+            make_model("RY2.2b"),
+        )
+
+
+def test_unrest_model(
+    unrest_model: dict[str, Any],
+) -> None:
+    tree = _process_tree_yaml(unrest_model, ["a", "b", "c", "d"], make_model("UNREST"))
+    assert "A/C" in tree[0].params
+    assert tree.params["mprobs"]
 
 
 @pytest.mark.parametrize(

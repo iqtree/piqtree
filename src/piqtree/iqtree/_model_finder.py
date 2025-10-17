@@ -2,11 +2,11 @@
 
 import dataclasses
 from collections.abc import Iterable
-from typing import Any
+from typing import Any, cast
 
 import yaml
 from _piqtree import iq_model_finder
-from cogent3.app import typing as c3_types
+from cogent3.core.alignment import Alignment
 from cogent3.util.misc import get_object_provenance
 
 from piqtree.iqtree._decorator import iqtree_func
@@ -117,18 +117,18 @@ class ModelFinderResult:
 
 
 def model_finder(
-    aln: c3_types.AlignedSeqsType,
+    aln: Alignment,
     model_set: Iterable[str] | None = None,
     freq_set: Iterable[str] | None = None,
     rate_set: Iterable[str] | None = None,
     rand_seed: int | None = None,
     num_threads: int | None = None,
-) -> ModelFinderResult | c3_types.SerialisableType:
+) -> ModelFinderResult:
     """Find the models of best fit for an alignment using ModelFinder.
 
     Parameters
     ----------
-    aln : c3_types.AlignedSeqsType
+    aln : Alignment
         The alignment to find the model of best fit for.
     model_set : Iterable[str] | None, optional
         Search space for models.
@@ -147,11 +147,11 @@ def model_finder(
 
     Returns
     -------
-    ModelFinderResult | c3_types.SerialisableType
+    ModelFinderResult
         Collection of data returned from IQ-TREE's ModelFinder.
 
     """
-    source = aln.info.source
+    source = cast("str", aln.info.source)
     if rand_seed is None:
         rand_seed = 0  # The default rand_seed in IQ-TREE
 

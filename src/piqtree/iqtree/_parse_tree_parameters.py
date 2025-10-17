@@ -27,7 +27,7 @@ MOTIF_PARS = "A", "C", "G", "T"
 
 def _insert_edge_pars(tree: PhyloNode, **kwargs: dict) -> None:
     # inserts the edge parameters into each edge to match the structure of
-    # cogent3.PhyloNode
+    # PhyloNode
     for node in tree.get_edge_vector():
         # skip the rate parameters when node is the root
         if node.is_root():

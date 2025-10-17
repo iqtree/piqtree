@@ -3,7 +3,6 @@
 from collections.abc import Iterable, Sequence
 from typing import Any, cast
 
-import cogent3
 import numpy as np
 import yaml
 from _piqtree import iq_build_tree, iq_consensus_tree, iq_fit_tree, iq_nj_tree
@@ -54,12 +53,12 @@ def _process_tree_yaml(
 ) -> PhyloNode:
     newick = tree_yaml["PhyloTree"]["newick"]
 
-    tree = cogent3.make_tree(newick)
+    tree = make_tree(newick)
     candidates = tree_yaml["CandidateSet"]
     likelihood = None
     for candidate in candidates.values():
         candidate_likelihood, candidate_newick = candidate.split(" ")
-        candidate_tree = cogent3.make_tree(candidate_newick)
+        candidate_tree = make_tree(candidate_newick)
         if _tree_equal(candidate_tree, tree):
             likelihood = float(candidate_likelihood)
             break
@@ -212,7 +211,7 @@ def nj_tree(
 
     Parameters
     ----------
-    pairwise_distances : c3_types.PairwiseDistanceType
+    pairwise_distances : DistanceMatrix
         Pairwise distances to construct neighbour joining tree from.
     allow_negative : bool, optional
         Whether to allow negative branch lengths in the output.

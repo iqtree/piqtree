@@ -2,9 +2,10 @@
 
 from collections.abc import Iterable
 
-import cogent3
-import cogent3.app.typing as c3_types
 from cogent3.app import composable
+from cogent3.core.alignment import Alignment
+from cogent3.core.tree import PhyloNode
+from cogent3.evolve.fast_distance import DistanceMatrix
 from cogent3.util.misc import extend_docstring_from
 
 from piqtree import (
@@ -39,8 +40,8 @@ class piq_build_tree:
 
     def main(
         self,
-        aln: c3_types.AlignedSeqsType,
-    ) -> cogent3.PhyloNode | cogent3.app.typing.SerialisableType:
+        aln: Alignment,
+    ) -> PhyloNode:
         tree = build_tree(
             aln,
             self._model,
@@ -57,7 +58,7 @@ class piq_fit_tree:
     @extend_docstring_from(fit_tree)
     def __init__(
         self,
-        tree: cogent3.PhyloNode,
+        tree: PhyloNode,
         model: Model | str,
         *,
         num_threads: int | None = None,
@@ -70,8 +71,8 @@ class piq_fit_tree:
 
     def main(
         self,
-        aln: c3_types.AlignedSeqsType,
-    ) -> cogent3.PhyloNode | cogent3.app.typing.SerialisableType:
+        aln: Alignment,
+    ) -> PhyloNode:
         tree = fit_tree(
             aln,
             self._tree,
@@ -89,7 +90,7 @@ def piq_random_tree(
     num_taxa: int,
     tree_mode: TreeGenMode,
     rand_seed: int | None = None,
-) -> cogent3.PhyloNode:
+) -> PhyloNode:
     return random_tree(num_taxa, tree_mode, rand_seed)
 
 
@@ -104,8 +105,8 @@ class piq_jc_distances:
 
     def main(
         self,
-        aln: c3_types.AlignedSeqsType,
-    ) -> c3_types.PairwiseDistanceType | cogent3.app.typing.SerialisableType:
+        aln: Alignment,
+    ) -> DistanceMatrix:
         dists = jc_distances(
             aln,
             num_threads=self._num_threads,
@@ -117,10 +118,10 @@ class piq_jc_distances:
 @composable.define_app
 @extend_docstring_from(nj_tree)
 def piq_nj_tree(
-    dists: c3_types.PairwiseDistanceType,
+    dists: DistanceMatrix,
     *,
     allow_negative: bool = False,
-) -> cogent3.PhyloNode:
+) -> PhyloNode:
     tree = nj_tree(dists, allow_negative=allow_negative)
     tree.params |= {"provenance": "piqtree"}
     tree.source = getattr(dists, "source", None)
@@ -130,18 +131,18 @@ def piq_nj_tree(
 @composable.define_app
 @extend_docstring_from(model_finder)
 def piq_model_finder(
-    aln: c3_types.AlignedSeqsType,
-) -> ModelFinderResult | c3_types.SerialisableType:
+    aln: Alignment,
+) -> ModelFinderResult:
     return model_finder(aln)
 
 
 @composable.define_app
 @extend_docstring_from(consensus_tree)
 def piq_consensus_tree(
-    trees: Iterable[cogent3.PhyloNode],
+    trees: Iterable[PhyloNode],
     *,
     min_support: float = 0.5,
-) -> cogent3.PhyloNode:
+) -> PhyloNode:
     return consensus_tree(trees, min_support=min_support)
 
 

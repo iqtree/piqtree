@@ -1,8 +1,8 @@
 from collections.abc import Sequence
 
-import cogent3.app.typing as c3_types
 import numpy as np
 from _piqtree import iq_jc_distances
+from cogent3.core.alignment import Alignment
 from cogent3.evolve.fast_distance import DistanceMatrix
 
 from piqtree.iqtree._decorator import iqtree_func
@@ -13,7 +13,7 @@ iq_jc_distances = iqtree_func(iq_jc_distances, hide_files=True)
 def _dists_to_distmatrix(
     distances: np.ndarray,
     names: Sequence[str],
-) -> c3_types.PairwiseDistanceType:
+) -> DistanceMatrix:
     """Convert numpy representation of distance matrix into cogent3 pairwise distance matrix.
 
     Parameters
@@ -25,7 +25,7 @@ def _dists_to_distmatrix(
 
     Returns
     -------
-    c3_types.PairwiseDistanceType
+    DistanceMatrix
         Pairwise distance matrix.
 
     """
@@ -37,21 +37,21 @@ def _dists_to_distmatrix(
 
 
 def jc_distances(
-    aln: c3_types.AlignedSeqsType,
+    aln: Alignment,
     num_threads: int | None = None,
-) -> c3_types.PairwiseDistanceType:
+) -> DistanceMatrix:
     """Compute pairwise JC distances for a given alignment.
 
     Parameters
     ----------
-    aln : c3_types.AlignedSeqsType
+    aln : Alignment
         alignment to compute pairwise JC distances for.
     num_threads: int | None, optional
         Number of threads for IQ-TREE to use, by default None (all available threads).
 
     Returns
     -------
-    c3_types.PairwiseDistanceType
+    DistanceMatrix
         Pairwise JC distance matrix.
 
     """

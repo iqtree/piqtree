@@ -223,7 +223,7 @@ def _process_tree_yaml(
     if "ModelDNA" in tree_yaml:
         _parse_nonlie_model(tree, tree_yaml)
 
-    if "ModelUnrest" in tree_yaml:
+    elif "ModelUnrest" in tree_yaml:
         _parse_unrest_model(tree, tree_yaml)
 
     # parse Lie DnaModel parameters, handling various Lie model names

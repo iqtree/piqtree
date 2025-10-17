@@ -197,7 +197,6 @@ def test_non_lie_dna_with_rate_model(
         ["a", "b", "c", "d"],
         make_model("GTR+I+G"),
     )
-    print(tree[0].params)
     for rate, value in edge_params["rates"].items():
         assert tree[0].params[rate] == value
     assert tree.params["RateGammaInvar"] == rate_params

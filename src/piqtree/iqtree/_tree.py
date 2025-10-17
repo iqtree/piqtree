@@ -1,17 +1,21 @@
 """Python wrappers to tree searching functions in the IQ-TREE library."""
 
 from collections.abc import Iterable, Sequence
+from typing import Any, cast
 
 import cogent3
-import cogent3.app.typing as c3_types
 import numpy as np
 import yaml
 from _piqtree import iq_build_tree, iq_consensus_tree, iq_fit_tree, iq_nj_tree
-from cogent3 import PhyloNode, make_tree
+from cogent3 import make_tree
+from cogent3.core.alignment import Alignment
+from cogent3.core.tree import PhyloNode
+from cogent3.evolve.fast_distance import DistanceMatrix
 
 from piqtree.exceptions import ParseIqTreeError
 from piqtree.iqtree._decorator import iqtree_func
-from piqtree.model import Model, StandardDnaModel, make_model
+from piqtree.iqtree._parse_tree_parameters import parse_model_parameters
+from piqtree.model import Model, make_model
 from piqtree.util import get_newick
 
 iq_build_tree = iqtree_func(iq_build_tree, hide_files=True)
@@ -19,165 +23,10 @@ iq_fit_tree = iqtree_func(iq_fit_tree, hide_files=True)
 iq_nj_tree = iqtree_func(iq_nj_tree, hide_files=True)
 iq_consensus_tree = iqtree_func(iq_consensus_tree, hide_files=True)
 
-# the order defined in IQ-TREE
-# assume UNREST model has 12 rates, GTR and simpler models always have 6 rates present
-RATE_PARS = "A/C", "A/G", "A/T", "C/G", "C/T", "G/T"
-RATE_PARS_UNREST = (
-    "A/C",
-    "A/G",
-    "A/T",
-    "C/A",
-    "C/G",
-    "C/T",
-    "G/A",
-    "G/C",
-    "G/T",
-    "T/A",
-    "T/C",
-    "T/G",
-)
-MOTIF_PARS = "A", "C", "G", "T"
 
-
-def _rename_iq_tree(tree: cogent3.PhyloNode, names: Sequence[str]) -> None:
+def _rename_iq_tree(tree: PhyloNode, names: Sequence[str]) -> None:
     for tip in tree.tips():
         tip.name = names[int(tip.name)]
-
-
-def _insert_edge_pars(tree: cogent3.PhyloNode, **kwargs: dict) -> None:
-    # inserts the edge parameters into each edge to match the structure of
-    # cogent3.PhyloNode
-    for node in tree.get_edge_vector():
-        # skip the rate parameters when node is the root
-        if node.is_root():
-            kwargs = {k: v for k, v in kwargs.items() if k == "mprobs"}
-            del node.params["edge_pars"]
-        node.params.update(kwargs)
-
-
-def _edge_pars_for_cogent3(tree: cogent3.PhyloNode, model: Model) -> None:
-    base_model = model.submod_type.base_model
-
-    rate_pars = tree.params["edge_pars"]["rates"]
-    motif_pars = {"mprobs": tree.params["edge_pars"]["mprobs"]}
-    # renames parameters to conform to cogent3's naming conventions
-    if base_model in {StandardDnaModel.JC, StandardDnaModel.F81}:
-        # skip rate_pars since rate parameters are constant in JC and F81
-        _insert_edge_pars(
-            tree,
-            **motif_pars,
-        )
-        return
-    if base_model in {StandardDnaModel.K80, StandardDnaModel.HKY}:
-        rate_pars = {"kappa": rate_pars["A/G"]}
-
-    elif base_model is StandardDnaModel.TN:
-        rate_pars = {"kappa_r": rate_pars["A/G"], "kappa_y": rate_pars["C/T"]}
-
-    elif base_model is StandardDnaModel.GTR:
-        del rate_pars["G/T"]
-
-    # applies global rate parameters to each edge
-    _insert_edge_pars(
-        tree,
-        **rate_pars,
-        **motif_pars,
-    )
-
-
-def _parse_nonlie_model(tree: cogent3.PhyloNode, tree_yaml: dict) -> None:
-    # parse motif and rate parameters in the tree_yaml for non-Lie DnaModel
-    model_fits = tree_yaml.get("ModelDNA", {})
-
-    state_freq_str = model_fits.get("state_freq", "")
-    rate_str = model_fits.get("rates", "")
-
-    # parse motif parameters, assign each to a name, and raise an error if not found
-    if state_freq_str:
-        # converts the strings of motif parameters into dictionary
-        state_freq_list = [
-            float(value) for value in state_freq_str.replace(" ", "").split(",")
-        ]
-        tree.params["edge_pars"] = {
-            "mprobs": dict(zip(MOTIF_PARS, state_freq_list, strict=True)),
-        }
-    else:
-        msg = "IQ-TREE output malformated, motif parameters not found."
-        raise ParseIqTreeError(msg)
-
-    # parse rate parameters, assign each to a name, and raise an error if not found
-    if rate_str:
-        rate_list = [float(value) for value in rate_str.replace(" ", "").split(",")]
-        tree.params["edge_pars"]["rates"] = dict(
-            zip(RATE_PARS, rate_list, strict=True),
-        )
-    else:
-        msg = "IQ-TREE output malformated, rate parameters not found."
-        raise ParseIqTreeError(msg)
-
-
-def _parse_lie_model(
-    tree: cogent3.PhyloNode,
-    tree_yaml: dict,
-    lie_model_name: str,
-) -> None:
-    # parse motif and rate parameters in the tree_yaml for Lie DnaModel
-    model_fits = tree_yaml.get(lie_model_name, {})
-
-    # parse motif parameters, assign each to a name, and raise an error if not found
-    state_freq_str = model_fits.get("state_freq", "")
-    if state_freq_str:
-        state_freq_list = [
-            float(value) for value in state_freq_str.replace(" ", "").split(",")
-        ]
-        tree.params[lie_model_name] = {
-            "mprobs": dict(zip(MOTIF_PARS, state_freq_list, strict=True)),
-        }
-    else:
-        msg = "IQ-TREE output malformated, motif parameters not found."
-        raise ParseIqTreeError(msg)
-
-    # parse rate parameters, skipping LIE_1_1 (aka JC69) since its rate parameter is constant thus absent
-    if "model_parameters" in model_fits:
-        model_parameters = model_fits["model_parameters"]
-
-        # convert model parameters to a list of floats if they are a string
-        if isinstance(model_parameters, str):
-            tree.params[lie_model_name]["model_parameters"] = [
-                float(value) for value in model_parameters.replace(" ", "").split(",")
-            ]
-        else:
-            # directly use the float
-            tree.params[lie_model_name]["model_parameters"] = model_parameters
-
-
-def _parse_unrest_model(tree: cogent3.PhyloNode, tree_yaml: dict) -> None:
-    model_fits = tree_yaml.get("ModelUnrest", {})
-
-    state_freq_str = model_fits.get("state_freq", "")
-    rate_str = model_fits.get("rates", "")
-
-    # parse state frequencies
-    if state_freq_str:
-        state_freq_list = [
-            float(value) for value in state_freq_str.replace(" ", "").split(",")
-        ]
-        tree.params["edge_pars"] = {
-            "mprobs": dict(zip(MOTIF_PARS, state_freq_list, strict=True)),
-        }
-    else:
-        msg = "IQ-TREE output malformated, motif parameters not found."
-        raise ParseIqTreeError(msg)
-
-    # parse rates
-    if rate_str:
-        rate_list = [float(value) for value in rate_str.replace(" ", "").split(",")]
-        tree.params["edge_pars"]["rates"] = dict(
-            zip(RATE_PARS_UNREST, rate_list, strict=True),
-        )
-    else:
-        msg = "IQ-TREE output malformated, rate parameters not found."
-        raise ParseIqTreeError(msg)
 
 
 def _tree_equal(node1: PhyloNode, node2: PhyloNode) -> bool:
@@ -199,9 +48,10 @@ def _tree_equal(node1: PhyloNode, node2: PhyloNode) -> bool:
 
 
 def _process_tree_yaml(
-    tree_yaml: dict,
+    tree_yaml: dict[str, Any],
     names: Sequence[str],
-) -> cogent3.PhyloNode:
+    model: Model,
+) -> PhyloNode:
     newick = tree_yaml["PhyloTree"]["newick"]
 
     tree = cogent3.make_tree(newick)
@@ -219,19 +69,7 @@ def _process_tree_yaml(
 
     tree.params["lnL"] = likelihood
 
-    # parse non-Lie DnaModel parameters
-    if "ModelDNA" in tree_yaml:
-        _parse_nonlie_model(tree, tree_yaml)
-
-    elif "ModelUnrest" in tree_yaml:
-        _parse_unrest_model(tree, tree_yaml)
-
-    # parse Lie DnaModel parameters, handling various Lie model names
-    elif key := next(
-        (key for key in tree_yaml if key.startswith("ModelLieMarkov")),
-        None,
-    ):
-        _parse_lie_model(tree, tree_yaml, key)
+    parse_model_parameters(tree, tree_yaml, model)
 
     # parse rate model, handling various rate model names
     if key := next((key for key in tree_yaml if key.startswith("Rate")), None):
@@ -245,19 +83,19 @@ def _process_tree_yaml(
 
 
 def build_tree(
-    aln: c3_types.AlignedSeqsType,
+    aln: Alignment,
     model: Model | str,
     rand_seed: int | None = None,
     bootstrap_replicates: int | None = None,
     num_threads: int | None = None,
-) -> cogent3.PhyloNode:
+) -> PhyloNode:
     """Reconstruct a phylogenetic tree.
 
     Given a sequence alignment, uses IQ-TREE to reconstruct a phylogenetic tree.
 
     Parameters
     ----------
-    aln : c3_types.AlignedSeqsType
+    aln : Alignment
         The sequence alignment.
     model : Model | str
         The substitution model with base frequencies and rate heterogeneity.
@@ -273,7 +111,7 @@ def build_tree(
 
     Returns
     -------
-    cogent3.PhyloNode
+    PhyloNode
         The IQ-TREE maximum likelihood tree from the given alignment.
 
     """
@@ -302,23 +140,17 @@ def build_tree(
             num_threads,
         ),
     )
-    tree = _process_tree_yaml(yaml_result, names)
-
-    # for non-Lie models, populate parameters to each branch and
-    # rename them to mimic cogent3.PhyloNode
-    if "edge_pars" in tree.params:
-        _edge_pars_for_cogent3(tree, model)
-    return tree
+    return _process_tree_yaml(yaml_result, names, model)
 
 
 def fit_tree(
-    aln: c3_types.AlignedSeqsType,
-    tree: cogent3.PhyloNode,
+    aln: Alignment,
+    tree: PhyloNode,
     model: Model | str,
     num_threads: int | None = None,
     *,
     bl_fixed: bool = False,
-) -> cogent3.PhyloNode:
+) -> PhyloNode:
     """Fit branch lengths and likelihood for a tree.
 
     Given a sequence alignment and a fixed topology,
@@ -326,9 +158,9 @@ def fit_tree(
 
     Parameters
     ----------
-    aln : c3_types.AlignedSeqsType
+    aln : Alignment
         The sequence alignment.
-    tree : cogent3.PhyloNode
+    tree : PhyloNode
         The topology to fit branch lengths to.
     model : Model | str
         The substitution model with base frequencies and rate heterogeneity.
@@ -343,7 +175,7 @@ def fit_tree(
 
     Returns
     -------
-    cogent3.PhyloNode
+    PhyloNode
         A phylogenetic tree with same given topology fitted with branch lengths.
 
     """
@@ -368,20 +200,14 @@ def fit_tree(
             num_threads,
         ),
     )
-    tree = _process_tree_yaml(yaml_result, names)
-
-    # for non-Lie models, populate parameters to each branch and
-    # rename them to mimic cogent3.PhyloNode
-    if "edge_pars" in tree.params:
-        _edge_pars_for_cogent3(tree, model)
-    return tree
+    return _process_tree_yaml(yaml_result, names, model)
 
 
 def nj_tree(
-    pairwise_distances: c3_types.PairwiseDistanceType,
+    pairwise_distances: DistanceMatrix,
     *,
     allow_negative: bool = False,
-) -> cogent3.PhyloNode:
+) -> PhyloNode:
     """Construct a neighbour joining tree from a pairwise distance matrix.
 
     Parameters
@@ -394,7 +220,7 @@ def nj_tree(
 
     Returns
     -------
-    cogent3.PhyloNode
+    PhyloNode
         The neigbour joining tree.
 
     See Also
@@ -415,12 +241,12 @@ def nj_tree(
 
     if not allow_negative:
         for node in tree.preorder(include_self=False):
-            node.length = max(node.length, 0)
+            node.length = max(cast("float", node.length), 0)
 
     return tree
 
 
-def _all_same_taxa_set(trees: Iterable[cogent3.PhyloNode]) -> bool:
+def _all_same_taxa_set(trees: Iterable[PhyloNode]) -> bool:
     tree_it = iter(trees)
     try:
         taxa_set = set(next(tree_it).get_tip_names())
@@ -431,10 +257,10 @@ def _all_same_taxa_set(trees: Iterable[cogent3.PhyloNode]) -> bool:
 
 
 def consensus_tree(
-    trees: Iterable[cogent3.PhyloNode],
+    trees: Iterable[PhyloNode],
     *,
     min_support: float = 0.5,
-) -> cogent3.PhyloNode:
+) -> PhyloNode:
     """Build a consensus tree, defaults to majority-rule consensus tree.
 
     The min_support parameter represents the proportion of trees a clade
@@ -445,7 +271,7 @@ def consensus_tree(
 
     Parameters
     ----------
-    trees : Iterable[cogent3.PhyloNode]
+    trees : Iterable[PhyloNode]
         The trees to form a consensus tree from.
     min_support : float, optional
         The minimum support for a clade to appear
@@ -453,7 +279,7 @@ def consensus_tree(
 
     Returns
     -------
-    cogent3.PhyloNode
+    PhyloNode
         The constructed consensus tree.
 
     """

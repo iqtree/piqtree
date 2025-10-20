@@ -15,7 +15,7 @@ from piqtree.exceptions import ParseIqTreeError
 from piqtree.iqtree._decorator import iqtree_func
 from piqtree.iqtree._parse_tree_parameters import parse_model_parameters
 from piqtree.model import Model, make_model
-from piqtree.util import get_newick
+from piqtree.util import get_newick, process_rand_seed_nonzero
 
 iq_build_tree = iqtree_func(iq_build_tree, hide_files=True)
 iq_fit_tree = iqtree_func(iq_fit_tree, hide_files=True)
@@ -99,7 +99,7 @@ def build_tree(
     model : Model | str
         The substitution model with base frequencies and rate heterogeneity.
     rand_seed : int | None, optional
-        The random seed - 0 or None means no seed, by default None.
+        The random seed - None means no seed is used, by default None.
     bootstrap_replicates : int, optional
         The number of bootstrap replicates to perform, by default None.
         If 0 is provided, then no bootstrapping is performed.
@@ -117,8 +117,7 @@ def build_tree(
     if isinstance(model, str):
         model = make_model(model)
 
-    if rand_seed is None:
-        rand_seed = 0  # The default rand_seed in IQ-TREE
+    rand_seed = process_rand_seed_nonzero(rand_seed)
 
     if bootstrap_replicates is None:
         bootstrap_replicates = 0

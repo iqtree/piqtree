@@ -11,6 +11,7 @@ from cogent3.util.misc import get_object_provenance
 
 from piqtree.iqtree._decorator import iqtree_func
 from piqtree.model import Model, make_model
+from piqtree.util import process_rand_seed_nonzero
 
 iq_model_finder = iqtree_func(iq_model_finder, hide_files=True)
 
@@ -140,7 +141,7 @@ def model_finder(
         Search space for rate heterogeneity types.
         Equivalent to IQ-TREE's mrate parameter, by default None
     rand_seed : int | None, optional
-        The random seed - 0 or None means no seed, by default None.
+        The random seed - None means no seed is used, by default None.
     num_threads: int | None, optional
         Number of threads for IQ-TREE to use, by default None (single-threaded).
         If 0 is specified, IQ-TREE attempts to find the optimal number of threads.
@@ -152,8 +153,8 @@ def model_finder(
 
     """
     source = cast("str", aln.info.source)
-    if rand_seed is None:
-        rand_seed = 0  # The default rand_seed in IQ-TREE
+
+    rand_seed = process_rand_seed_nonzero(rand_seed)
 
     if num_threads is None:
         num_threads = 1

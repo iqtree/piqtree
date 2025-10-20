@@ -8,7 +8,7 @@ from piqtree.distribution import IndelDistribution
 from piqtree.exceptions import ParseIqTreeError
 from piqtree.iqtree._decorator import iqtree_func
 from piqtree.model import Model, make_model
-from piqtree.util import get_newick
+from piqtree.util import get_newick, make_rand_seed
 
 iq_simulate_alignment = iqtree_func(iq_simulate_alignment, hide_files=True)
 
@@ -37,7 +37,7 @@ def simulate_alignment(
         The length of the alignment (by default 1000).
         Alignment may be longer when indel model is used due to insertion events.
     rand_seed : int | None, optional
-        The random seed - 0 or None means no seed, by default None.
+        The random seed - None means no seed is used, by default None.
     insertion_rate: float | None, optional
         The insertion rate relative to substitution rate (by default 0.0).
     deletion_rate: float | None, optional
@@ -60,7 +60,7 @@ def simulate_alignment(
 
     """
     if rand_seed is None:
-        rand_seed = -1
+        rand_seed = make_rand_seed()
 
     if root_seq is None:
         root_seq = ""

@@ -78,7 +78,7 @@ jobs:
           CIBW_TEST_COMMAND: pytest {package}/tests
 
       - name: Upload Wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: cibw-wheels-${{ matrix.platform_id }}
           path: ./wheelhouse/*.whl
@@ -125,7 +125,7 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Upload Documentation Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: piqtree-docs-html
           path: site

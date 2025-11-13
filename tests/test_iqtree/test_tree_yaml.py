@@ -277,5 +277,5 @@ def test_unrest_model(
 )
 def test_tree_equal(candidate: str, expected: bool) -> None:
     tree = make_tree("((a:1.0,b:0.9),c:0.8);")
-    candidate = make_tree(candidate)
-    assert _tree_equal(tree, candidate) == expected
+    candidate_tree = make_tree(candidate)
+    assert _tree_equal(tree, candidate_tree) == expected

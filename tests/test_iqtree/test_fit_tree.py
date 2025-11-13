@@ -1,3 +1,5 @@
+from typing import cast
+
 import numpy as np
 import pytest
 from cogent3 import get_app, make_tree
@@ -14,18 +16,18 @@ def check_likelihood(got: PhyloNode, expected: model_result) -> None:
 
 
 def check_motif_probs(got: PhyloNode, expected: PhyloNode) -> None:
-    expected = expected.params["mprobs"]
-    got = got.params["mprobs"]
+    expected_mprobs = expected.params["mprobs"]
+    got_mprobs = got.params["mprobs"]
 
-    expected_keys = set(expected.keys())
-    got_keys = set(got.keys())
+    expected_keys = set(expected_mprobs.keys())
+    got_keys = set(got_mprobs.keys())
 
     # Check that the base characters are the same
     assert expected_keys == got_keys
 
     # Check that the probs are the same
-    expected_values = [expected[key] for key in expected_keys]
-    got_values = [got[key] for key in expected_keys]
+    expected_values = [expected_mprobs[key] for key in expected_keys]
+    got_values = [got_mprobs[key] for key in expected_keys]
     assert all(
         got == pytest.approx(exp)
         for got, exp in zip(got_values, expected_values, strict=True)
@@ -54,16 +56,16 @@ def check_rate_parameters(got: PhyloNode, expected: PhyloNode) -> None:
 
 
 def check_branch_lengths(got: PhyloNode, expected: PhyloNode) -> None:
-    got = got.tip_to_tip_distances()
-    expected = expected.tip_to_tip_distances()
+    got_dists = got.tip_to_tip_distances()
+    expected_dists = expected.tip_to_tip_distances()
     # make sure the distance matrices have the same name order
     # so we can just compare entire numpy arrays
-    expected = expected.take_dists(got.names)
+    expected_dists = expected_dists.take_dists(got_dists.names)
     # Check that the keys of branch lengths are the same
-    assert set(got.names) == set(expected.names)
+    assert set(got_dists.names) == set(expected_dists.names)
 
     # Check that the branch lengths are the same
-    np.testing.assert_allclose(got.array, expected.array, atol=1e-4)
+    np.testing.assert_allclose(got_dists.array, expected_dists.array, atol=1e-4)
 
 
 @pytest.mark.parametrize(
@@ -178,7 +180,7 @@ def test_fit_tree_paramaterisation(three_otu: Alignment, model_str: str) -> None
 
     assert isinstance(tree.params["lnL"], float)
     for node in tree.preorder(include_self=False):
-        assert node.length > 0
+        assert cast("float", node.length) > 0
 
 
 def test_special_characters(three_otu: Alignment) -> None:
@@ -194,6 +196,6 @@ def test_special_characters(three_otu: Alignment) -> None:
 
     assert isinstance(tree.params["lnL"], float)
     for node in tree.preorder(include_self=False):
-        assert node.length > 0
+        assert cast("float", node.length) > 0
 
     assert set(three_otu.names) == set(tree.get_tip_names())

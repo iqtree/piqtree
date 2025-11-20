@@ -11,6 +11,11 @@ import piqtree
 from piqtree.model import Model, StandardDnaModel
 
 
+def check_model_name(got: PhyloNode, expected: str) -> None:
+    got_model = cast("str", got.params.get("model"))
+    assert got_model == expected
+
+
 def check_likelihood(got: PhyloNode, expected: model_result) -> None:
     assert got.params["lnL"] == pytest.approx(expected.lnL)
 
@@ -95,6 +100,7 @@ def test_fit_tree(
     check_motif_probs(got, expected.tree)
     check_rate_parameters(got, expected.tree)
     check_branch_lengths(got, expected.tree)
+    check_model_name(got, str(model))
 
 
 @pytest.mark.parametrize(

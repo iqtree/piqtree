@@ -30,7 +30,7 @@ jobs:
           platform_id: win_amd64
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           submodules: recursive

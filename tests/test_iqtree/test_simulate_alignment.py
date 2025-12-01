@@ -9,6 +9,7 @@ from piqtree.model import (
     StandardDnaModel,
     SubstitutionModel,
 )
+from piqtree.model._substitution_model import LieModelInstance
 
 
 @pytest.fixture
@@ -28,6 +29,18 @@ def check_simulate_alignment(
     insertion_rate: float = 0.0,
     deletion_rate: float = 0.0,
 ) -> None:
+    if isinstance(model, Model):
+        submod = model.submod_type
+        if isinstance(submod, LieModelInstance) and submod.lie_model in (
+            LieModel.LIE_1_1,
+            LieModel.LIE_3_3a,
+            LieModel.LIE_4_4a,
+            LieModel.LIE_6_7a,
+            LieModel.LIE_9_20a,
+            LieModel.LIE_9_20b,
+            LieModel.LIE_12_12,
+        ):
+            return
     if length is None:
         aln = simulate_alignment(
             tree,

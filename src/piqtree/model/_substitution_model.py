@@ -32,6 +32,18 @@ class SubstitutionModel:
         """
         raise NotImplementedError
 
+    def get_moltype(self) -> Literal["dna", "protein"]:
+        """The model's moltype string for cogent3
+
+
+        Returns
+        -------
+        str
+            The model's moltype string.
+
+        """
+        raise NotImplementedError
+
     @property
     def base_model(self) -> "SubstitutionModel":
         """Get the base model enum used by the model.
@@ -95,6 +107,9 @@ class StandardDnaModelInstance(SubstitutionModel):
             f"{{{','.join(map(str, self.model_params))}}}" if self.model_params else ""
         )
         return f"{self.dna_model.value}{params}"
+
+    def get_moltype(self) -> Literal["dna", "protein"]:
+        return "dna"
 
     @property
     def base_model(self) -> "StandardDnaModel":
@@ -174,6 +189,9 @@ class StandardDnaModel(SubstitutionModel, Enum):
 
     def iqtree_str(self) -> str:
         return self.value
+
+    def get_moltype(self) -> Literal["dna", "protein"]:
+        return "dna"
 
     @property
     def base_model(self) -> "StandardDnaModel":
@@ -264,6 +282,9 @@ class LieModelInstance(SubstitutionModel):
             f"{{{','.join(map(str, self.model_params))}}}" if self.model_params else ""
         )
         return f"{prefix}{self.lie_model.value}{params}"
+
+    def get_moltype(self) -> Literal["dna", "protein"]:
+        return "dna"
 
     @property
     def base_model(self) -> "LieModel":
@@ -363,6 +384,9 @@ class LieModel(SubstitutionModel, Enum):
 
     def iqtree_str(self) -> str:
         return self.value
+
+    def get_moltype(self) -> Literal["dna", "protein"]:
+        return "dna"
 
     @property
     def base_model(self) -> "LieModel":
@@ -473,6 +497,9 @@ class AaModel(SubstitutionModel, Enum):
 
     def iqtree_str(self) -> str:
         return self.value
+
+    def get_moltype(self) -> Literal["dna", "protein"]:
+        return "protein"
 
     @property
     def base_model(self) -> "AaModel":

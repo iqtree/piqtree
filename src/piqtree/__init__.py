@@ -27,6 +27,7 @@ from piqtree.iqtree import (
     nj_tree,
     random_tree,
     robinson_foulds,
+    simulate_alignment,
 )
 from piqtree.model import (
     Model,
@@ -57,4 +58,5 @@ __all__ = [
     "nj_tree",
     "random_tree",
     "robinson_foulds",
+    "simulate_alignment",
 ]

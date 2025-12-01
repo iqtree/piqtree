@@ -195,7 +195,7 @@ def test_special_characters(three_otu: Alignment) -> None:
             return r"_F''<.'_l_?|\y}_F_o_!@#$%^&*x_''"
         return before
 
-    three_otu = three_otu.rename_seqs(_renamer)
+    three_otu = three_otu.renamed_seqs(_renamer)
 
     to_fit = make_tree(r"(_F''<.'_l_?|\y}_F_o_!@#$%^&*x_'', (Rhesus, Mouse))")
     tree = piqtree.fit_tree(three_otu, to_fit, "GTR")

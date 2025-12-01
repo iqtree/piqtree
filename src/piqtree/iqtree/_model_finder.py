@@ -101,7 +101,10 @@ class ModelFinderResult:
     def to_rich_dict(self) -> dict[str, Any]:
         import piqtree
 
-        result = {"version": piqtree.__version__, "type": get_object_provenance(self)}
+        result: dict[str, Any] = {
+            "version": piqtree.__version__,
+            "type": get_object_provenance(self),
+        }
 
         raw_data = {
             str(model_): f"{stats.lnL} {stats.nfp} {stats.tree_length}"
@@ -109,6 +112,7 @@ class ModelFinderResult:
         }
         for attr in ("best_model_AIC", "best_model_AICc", "best_model_BIC"):
             raw_data[attr] = str(getattr(self, attr.replace("_model", "").lower()))
+
         result["init_kwargs"] = {"raw_data": raw_data, "source": self.source}
         return result
 

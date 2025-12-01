@@ -30,7 +30,7 @@ jobs:
           platform_id: win_amd64
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           submodules: recursive
@@ -64,7 +64,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
     
       - name: Build Wheels
-        uses: pypa/cibuildwheel@v3.2.1
+        uses: pypa/cibuildwheel@v3.3.0
         env: # Can specify per os - e.g. CIBW_BEFORE_ALL_LINUX, CIBW_BEFORE_ALL_MACOS, CIBW_BEFORE_ALL_WINDOWS 
           CIBW_BEFORE_ALL_LINUX: ./build_tools/before_all_linux.sh
           CIBW_BEFORE_ALL_MACOS: ./build_tools/before_all_mac.sh
@@ -78,7 +78,7 @@ jobs:
           CIBW_TEST_COMMAND: pytest {package}/tests
 
       - name: Upload Wheels
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: cibw-wheels-${{ matrix.platform_id }}
           path: ./wheelhouse/*.whl
@@ -87,7 +87,7 @@ jobs:
     name: Fetch or Build IQ-TREE Static Library
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
           submodules: recursive
@@ -105,7 +105,7 @@ jobs:
     needs: build-iqtree
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           submodules: recursive
@@ -125,7 +125,7 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Upload Documentation Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: piqtree-docs-html
           path: site
@@ -140,7 +140,7 @@ jobs:
 
     steps:      
       - name: Download Artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           pattern: cibw-*
           path: dist
@@ -161,7 +161,7 @@ jobs:
 
     steps:      
       - name: Download Artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           pattern: cibw-*
           path: dist

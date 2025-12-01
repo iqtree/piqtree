@@ -34,6 +34,7 @@ def check_build_tree_model(
     assert expected.same_topology(got.unrooted())
     # Check if branch lengths exist
     assert all(v.length is not None for v in got.get_edge_vector(include_root=False))
+    assert got.params["model"] == str(model)
 
 
 def check_build_tree(

@@ -32,7 +32,7 @@ class SubstitutionModel:
         """
         raise NotImplementedError
 
-    def get_moltype(self) -> str:
+    def get_moltype(self) -> Literal["dna", "protein"]:
         """The model's moltype string for cogent3
 
 
@@ -108,7 +108,7 @@ class StandardDnaModelInstance(SubstitutionModel):
         )
         return f"{self.dna_model.value}{params}"
 
-    def get_moltype(self) -> str:
+    def get_moltype(self) -> Literal["dna", "protein"]:
         return "dna"
 
     @property
@@ -190,7 +190,7 @@ class StandardDnaModel(SubstitutionModel, Enum):
     def iqtree_str(self) -> str:
         return self.value
 
-    def get_moltype(self) -> str:
+    def get_moltype(self) -> Literal["dna", "protein"]:
         return "dna"
 
     @property
@@ -283,7 +283,7 @@ class LieModelInstance(SubstitutionModel):
         )
         return f"{prefix}{self.lie_model.value}{params}"
 
-    def get_moltype(self) -> str:
+    def get_moltype(self) -> Literal["dna", "protein"]:
         return "dna"
 
     @property
@@ -385,7 +385,7 @@ class LieModel(SubstitutionModel, Enum):
     def iqtree_str(self) -> str:
         return self.value
 
-    def get_moltype(self) -> str:
+    def get_moltype(self) -> Literal["dna", "protein"]:
         return "dna"
 
     @property
@@ -498,7 +498,7 @@ class AaModel(SubstitutionModel, Enum):
     def iqtree_str(self) -> str:
         return self.value
 
-    def get_moltype(self) -> str:
+    def get_moltype(self) -> Literal["dna", "protein"]:
         return "protein"
 
     @property

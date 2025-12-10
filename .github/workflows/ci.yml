@@ -59,7 +59,23 @@ jobs:
       - name: Install llvm (macOS)
         if: runner.os == 'macOS'
         run: |
-          brew install llvm
+          if [[ "$(uname -m)" == "arm64" ]]; then
+            brew install llvm
+          else
+            brew install llvm
+
+            brew install llvm@20
+
+            LLVM20_PREFIX="$(brew --prefix llvm@20)"
+          
+            echo "PATH=$LLVM20_PREFIX/bin:$PATH" >> $GITHUB_ENV
+            echo "LLVM_CONFIG=$LLVM20_PREFIX/bin/llvm-config" >> $GITHUB_ENV
+            echo "LLVM_DIR=$LLVM20_PREFIX/lib/cmake/llvm" >> $GITHUB_ENV
+            echo "CMAKE_PREFIX_PATH=$LLVM20_PREFIX/lib/cmake:$CMAKE_PREFIX_PATH" >> $GITHUB_ENV
+            echo "LDFLAGS=-L$LLVM20_PREFIX/lib $LDFLAGS" >> $GITHUB_ENV
+            echo "CPPFLAGS=-I$LLVM20_PREFIX/include $CPPFLAGS" >> $GITHUB_ENV
+          fi
+
 
       - name: Install llvm (Windows)
         if: runner.os == 'Windows'

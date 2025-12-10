@@ -1,8 +1,6 @@
-# piqtree documentation
-
 ## Overview
 
-`piqtree` is a Python package that exposes selected [IQ-TREE](http://www.iqtree.org) capabilities within Python, using the [cogent3](https://cogent3.org) library as the interface.
+`piqtree` (pronounced 'pie-cue-tree') is a Python package that exposes selected [IQ-TREE](http://www.iqtree.org) capabilities within Python, using the [cogent3](https://cogent3.org) library as the interface.
 
 `piqtree` is implemented with the goals of:
 

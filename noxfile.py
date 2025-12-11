@@ -58,6 +58,6 @@ def test_docs(session: nox.Session) -> None:
         session.run("python", doctest_setup_path, env=env)
         session.run("pytest", *posargs, env=env)
 
-        session.install("cogent3[extra]", "diverse-seq")
+        session.install("plotly", "ipython", "nbformat", "diverse-seq")
         for py_file in doc_py_files:
             session.run("python", py_file, env=env, silent=True)

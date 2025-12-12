@@ -1,4 +1,5 @@
 import multiprocessing
+import re
 
 import pytest
 from cogent3.core.alignment import Alignment
@@ -84,4 +85,19 @@ def test_model_finder_other_options(five_otu: Alignment) -> None:
             rand_seed=1,
             model_set={"HKY", "TIM"},
             other_options="-mtre",
+        )
+
+
+def test_model_finder_overridden_option(five_otu: Alignment) -> None:
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "Option '-mset' will be overridden by parameter of function. Use the parameter directly instead.",
+        ),
+    ):
+        _ = model_finder(
+            five_otu,
+            rand_seed=1,
+            model_set={"HKY", "TIM"},
+            other_options="-mset JC,HKY,TIM",
         )

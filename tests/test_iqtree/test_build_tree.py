@@ -160,3 +160,29 @@ def test_build_tree_other_options(four_otu: Alignment) -> None:
     with pytest.raises(IqTreeError):
         # Invalid extra options
         _ = piqtree.build_tree(four_otu, "GTR", other_options="--epslon 0.1 -n 0")
+
+
+def test_build_tree_overridden_option(four_otu: Alignment) -> None:
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "Option '-seed' will be overridden by parameter of function. Use the parameter directly instead.",
+        ),
+    ):
+        _ = piqtree.build_tree(
+            four_otu,
+            "GTR",
+            other_options="--epsilon 0.1 -seed 123 -n 0",
+        )
+
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "Option '-bb' will be overridden by parameter of function. Use the parameter directly instead.",
+        ),
+    ):
+        _ = piqtree.build_tree(
+            four_otu,
+            "GTR",
+            other_options="--epsilon 0.1 -n 0 -bb 2000",
+        )

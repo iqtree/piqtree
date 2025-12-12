@@ -1,3 +1,4 @@
+import re
 from typing import cast
 
 import numpy as np
@@ -227,4 +228,22 @@ def test_fit_tree_other_options(four_otu: Alignment) -> None:
             tree,
             "GTR",
             other_options="-blminn 0.1 -blmaax 0.5",
+        )
+
+
+def test_fit_tree_overridden_option(four_otu: Alignment) -> None:
+    tree = make_tree(tip_names=four_otu.names)
+
+    with pytest.raises(
+        ValueError,
+        match=re.escape(
+            "Option '-blfix' will be overridden by parameter of function. Use the parameter directly instead.",
+        ),
+    ):
+        # Invalid extra options
+        _ = piqtree.fit_tree(
+            four_otu,
+            tree,
+            "JC",
+            other_options="-blfix",
         )

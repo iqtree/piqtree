@@ -1,4 +1,5 @@
 import re
+from typing import cast
 
 import pytest
 from cogent3 import make_tree
@@ -92,7 +93,9 @@ def test_rooted_tree(
     if model.base_model in UNSUPPORTED_MODELS:
         with pytest.raises(
             ValueError,
-            match=re.escape(f"Lie Model {model.base_model.value} is unsupported."),
+            match=re.escape(
+                f"Lie Model {cast('LieModel', model.base_model).value} is unsupported.",
+            ),
         ):
             check_simulate_alignment(five_taxon_rooted_tree, Model(model))
     else:
@@ -114,7 +117,9 @@ def test_unrooted_tree(
     if model.base_model in UNSUPPORTED_MODELS:
         with pytest.raises(
             ValueError,
-            match=re.escape(f"Lie Model {model.base_model.value} is unsupported."),
+            match=re.escape(
+                f"Lie Model {cast('LieModel', model.base_model).value} is unsupported.",
+            ),
         ):
             check_simulate_alignment(four_taxon_unrooted_tree, Model(model))
     else:

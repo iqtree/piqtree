@@ -2,6 +2,7 @@ import re
 from typing import cast
 
 import pytest
+from cogent3 import make_tree
 from cogent3.core.alignment import Alignment
 from cogent3.core.tree import PhyloNode
 
@@ -180,3 +181,13 @@ def test_indel_sizes(
 
     for name in aln.names:
         assert aln.get_seq(name) == aln_indel_str.get_seq(name)
+
+
+def test_root_seq() -> None:
+    tree = make_tree("((a:0.8,(b:1.2,c:0)):0.0,d:0.5,e:0.0)")
+    root_seq = "GGGGCCCCAAAATTTT" * 10
+
+    aln = simulate_alignment(tree, "JC", len(root_seq), root_seq=root_seq)
+
+    assert str(aln.get_seq("c")) == root_seq
+    assert str(aln.get_seq("e")) == root_seq

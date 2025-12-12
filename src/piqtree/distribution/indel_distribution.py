@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 class IndelDistribution(ABC):
     @abstractmethod
     def iqtree_str(self) -> str:
-        pass
+        pass  # pragma: no cover
 
     def __str__(self) -> str:
         return self.iqtree_str()

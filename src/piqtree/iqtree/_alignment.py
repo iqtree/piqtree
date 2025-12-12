@@ -120,20 +120,20 @@ def _parse_yaml_alignment(yaml_alignment: str) -> dict[str, str]:
         if part.startswith(">"):
             if seq_buffer is not None:
                 if name is None:
-                    msg = "Got sequence data without name."
-                    raise ParseIqTreeError(msg)
+                    msg = "Got sequence data without name."  # pragma: no cover
+                    raise ParseIqTreeError(msg)  # pragma: no cover
                 seqs[name] = seq_buffer
             name = part.strip()[1:]
             seq_buffer = ""
         elif seq_buffer is not None:
             seq_buffer += part.strip()
         else:
-            msg = f"Unexpected parsed value '{part}'"
-            raise ParseIqTreeError(msg)
+            msg = f"Unexpected parsed value '{part}'"  # pragma: no cover
+            raise ParseIqTreeError(msg)  # pragma: no cover
 
     if seq_buffer is not None:
         if name is None:
-            msg = "Got sequence data without name."
-            raise ParseIqTreeError(msg)
+            msg = "Got sequence data without name."  # pragma: no cover
+            raise ParseIqTreeError(msg)  # pragma: no cover
         seqs[name] = seq_buffer
     return seqs

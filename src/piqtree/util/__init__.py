@@ -28,7 +28,7 @@ def make_nonzero_rand_seed() -> int:
         A non-zero 32-bit random seed.
     """
     while (seed := make_rand_seed()) == 0:
-        pass  # pragma: nocov
+        pass  # pragma: no cover
     return seed
 
 

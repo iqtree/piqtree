@@ -28,8 +28,8 @@ def _fd_or_fallback(stream: object, fallback_fd: int) -> int:
     """
     try:
         return stream.fileno()  # type: ignore[attr-defined]
-    except io.UnsupportedOperation:
-        return fallback_fd
+    except io.UnsupportedOperation:  # pragma: no cover
+        return fallback_fd  # pragma: no cover
 
 
 def iqtree_func[**Param, RetType](

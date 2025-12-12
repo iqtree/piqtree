@@ -147,8 +147,8 @@ def _parse_unrest_model(tree: PhyloNode, tree_yaml: dict) -> None:
             "mprobs": dict(zip(MOTIF_PARS, state_freq_list, strict=True)),
         }
     else:
-        msg = "IQ-TREE output is malformed, motif parameters not found."
-        raise ParseIqTreeError(msg)
+        msg = "IQ-TREE output is malformed, motif parameters not found."  # pragma: no cover
+        raise ParseIqTreeError(msg)  # pragma: no cover
 
     # parse rates
     if rate_str:
@@ -157,8 +157,8 @@ def _parse_unrest_model(tree: PhyloNode, tree_yaml: dict) -> None:
             zip(RATE_PARS_UNREST, rate_list, strict=True),
         )
     else:
-        msg = "IQ-TREE output is malformed, rate parameters not found."
-        raise ParseIqTreeError(msg)
+        msg = "IQ-TREE output is malformed, rate parameters not found."  # pragma: no cover
+        raise ParseIqTreeError(msg)  # pragma: no cover
 
 
 def parse_model_parameters(

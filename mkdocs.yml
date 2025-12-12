@@ -49,6 +49,7 @@ nav:
     - quickstart/index.md
     - quickstart/construct_ml_tree.md
     - quickstart/fit_tree_topology.md
+    - quickstart/simulate_alignment.md
     - quickstart/using_substitution_models.md
     - quickstart/using_model_finder.md
     - quickstart/calculate_jc_distances.md
@@ -76,6 +77,8 @@ nav:
           - api/tree/nj_tree.md
           - api/tree/consensus_tree.md
           - api/tree/random_tree.md
+      - Alignments:
+          - api/alignment/simulate_alignment.md
       - Substitution models:
           - api/model/model_finder.md
           - api/model/ModelFinderResult.md

@@ -10,6 +10,13 @@
 | [consensus_tree](tree/consensus_tree.md) | Construct a consensus tree from a collection of trees. |
 | [random_tree](tree/random_tree.md) | Create a randomly generated phylogenetic tree. |
 
+## Alignments
+
+| Name | Summary |
+|------|---------|
+| [simulate_alignment](alignment/simulate_alignment.md) |  Simulate an alignment with AliSim. |
+
+
 ## Substitution Models
 
 | Name | Summary |

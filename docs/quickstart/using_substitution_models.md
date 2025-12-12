@@ -170,3 +170,4 @@ model = make_model("GTR+FQ+I+R3")
 
 - Use a [`Model`](../api/model/Model.md) to construct a maximum likelihood tree: ["Construct a maximum likelihood phylogenetic tree"](construct_ml_tree.md).
 - Use a [`Model`](../api/model/Model.md) to fit branch lengths to a tree topology: ["Fit branch lengths to a tree topology from an alignment"](fit_tree_topology.md).
+- Use a [`Model`](../api/model/Model.md) to simulate an alignment with AliSim: ["Simulate alignments with AliSim"](simulate_alignment.md).

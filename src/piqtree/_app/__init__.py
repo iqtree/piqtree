@@ -17,7 +17,9 @@ from piqtree import (
     model_finder,
     nj_tree,
     random_tree,
+    simulate_alignment,
 )
+from piqtree.distribution import IndelDistribution
 from piqtree.iqtree import ModelFinderResult
 from piqtree.model import Model
 
@@ -152,6 +154,34 @@ def piq_consensus_tree(
     return consensus_tree(trees, min_support=min_support)
 
 
+@composable.define_app
+@extend_docstring_from(simulate_alignment)
+def piq_simulate_alignment(
+    tree: PhyloNode,
+    model: Model | str,
+    length: int = 1000,
+    rand_seed: int | None = None,
+    insertion_rate: float = 0.0,
+    deletion_rate: float = 0.0,
+    insertion_size_distribution: IndelDistribution | str = "POW{1.7/100}",
+    deletion_size_distribution: IndelDistribution | str = "POW{1.7/100}",
+    root_seq: str | None = None,
+    num_threads: int | None = None,
+) -> Alignment:
+    return simulate_alignment(
+        tree,
+        model,
+        length=length,
+        rand_seed=rand_seed,
+        insertion_rate=insertion_rate,
+        deletion_rate=deletion_rate,
+        insertion_size_distribution=insertion_size_distribution,
+        deletion_size_distribution=deletion_size_distribution,
+        root_seq=root_seq,
+        num_threads=num_threads,
+    )
+
+
 _ALL_APP_NAMES = [
     "piq_build_tree",
     "piq_fit_tree",
@@ -160,4 +190,5 @@ _ALL_APP_NAMES = [
     "piq_nj_tree",
     "piq_model_finder",
     "piq_consensus_tree",
+    "piq_simulate_alignment",
 ]

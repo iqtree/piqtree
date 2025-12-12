@@ -2,7 +2,6 @@ import re
 from typing import cast
 
 import pytest
-from cogent3 import make_tree
 from cogent3.core.alignment import Alignment
 from cogent3.core.tree import PhyloNode
 
@@ -21,16 +20,6 @@ from piqtree.model import (
     StandardDnaModel,
     SubstitutionModel,
 )
-
-
-@pytest.fixture
-def four_taxon_unrooted_tree() -> PhyloNode:  # Unrooted
-    return make_tree("((a:0.1,b:0.2):0.05,c:0.3,d:0.1);")
-
-
-@pytest.fixture
-def five_taxon_rooted_tree() -> PhyloNode:  # Rooted
-    return make_tree("(((a:0.1,b:0.2):0.05,(c:0.3,d:0.1):0.2):0.05,e:0.4);")
 
 
 def check_simulate_alignment(

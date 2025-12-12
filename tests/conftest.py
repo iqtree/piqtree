@@ -64,3 +64,13 @@ def five_trees() -> list[PhyloNode]:
     tree5 = make_tree("((((a,b),c),d),(e,f))")
 
     return [tree1, tree2, tree3, tree4, tree5]
+
+
+@pytest.fixture
+def four_taxon_unrooted_tree() -> PhyloNode:  # Unrooted
+    return make_tree("((a:0.1,b:0.2):0.05,c:0.3,d:0.1);")
+
+
+@pytest.fixture
+def five_taxon_rooted_tree() -> PhyloNode:  # Rooted
+    return make_tree("(((a:0.1,b:0.2):0.05,(c:0.3,d:0.1):0.2):0.05,e:0.4);")

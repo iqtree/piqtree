@@ -121,6 +121,15 @@ def test_piq_consesus_tree(five_trees: list[PhyloNode]) -> None:
     assert tree_equal(got_0_3, expected_0_3)
 
 
+def test_piq_simulate_alignment(five_taxon_rooted_tree: PhyloNode) -> None:
+    app = get_app("piq_simulate_alignment", model="JC")
+    aln = app(five_taxon_rooted_tree)
+
+    assert isinstance(aln, Alignment)
+    assert sorted(aln.names) == sorted(five_taxon_rooted_tree.get_tip_names())
+    assert len(aln) == 1000
+
+
 def test_quick_tree_hook(four_otu: Alignment) -> None:
     tree = four_otu.quick_tree(use_hook="piqtree")
     assert tree.params["provenance"] == "piqtree"

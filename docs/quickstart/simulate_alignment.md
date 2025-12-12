@@ -19,7 +19,7 @@ aln = simulate_alignment(tree, "JC")
 ### Reproducible Results
 
 For reproducible results, a random seed may be specified.
-> **Caution:** 0 and None are equivalent to no random seed being specified.
+> **Caution:** 0 is a specific random seed. None is equivalent to no random seed being specified.
 
 ```python
 from cogent3 import make_tree

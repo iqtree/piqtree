@@ -24,7 +24,7 @@ tree = random_tree(num_taxa, TreeGenMode.YULE_HARDING)
 ### Reproducible Results
 
 For reproducible results, a random seed may be specified.
-> **Caution:** 0 and None are equivalent to no random seed being specified.
+> **Caution:** 0 is a specific random seed. None is equivalent to no random seed being specified.
 
 ```python
 from piqtree import TreeGenMode, random_tree

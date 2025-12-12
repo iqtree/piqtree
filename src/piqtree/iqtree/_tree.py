@@ -15,7 +15,7 @@ from piqtree.exceptions import ParseIqTreeError
 from piqtree.iqtree._decorator import iqtree_func
 from piqtree.iqtree._parse_tree_parameters import parse_model_parameters
 from piqtree.model import Model, make_model
-from piqtree.util import get_newick, process_rand_seed_nonzero
+from piqtree.util import get_newick, process_rand_seed_nonzero, validate_other_options
 
 iq_build_tree = iqtree_func(iq_build_tree, hide_files=True)
 iq_fit_tree = iqtree_func(iq_fit_tree, hide_files=True)
@@ -82,6 +82,17 @@ def _process_tree_yaml(
     return tree
 
 
+# Bad options
+INVALID_BUILD_TREE_PARAMS = [
+    "-s",  # aln file
+    "-m",  # model selection
+    "-seed",  # seed
+    "-bb",  # bootstrap replicates
+    "-nt",  # threads
+    "-ntmax",  # threads
+]
+
+
 def build_tree(
     aln: Alignment,
     model: Model | str,
@@ -118,6 +129,8 @@ def build_tree(
         The IQ-TREE maximum likelihood tree from the given alignment.
 
     """
+    validate_other_options(other_options, INVALID_BUILD_TREE_PARAMS)
+
     if isinstance(model, str):
         model = make_model(model)
 
@@ -144,6 +157,17 @@ def build_tree(
         ),
     )
     return _process_tree_yaml(yaml_result, names, model)
+
+
+INVALID_FIT_TREE_PARAMS = [
+    "-s",  # aln file
+    "-t",  # tree specification
+    "-te",  # tree specification
+    "-m",  # model selection
+    "-nt",  # threads
+    "-ntmax",  # threads
+    "-blfix",  # whether to fix current branch lengths
+]
 
 
 def fit_tree(
@@ -185,6 +209,8 @@ def fit_tree(
         A phylogenetic tree with the same given topology fitted with branch lengths.
 
     """
+    validate_other_options(other_options, INVALID_FIT_TREE_PARAMS)
+
     if isinstance(model, str):
         model = make_model(model)
 

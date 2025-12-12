@@ -1,6 +1,15 @@
 import secrets
+from collections.abc import Iterable
 
 from cogent3.core.tree import PhyloNode
+
+
+def validate_other_options(other_options: str, banned_options: Iterable[str]) -> None:
+    option_parts = set(other_options.split())
+    for banned_option in banned_options:
+        if banned_option in option_parts:
+            msg = f"Option {banned_option!r} will be overridden by parameter of function. Use the parameter directly instead."
+            raise ValueError(msg)
 
 
 def get_newick(tree: PhyloNode) -> str:

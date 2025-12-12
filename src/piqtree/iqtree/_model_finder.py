@@ -11,7 +11,7 @@ from cogent3.util.misc import get_object_provenance
 
 from piqtree.iqtree._decorator import iqtree_func
 from piqtree.model import Model, make_model
-from piqtree.util import process_rand_seed_nonzero
+from piqtree.util import process_rand_seed_nonzero, validate_other_options
 
 iq_model_finder = iqtree_func(iq_model_finder, hide_files=True)
 
@@ -121,6 +121,18 @@ class ModelFinderResult:
         return cls(**data["init_kwargs"])
 
 
+INVALID_MODEL_FINDER_PARAMS = [
+    "-s",  # aln file
+    "-m",  # model selection
+    "-mset",  # model set
+    "-mfreq",  # freq set
+    "-mrate",  # rate set
+    "-seed",  # seed
+    "-nt",  # threads
+    "-ntmax",  # threads
+]
+
+
 def model_finder(
     aln: Alignment,
     model_set: Iterable[str] | None = None,
@@ -159,6 +171,8 @@ def model_finder(
         Collection of data returned from IQ-TREE's ModelFinder.
 
     """
+    validate_other_options(other_options, INVALID_MODEL_FINDER_PARAMS)
+
     source = cast("str", aln.info.source)
 
     rand_seed = process_rand_seed_nonzero(rand_seed)

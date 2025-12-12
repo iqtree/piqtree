@@ -16,7 +16,7 @@ If you encounter any problems or have any feature requests feel free to raise an
 
 ## Contributing
 
-If you would like to help out by contributing to the piqtree project, please check out our [contributor guide!](https://piqtree.readthedocs.io/en/latest/developers/)
+If you would like to help out by contributing to the piqtree project, please check out our [contributor guide](https://piqtree.readthedocs.io/en/latest/developers/)!
 
 ## Examples
 
@@ -63,4 +63,4 @@ print("Log-likelihood:", tree.params["lnL"])
 
 ## More
 
-For more examples ranging from using ModelFinder, to making rapid neighbour-joining trees, or randomly generated trees be sure to check out the [documentation](https://piqtree.readthedocs.io/)!
+For more examples ranging from using ModelFinder and AliSim, to making rapid neighbour-joining trees, or randomly generated trees be sure to check out the [documentation](https://piqtree.readthedocs.io/)!

@@ -1,3 +1,5 @@
+from typing import cast
+
 import yaml
 from _piqtree import iq_simulate_alignment
 from cogent3 import make_aligned_seqs
@@ -7,10 +9,20 @@ from cogent3.core.tree import PhyloNode
 from piqtree.distribution import IndelDistribution
 from piqtree.exceptions import ParseIqTreeError
 from piqtree.iqtree._decorator import iqtree_func
-from piqtree.model import Model, make_model
+from piqtree.model import LieModel, Model, make_model
 from piqtree.util import get_newick, make_rand_seed
 
 iq_simulate_alignment = iqtree_func(iq_simulate_alignment, hide_files=True)
+
+UNSUPPORTED_MODELS = {
+    LieModel.LIE_1_1,
+    LieModel.LIE_3_3a,
+    LieModel.LIE_4_4a,
+    LieModel.LIE_6_7a,
+    LieModel.LIE_9_20a,
+    LieModel.LIE_9_20b,
+    LieModel.LIE_12_12,
+}
 
 
 def simulate_alignment(
@@ -70,6 +82,11 @@ def simulate_alignment(
 
     if isinstance(model, str):
         model = make_model(model)
+
+    if model.submod_type.base_model in UNSUPPORTED_MODELS:
+        msg = f"Lie Model {cast('LieModel', model.submod_type.base_model).value} is unsupported."
+        raise ValueError(msg)
+
     newick_tree = get_newick(tree)
 
     yaml_result = yaml.safe_load(

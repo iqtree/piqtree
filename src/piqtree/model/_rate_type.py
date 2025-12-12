@@ -38,7 +38,7 @@ class RateType:
         """
         if not isinstance(invariable_sites, bool):
             if not (0 <= invariable_sites < 1):
-                msg = "The proportion of invaraint sites must be in the range [0,1)"
+                msg = "The proportion of invariant sites must be in the range [0,1)"
                 raise ValueError(msg)
             self.invariable_sites = True
             self.proportion_invariable: float | None = invariable_sites
@@ -83,8 +83,8 @@ class DiscreteGammaModel(RateModel):
 
         Parameters
         ----------
-        rate_categories : int, optional
-            The number of rate categories, by default 4.
+        rate_categories : int | None, optional
+            The number of rate categories, by default None (uses 4).
         alpha : float | None, optional
             The Gamma shape parameter - fixed if not None, by default None
 
@@ -154,8 +154,8 @@ class FreeRateModel(RateModel):
 
         Parameters
         ----------
-        rate_categories : int, optional
-            The number of rate categories, by default 4.
+        rate_categories : int | None, optional
+            The number of rate categories, by default None (uses 4).
         weights : Sequence[float] | None, optional
             The weights for each rate category, by default None
         rates : Sequence[float] | None, optional

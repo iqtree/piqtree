@@ -10,7 +10,7 @@
 | [consensus_tree](tree/consensus_tree.md) | Construct a consensus tree from a collection of trees. |
 | [random_tree](tree/random_tree.md) | Create a randomly generated phylogenetic tree. |
 
-## Subsitution Models
+## Substitution Models
 
 | Name | Summary |
 |------|---------|

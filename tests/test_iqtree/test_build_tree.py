@@ -152,3 +152,11 @@ def test_too_many_dna_params(four_otu: Alignment) -> None:
 def test_too_few_dna_params(four_otu: Alignment) -> None:
     with pytest.raises(IqTreeError):
         _ = piqtree.build_tree(four_otu, "GTR{4.39,5.30,4.39,1.0}")
+
+
+def test_build_tree_other_options(four_otu: Alignment) -> None:
+    _ = piqtree.build_tree(four_otu, "GTR", other_options="--epsilon 0.1 -n 0")
+
+    with pytest.raises(IqTreeError):
+        # Invalid extra options
+        _ = piqtree.build_tree(four_otu, "GTR", other_options="--epslon 0.1 -n 0")

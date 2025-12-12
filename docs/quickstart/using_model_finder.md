@@ -80,6 +80,20 @@ best_aicc_model = result.best_aicc
 best_bic_model = result.best_bic
 ```
 
+### Additional options
+
+Additional options in the format that would be passed to the IQ-TREE CLI can be set.
+Options in `other_options` already allowed through `model_finder` will be ignored.
+
+```python
+from cogent3 import load_aligned_seqs
+from piqtree import model_finder
+
+aln = load_aligned_seqs("my_alignment.fasta", moltype="dna")
+
+result = model_finder(aln, model_set={"HKY", "TIM"}, other_options="-mtree")
+```
+
 ## See also
 
 - For constructing a maximum likelihood tree, see ["Construct a maximum likelihood phylogenetic tree"](construct_ml_tree.md).

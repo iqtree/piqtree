@@ -42,7 +42,7 @@ def process_rand_seed_nonzero(seed: int | None) -> int:
 
     If the seed is None, a random seed is generated.
     If the seed is 0, it is replaced with a pre-determined
-    number (1158426093).
+    number (1074213633).
     If the seed is anything else, returns that number.
 
     Parameters
@@ -54,8 +54,8 @@ def process_rand_seed_nonzero(seed: int | None) -> int:
     -------
     int
         The original seed if no processing is required.
-        Otherwise a random non-zero seed is the original seed
-        was None. If the original seed was zero, a pre-determined
+        Otherwise if the original seed was None, a random non-zero seed
+        is returned. If the original seed was zero, a pre-determined
         number is returned.
     """
     if seed == 0:

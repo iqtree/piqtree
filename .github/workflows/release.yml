@@ -16,10 +16,6 @@ jobs:
         # manylinux x86_64
         - os: ubuntu-latest
           platform_id: manylinux_x86_64
-        
-        # MacOS x86_64
-        - os: macos-15-intel
-          platform_id: macosx_x86_64
 
         # MacOS arm64
         - os: macos-15
@@ -44,11 +40,7 @@ jobs:
       - name: Set macOS Deployment Target
         if: runner.os == 'macOS'
         run: |
-          if [[ "${{ matrix.os }}" == "macos-15-intel" ]]; then
-            echo "MACOSX_DEPLOYMENT_TARGET=15.0" >> $GITHUB_ENV
-          elif [[ "${{ matrix.os }}" == "macos-15" ]]; then
-            echo "MACOSX_DEPLOYMENT_TARGET=15.0" >> $GITHUB_ENV
-          fi
+          echo "MACOSX_DEPLOYMENT_TARGET=15.0" >> $GITHUB_ENV
 
       - name: Install Boost
         if: runner.os == 'Windows'
@@ -64,7 +56,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
     
       - name: Build Wheels
-        uses: pypa/cibuildwheel@v3.3.0
+        uses: pypa/cibuildwheel@v3.2.1
         env: # Can specify per os - e.g. CIBW_BEFORE_ALL_LINUX, CIBW_BEFORE_ALL_MACOS, CIBW_BEFORE_ALL_WINDOWS 
           CIBW_BEFORE_ALL_LINUX: ./build_tools/before_all_linux.sh
           CIBW_BEFORE_ALL_MACOS: ./build_tools/before_all_mac.sh
@@ -74,6 +66,7 @@ jobs:
           CIBW_ARCHS_MACOS: ${{endsWith(matrix.platform_id, 'universal2') && 'universal2' || 'auto'}} 
           CIBW_ARCHS_WINDOWS: ${{endsWith(matrix.platform_id, '_amd64') && 'AMD64' || 'ARM64'}} 
           CIBW_BUILD: "*${{matrix.platform_id}}"
+          CIBW_SKIP: "cp314t-*"
           CIBW_TEST_REQUIRES: pytest pytest-mock
           CIBW_TEST_COMMAND: pytest {package}/tests
 
@@ -112,7 +105,7 @@ jobs:
 
       - uses: ./.github/actions/setup-piqtree
         with:
-          python-version: "3.13"
+          python-version: "3.14"
           cache-key: libiqtree-ubuntu-latest-${{ needs.build-iqtree.outputs.iqtree-sha }}
       
       - name: Install Docs Dependencies

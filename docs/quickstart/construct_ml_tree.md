@@ -66,8 +66,23 @@ model = "HKY+I+G6"
 tree = build_tree(aln, model, num_threads=4)
 ```
 
+### Additional options
+
+Additional options in the format that would be passed to the IQ-TREE CLI can be set.
+Options in `other_options` already allowed through `build_tree` will be ignored.
+
+```python
+from cogent3 import load_aligned_seqs
+from piqtree import build_tree
+
+aln = load_aligned_seqs("my_alignment.fasta", moltype="dna")
+
+tree = build_tree(aln, "GTR", other_options="--epsilon 0.1 -n 0")
+```
+
+
 ## See also
 
 - For how to specify a `Model`, see ["Use different kinds of substitution models"](using_substitution_models.md).
 - For selecting the best `Model`, see ["Find the model of best fit with ModelFinder"](using_model_finder.md).
-- For fitting branch lengths to a tree topology see ["Fit branch lengths to a tree topology from an alignment"](fit_tree_topology.md).
+- For fitting branch lengths to a tree topology, see ["Fit branch lengths to a tree topology from an alignment"](fit_tree_topology.md).

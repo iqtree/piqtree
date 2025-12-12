@@ -131,7 +131,7 @@ def test_bad_invariable_sites() -> None:
         with pytest.raises(
             ValueError,
             match=re.escape(
-                "The proportion of invaraint sites must be in the range [0,1)",
+                "The proportion of invariant sites must be in the range [0,1)",
             ),
         ):
             _ = RateType(invariable_sites=invar_p)

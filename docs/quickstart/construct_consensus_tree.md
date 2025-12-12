@@ -24,7 +24,7 @@ tree = consensus_tree([tree1, tree2, tree3]) # (a,(b,c,(d,e)));
 
 ### Strict consensus tree
 
-The `min_support` parameter can be set to 1.0 construct a strict consensus tree (only the clades that appear in all of the trees).
+The `min_support` parameter can be set to 1.0 to construct a strict consensus tree (only the clades that appear in all of the trees).
 The parameter represents the proportion of trees a clade must appear in to be in the resulting tree.
 
 ```python
@@ -52,7 +52,7 @@ tree3 = make_tree("(a,((b,c),(d,e)));")
 tree4 = make_tree("(a,(c,(b,(d,e))));")
 tree5 = make_tree("(c,(b,(a,(d,e))));")
 
-tree = consensus_tree([tree1, tree2, tree3, tree4, tree5], min_support=0) # (a,((b,c),(d,e));
+tree = consensus_tree([tree1, tree2, tree3, tree4, tree5], min_support=0) # (a,((b,c),(d,e)));
 ```
 
 ## See also

@@ -59,6 +59,22 @@ tree_with_likelihood = fit_tree(aln, tree, model="GTR", bl_fixed=True)
 log_likelihood = tree_with_likelihood.params["lnL"]
 ```
 
+### Additional options
+
+Additional options in the format that would be passed to the IQ-TREE CLI can be set.
+Options in `other_options` already allowed through `fit_tree` will be ignored.
+
+```python
+from cogent3 import load_aligned_seqs, make_tree
+from piqtree import fit_tree
+
+aln = load_aligned_seqs("my_alignment.fasta", moltype="dna")
+tree = make_tree("((Human, Chimpanzee), Rhesus, Mouse);")
+
+fitted_tree = fit_tree(aln, tree, model="GTR", other_options="-blmin 0.001 -blmax 1.5")
+```
+
+
 ## See also
 
 - For how to specify a `Model`, see ["Use different kinds of substitution models"](using_substitution_models.md).

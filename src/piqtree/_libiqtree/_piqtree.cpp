@@ -12,11 +12,11 @@ namespace py = pybind11;
 void checkError(char* errorStr) {
   if (errorStr && std::strlen(errorStr) > 0) {
     string msg(errorStr);
-    free(errorStr);
+    iqtree_free(errorStr);
     throw std::runtime_error(msg);
   }
   if (errorStr)
-    free(errorStr);
+    iqtree_free(errorStr);
 }
 
 namespace PYBIND11_NAMESPACE {
@@ -135,7 +135,7 @@ struct type_caster<StringResult> {
     if (!py_str)
       throw error_already_set();
 
-    free(src.value);
+    iqtree_free(src.value);
 
     return handle(py_str);
   }
@@ -158,7 +158,7 @@ struct type_caster<DoubleArrayResult> {
     auto result = py::array_t<double>(src.length);
 
     std::memcpy(result.mutable_data(), src.value, src.length * sizeof(double));
-    free(src.value);
+    iqtree_free(src.value);
 
     return result.release();
   }

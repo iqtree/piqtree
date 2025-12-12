@@ -81,7 +81,7 @@ def test_bad_min_support(five_trees: list[PhyloNode], min_support: float) -> Non
     with pytest.raises(
         ValueError,
         match=re.escape(
-            f"Only min support values in the range 0 <= value < 1 are supported, got {min_support}",
+            f"Only min support values in the range 0 <= value <= 1 are supported, got {min_support}",
         ),
     ):
         consensus_tree(five_trees, min_support=min_support)

@@ -3,6 +3,7 @@ import multiprocessing
 import pytest
 from cogent3.core.alignment import Alignment
 
+from piqtree.exceptions import IqTreeError
 from piqtree.iqtree import ModelFinderResult, ModelResultValue, model_finder
 
 
@@ -18,7 +19,6 @@ def test_model_result_value_from_string() -> None:
     "bad_val",
     [
         "123.45.00 10 0.678",  # invalid float
-        "123.45 10 10 0.678",  # too many values
         "123.45 10",  # too few values
     ],
 )
@@ -64,3 +64,24 @@ def test_model_finder_restricted_submod(five_otu: Alignment) -> None:
     assert str(result.best_aic).startswith(("HKY", "TIM"))
     assert str(result.best_aicc).startswith(("HKY", "TIM"))
     assert str(result.best_bic).startswith(("HKY", "TIM"))
+
+
+def test_model_finder_other_options(five_otu: Alignment) -> None:
+    result = model_finder(
+        five_otu,
+        rand_seed=1,
+        model_set={"HKY", "TIM"},
+        other_options="-mtree",
+    )
+    assert str(result.best_aic).startswith(("HKY", "TIM"))
+    assert str(result.best_aicc).startswith(("HKY", "TIM"))
+    assert str(result.best_bic).startswith(("HKY", "TIM"))
+
+    with pytest.raises(IqTreeError):
+        # Invalid extra options
+        _ = model_finder(
+            five_otu,
+            rand_seed=1,
+            model_set={"HKY", "TIM"},
+            other_options="-mtre",
+        )

@@ -38,23 +38,23 @@ def download_dataset(
     *,
     inflate_zip: bool = True,
 ) -> pathlib.Path:
-    """Download a data files used in docs, requires an internet connection.
+    """Download data files used in docs, requires an internet connection.
 
     Parameters
     ----------
     name : str
-        data set name, see `dataset_names()`.
+        Data set name, see `dataset_names()`.
     dest_dir : str | pathlib.Path
-        where to write a local copy.
+        Where to write a local copy.
     dest_name : str | None, optional
-        name of the file to write, if None (default) uses name.
-    inflate_zip : bool = True
-        whether to unzip archives, by default True.
+        Name of the file to write, if None (default) uses name.
+    inflate_zip : bool, optional
+        Whether to unzip archives, by default True.
 
     Returns
     -------
     pathlib.Path
-        path to the downloaded file
+        Path to the downloaded file
 
     Notes
     -----

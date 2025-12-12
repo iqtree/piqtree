@@ -62,7 +62,7 @@ class SubstitutionModel:
 
         Returns
         -------
-        Iterable["SubstitutionModel"]:
+        Sequence[SubstitutionModel]
             The available models.
 
         """
@@ -74,7 +74,7 @@ class SubstitutionModel:
 
         Returns
         -------
-        int:
+        int
             The number of available models.
 
         """
@@ -541,7 +541,7 @@ class AaModel(SubstitutionModel, Enum):
             AaModel.mtZOA: "Mitochondrial Metazoa (Animals) (Rota-Stabelli et al., 2009).",
             AaModel.mtMet: "Mitochondrial Metazoa (Vinh et al., 2017).",
             AaModel.mtVer: "Mitochondrial Vertebrate (Vinh et al., 2017).",
-            AaModel.mtInv: "Mitochondrial Inverterbrate (Vinh et al., 2017).",
+            AaModel.mtInv: "Mitochondrial Invertebrate (Vinh et al., 2017).",
             AaModel.NQ_bird: "Non-reversible Q matrix (Dang et al., 2022) estimated for birds (Jarvis et al., 2015).",
             AaModel.NQ_insect: "Non-reversible Q matrix (Dang et al., 2022) estimated for insects (Misof et al., 2014).",
             AaModel.NQ_mammal: "Non-reversible Q matrix (Dang et al., 2022) estimated for mammals (Wu et al., 2018).",

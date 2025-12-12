@@ -6,7 +6,7 @@ A rapid neighbour-joining tree can be constructed from a pairwise `DistanceMatri
 
 ### Basic Usage
 
-Make a pairwise distance matrix, then construct a the rapid neighbour-joining tree.
+Make a pairwise distance matrix, then construct the rapid neighbour-joining tree.
 
 ```python
 from cogent3 import load_aligned_seqs

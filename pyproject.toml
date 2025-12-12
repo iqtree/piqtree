@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "piqtree"
-dependencies = ["cogent3>=2025.9.8a10", "pyyaml", "requests"]
-requires-python = ">=3.11, <3.14"
+dependencies = ["cogent3>=2025.12.10a2", "pyyaml", "requests"]
+requires-python = ">=3.12"
 
 authors = [
     { name = "Gavin Huttley" },
@@ -36,9 +36,9 @@ classifiers = [
 
     "Programming Language :: C++",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 
     "Typing :: Typed"
 ]
@@ -50,7 +50,7 @@ Documentation = "https://piqtree.readthedocs.io"
 
 [project.optional-dependencies]
 dev = [
-    "cibuildwheel==3.3.0",
+    "cibuildwheel==3.2.1",
     "pybind11==3.0.1",
     "delvewheel==1.11.2",
     "scriv",
@@ -59,7 +59,7 @@ dev = [
     "piqtree[typing]"
 ]
 test = ["pytest", "pytest-cov", "pytest-markdown-docs", "pytest-mock", "nox"]
-lint = ["ruff==0.14.7"]
+lint = ["ruff==0.14.8"]
 typing = ["mypy==1.19.0", "piqtree[stubs]", "piqtree[test]"]
 stubs = ["types-PyYAML", "types-requests"]
 extra = ["cogent3[extra]"]
@@ -126,7 +126,7 @@ exclude = [
 line-length = 88
 indent-width = 4
 
-target-version = "py311"
+target-version = "py312"
 
 [tool.ruff.lint]
 # Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.

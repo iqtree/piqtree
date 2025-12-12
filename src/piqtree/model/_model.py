@@ -24,11 +24,11 @@ class Model:
         submod_type : str | SubstitutionModel
             The substitution model to use.
         freq_type : str | FreqType | CustomBaseFreq | None, optional
-            State frequency specification, by default None. (defaults
+            State frequency specification, by default None (defaults
             to empirical base frequencies if not specified by model).
         rate_model : str | RateModel | None, optional
-            Rate heterogeneity across sites model, by default
-            no Gamma, and no FreeRate.
+            Rate heterogeneity across sites model, by default None
+            (no Gamma and no FreeRate).
         invariable_sites : bool | float, optional
             Invariable sites, by default False.
             If a float in the range [0,1), specifies the proportion of invariable sites.
@@ -59,7 +59,7 @@ class Model:
         Returns
         -------
         str
-            The IQ-TREE representation of the mode.
+            The IQ-TREE representation of the model.
 
         """
         iqtree_extra_args = (

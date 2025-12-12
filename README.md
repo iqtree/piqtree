@@ -9,7 +9,7 @@
 [![Documentation Status](https://readthedocs.org/projects/piqtree/badge/?version=latest)](https://piqtree.readthedocs.io/en/latest/?badge=latest)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
-`piqtree` is a library which allows you use IQ-TREE directly from Python! The interface with python is through [cogent3](https://cogent3.org) objects.
+`piqtree` (pronounced 'pie-cue-tree') is a library which allows you to use IQ-TREE directly from Python! The interface with Python is through [cogent3](https://cogent3.org) objects.
 For usage, please refer to the [documentation](https://piqtree.readthedocs.io/) or the examples below.
 
 If you encounter any problems or have any feature requests feel free to raise an [issue](https://github.com/iqtree/piqtree/issues)!

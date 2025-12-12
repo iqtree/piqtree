@@ -9,7 +9,7 @@ There could be several reasons `piqtree` doesn't install correctly.
 
 ### Check your operating system is supported
 
-At this stage, we currently only support x86-64 linux, and x86-64 and ARM macOS.
+At this stage, we currently only support x86-64 linux, x86-64 Windows, and ARM macOS.
 
 ### Check the IQ-TREE library is up-to-date
 
@@ -20,7 +20,7 @@ git submodule update --init --recursive
 ./build_tools/build_iqtree.sh
 ```
 
-If the above doesn't work, please re-try the guide on ["Setting up your environment for development"](./environment_setup.md).
+If the above doesn't work, please retry the guide on ["Setting up your environment for development"](./environment_setup.md).
 
 ## The IQ-TREE library doesn't build
 
@@ -28,9 +28,10 @@ There could be several reasons `piqtree` doesn't build.
 
 ### Check your operating system is supported
 
-At this stage, we currently only support x86-64 linux, and x86-64 and ARM macOS.
+At this stage, we currently only support x86-64 linux, x86-64 Windows, and ARM macOS.
 
 ### Check dependencies have been installed
 
+- If on Windows, try running `./before_all_windows.sh` which will also install dependencies.
 - If on macOS, try running `./before_all_mac.sh` which will also install dependencies.
 - If on linux, try installing the dependencies listed at the top of `.devcontainer/DockerFile`

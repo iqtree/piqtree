@@ -45,9 +45,10 @@ def jc_distances(
     Parameters
     ----------
     aln : Alignment
-        alignment to compute pairwise JC distances for.
+        The alignment to compute pairwise JC distances for.
     num_threads: int | None, optional
-        Number of threads for IQ-TREE to use, by default None (all available threads).
+        Number of threads for IQ-TREE to use,
+        by default None (uses all available threads).
 
     Returns
     -------

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import nox
 
-_py_versions = range(11, 14)
+_py_versions = range(12, 15)
 _python_sessions = [f"3.{v}" for v in _py_versions]
 
 
@@ -45,7 +45,7 @@ def test_docs(session: nox.Session) -> None:
 
     doctest_setup_path = Path("docs/scripts/prepare_doc_test_data.py").resolve()
 
-    posargs = list(session.posargs)
+    posargs: list[str | Path] = list(session.posargs)
     posargs.extend(["--markdown-docs", *doc_md_files])
     env = os.environ.copy()
 

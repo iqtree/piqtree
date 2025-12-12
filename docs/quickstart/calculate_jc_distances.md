@@ -24,7 +24,7 @@ distance_2 = distance_matrix["Human", "Chimpanzee"]
 
 ### Multithreading
 
-The number of threads to be used may be specified. By default, or if 0 is specified all available threads are used.
+The number of threads to be used may be specified. By default, or if 0 is specified, all available threads are used.
 
 ```python
 from cogent3 import load_aligned_seqs
@@ -38,4 +38,4 @@ distance_matrix = jc_distances(aln, num_threads=4)
 
 ## See also
 
-- For using the JC distance matrix to construct rapid neighbour-joining tree, see ["Construct a rapid neighbour-joining tree from a distance matrix"](construct_nj_tree.md).
+- For using the JC distance matrix to construct a rapid neighbour-joining tree, see ["Construct a rapid neighbour-joining tree from a distance matrix"](construct_nj_tree.md).

@@ -32,11 +32,13 @@ class piq_build_tree:
         rand_seed: int | None = None,
         bootstrap_reps: int | None = None,
         num_threads: int | None = None,
+        other_options: str = "",
     ) -> None:
         self._model = model
         self._rand_seed = rand_seed
         self._bootstrap_reps = bootstrap_reps
         self._num_threads = num_threads
+        self._other_options = other_options
 
     def main(
         self,
@@ -48,6 +50,7 @@ class piq_build_tree:
             self._rand_seed,
             bootstrap_replicates=self._bootstrap_reps,
             num_threads=self._num_threads,
+            other_options=self._other_options,
         )
         tree.source = getattr(aln, "source", None)
         return tree
@@ -62,12 +65,14 @@ class piq_fit_tree:
         model: Model | str,
         *,
         num_threads: int | None = None,
+        other_options: str = "",
         bl_fixed: bool = False,
     ) -> None:
         self._tree = tree
         self._model = model
         self._num_threads = num_threads
         self._bl_fixed = bl_fixed
+        self._other_options = other_options
 
     def main(
         self,
@@ -78,6 +83,7 @@ class piq_fit_tree:
             self._tree,
             self._model,
             self._num_threads,
+            other_options=self._other_options,
             bl_fixed=self._bl_fixed,
         )
         tree.source = getattr(aln, "source", None)

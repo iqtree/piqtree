@@ -53,7 +53,7 @@ def available_models(
     model_type : Literal["dna", "protein"] | None, optional
         The models to fetch, by default None (all models).
     show_all : bool, optional
-        if True, the representation of the table shows all records, by default True.
+        If True, the representation of the table shows all records, by default True.
 
     Returns
     -------

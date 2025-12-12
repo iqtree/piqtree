@@ -8,6 +8,7 @@ from cogent3.core.alignment import Alignment
 from cogent3.core.tree import PhyloNode
 
 import piqtree
+from piqtree.exceptions import IqTreeError
 from piqtree.model import Model, StandardDnaModel
 
 
@@ -205,3 +206,25 @@ def test_special_characters(three_otu: Alignment) -> None:
         assert cast("float", node.length) > 0
 
     assert set(three_otu.names) == set(tree.get_tip_names())
+
+
+def test_fit_tree_other_options(four_otu: Alignment) -> None:
+    tree = make_tree(tip_names=four_otu.names)
+    fitted_tree = piqtree.fit_tree(
+        four_otu,
+        tree,
+        "GTR",
+        other_options="-blmin 0.1 -blmax 0.5",
+    )
+    for node in fitted_tree.postorder(include_self=False):
+        assert node.length is not None
+        assert 0.1 <= node.length <= 0.5
+
+    with pytest.raises(IqTreeError):
+        # Invalid extra options
+        fitted_tree = piqtree.fit_tree(
+            four_otu,
+            tree,
+            "GTR",
+            other_options="-blminn 0.1 -blmaax 0.5",
+        )

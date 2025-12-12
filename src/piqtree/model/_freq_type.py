@@ -41,11 +41,11 @@ class CustomBaseFreq:
     def __init__(self, frequencies: Sequence[float]) -> None:
         """Create a custom base frequency specification.
 
-        For DNA models the order of the frequencies are:
+        For DNA models the order of the frequencies is:
 
         A C G T
 
-        For AA models the order of the frequencies are:
+        For AA models the order of the frequencies is:
 
         | A   | R   | N   | D   | C   | Q  | E  | G  | H  | I  | L   | K   | M   | F   | P   | S   | T   | W   | Y   | V   |
         |-----|-----|-----|-----|-----|----|----|----|----|----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
@@ -67,7 +67,7 @@ class CustomBaseFreq:
 
     @property
     def description(self) -> str:
-        return "Fixed based frequencies."
+        return "Fixed base frequencies."
 
     def iqtree_str(self) -> str:
         return f"F{{{','.join(map(str, self.frequencies))}}}"

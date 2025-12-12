@@ -34,10 +34,10 @@ RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUS
 # Configure zsh
 RUN sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc
 
-# Create a new conda environment with Python 3.12 and fix the bug with VS-code terminal showing 2 conda env prompts 
+# Create a new conda environment with Python 3.14 and fix the bug with VS-code terminal showing 2 conda env prompts 
 RUN . /opt/conda/etc/profile.d/conda.sh && \
     conda config --set auto_activate_base False && \
-    /opt/conda/bin/conda create -n piq-dev python=3.12 -y && \
+    /opt/conda/bin/conda create -n piq-dev python=3.14 -y && \
     conda activate piq-dev
 
 # Initialize conda for zsh shell

@@ -1,6 +1,6 @@
 # Make a randomly generated phylogenetic tree
 
-A randomly generated phylogentic tree can be made using [`random_tree`](../api/tree/random_tree.md#piqtree.random_tree).
+A randomly generated phylogenetic tree can be made using [`random_tree`](../api/tree/random_tree.md#piqtree.random_tree).
 Multiple tree generation modes are supported with the [`TreeGenMode`](../api/tree/random_tree.md#piqtree.TreeGenMode) including
 balanced, birth-death, caterpillar, star, uniform, and Yule-Harding tree.
 
@@ -37,4 +37,4 @@ tree = random_tree(num_taxa, TreeGenMode.CATERPILLAR, rand_seed=1)
 ## See also
 
 - For constructing a maximum likelihood tree, see ["Construct a maximum likelihood phylogenetic tree"](construct_ml_tree.md).
-- For constructing a consensus tree, see ["Construct a consensus tree from a collection of trees"](construct_consensus_tree.md)
+- For constructing a consensus tree, see ["Construct a consensus tree from a collection of trees"](construct_consensus_tree.md).

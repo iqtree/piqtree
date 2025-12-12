@@ -1,4 +1,4 @@
-# build_tree
+# consensus_tree
 
 ::: piqtree.consensus_tree
 

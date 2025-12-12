@@ -27,8 +27,8 @@ required dependencies through homebrew, then build the IQ-TREE library. If you n
 build the library again, running `./build_tools/build_iqtree.sh` will skip the dependency
 installation step.
 
-If you are working on linux, check the top of the `.devconatiner/Dockerfile` for the list of
-dependencies. Once installed, the IQ-TREE library can be build with `./build_tools/build_iqtree.sh`.
+If you are working on linux, check the top of the `.devcontainer/DockerFile` for the list of
+dependencies. Once installed, the IQ-TREE library can be built with `./build_tools/build_iqtree.sh`.
 
 ## Installing `piqtree` for standard development
 
@@ -54,8 +54,7 @@ This will install `piqtree` in editable mode, along with dependencies for buildi
 
 ## Running the tests
 
-To verify that installation has worked, using your chosen standard development environment run
-the following in the base directory of this repository.
+To verify that installation has worked, run the following in the base directory of this repository using your chosen development environment.
 
 ```bash
 pytest

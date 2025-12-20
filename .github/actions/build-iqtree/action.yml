@@ -21,7 +21,7 @@ runs:
 
     - name: Cache IQ-TREE (Windows)
       if: runner.os == 'Windows'
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       id: cache-windows
       with:
         key: libiqtree-${{ inputs.os }}-${{ steps.iqtree-sha.outputs.iqtree-sha }}
@@ -32,7 +32,7 @@ runs:
 
     - name: Cache IQ-TREE (Linux/macOS)
       if: runner.os != 'Windows'
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       id: cache-unix
       with:
         key: libiqtree-${{ inputs.os }}-${{ steps.iqtree-sha.outputs.iqtree-sha }}

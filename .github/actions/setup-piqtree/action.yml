@@ -16,7 +16,7 @@ runs:
 
     - name: Cache IQ-TREE (Windows)
       if: runner.os == 'Windows'
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v5
       id: cache-windows
       with:
         key: ${{ inputs.cache-key }}
@@ -27,7 +27,7 @@ runs:
 
     - name: Cache IQ-TREE (Linux/macOS)
       if: runner.os != 'Windows'
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v5
       id: cache-unix
       with:
         key: ${{ inputs.cache-key }}

@@ -26,3 +26,17 @@ To get Jupyter and visualisation support (with plotly) use the `[extra]` option.
 ```bash
 pip install "piqtree[extra]"
 ```
+
+## Sharing your cool solutions 😎
+
+If you've done something you would like to share which either used `piqtree` or helped you to it (e.g. some data sampling steps with `cogent3`), please share your code on [our community contribution site](https://github.com/cogent3/c3community). Contributing is as easy as clicking a button and pasting your code! Who knows, it may lead to collaborations 🙂.
+
+If you want to see how others are using `piqtree`, take a look at the site. (At the time of writing, this is very new, so there's not many contributions.)
+
+## Getting help
+
+If you have a question about using `piqtree`, you can post a question [in the piqtree forums](https://github.com/iqtree/piqtree/discussions). Likewise, if you have any questions about using `cogent3`, post a question [in the cogent3 forums](https://github.com/cogent3/cogent3/discussions).
+
+## Reporting problems
+
+To report problems or potential bugs 🐛, please raise an issue on the [piqtree GitHub issues page](https://github.com/iqtree/piqtree/issues).

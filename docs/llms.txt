@@ -1,0 +1,78 @@
+# piqtree
+
+> piqtree (pronounced 'pie-cue-tree') is a Python library that exposes IQ-TREE phylogenetic inference capabilities within Python, using cogent3 as the interface.
+
+## Overview
+
+piqtree makes individual high-performance components of IQ-TREE available within Python, enabling phylogenetic analyses directly from Python code. It integrates with cogent3 for rich interactive experiences in Jupyter notebooks.
+
+## Installation
+
+```bash
+pip install piqtree
+pip install "piqtree[extra]"  # With Jupyter and plotly support
+```
+
+## Documentation
+
+- Main docs: https://piqtree.readthedocs.io/
+- GitHub: https://github.com/iqtree/piqtree
+- cogent3 docs: https://cogent3.org
+
+## Core Functions
+
+### Tree Construction
+- `build_tree(alignment, model)` - Construct maximum-likelihood phylogenetic tree
+- `fit_tree(alignment, tree, model)` - Fit branch lengths to existing tree topology
+- `nj_tree(distances)` - Construct rapid neighbour-joining tree from distance matrix
+- `consensus_tree(trees)` - Construct consensus tree from collection of trees
+- `random_tree(names)` - Create randomly generated phylogenetic tree
+
+### Alignment Simulation
+- `simulate_alignment(tree, model, length)` - Simulate alignment with AliSim
+
+### Model Selection
+- `model_finder(alignment)` - Determine best-fit substitution model
+- `make_model(model_string)` - Construct Model from IQ-TREE model string
+- `Model` - Class for substitution models
+- `SubstitutionModel` - Enum for available substitution models (JC, K2P, HKY, GTR, etc.)
+- `FreqType` - Enum for base frequency options
+- `RateModel` - Classes for rate heterogeneity (+G, +I, +R)
+
+### Distance Calculations
+- `jc_distances(alignment)` - Pairwise Jukes-Cantor genetic distances
+- `robinson_foulds(tree1, tree2)` - Pairwise Robinson-Foulds tree distances
+
+## Quick Example
+
+```python
+from piqtree import build_tree
+from cogent3 import load_aligned_seqs
+
+aln = load_aligned_seqs("seqs.fasta", moltype="dna")
+tree = build_tree(aln, "JC", rand_seed=1)
+
+print(tree)  # cogent3 tree object
+print(tree.params["lnL"])  # log-likelihood
+```
+
+## cogent3 Apps
+
+piqtree provides cogent3-compatible apps for use in pipelines:
+- `piqtree_phylo` - ML tree reconstruction
+- `piqtree_fit` - Fit branch lengths
+- `piqtree_nj` - Neighbour-joining trees
+- `piqtree_model_finder` - Model selection
+- `piqtree_pairwise_dist` - Pairwise distances
+
+## Key Concepts
+
+- All sequence data uses cogent3 `Alignment` objects
+- All trees are cogent3 `PhyloNode` objects with branch lengths and likelihood info
+- Substitution models follow IQ-TREE naming conventions
+- Results include log-likelihood in `tree.params["lnL"]`
+
+## Support
+
+- Issues: https://github.com/iqtree/piqtree/issues
+- Discussions: https://github.com/iqtree/piqtree/discussions

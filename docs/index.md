@@ -29,7 +29,7 @@ pip install "piqtree[extra]"
 
 ## Sharing your cool solutions 😎
 
-If you've done something you would like to share which either used `piqtree` or helped you to it (e.g. some data sampling steps with `cogent3`), please share your code on [our community contribution site](https://github.com/cogent3/c3community). Contributing is as easy as clicking a button and pasting your code! Who knows, it may lead to collaborations 🙂.
+If you've done something you would like to share which either used `piqtree` or helped you to it (e.g. some data sampling steps with `cogent3`), please share your code on [our community contribution site](https://github.com/cogent3/c3codeshare). Contributing is as easy as clicking a button and pasting your code! Who knows, it may lead to collaborations 🙂.
 
 If you want to see how others are using `piqtree`, take a look at the site. (At the time of writing, this is very new, so there's not many contributions.)
 
@@ -40,3 +40,7 @@ If you have a question about using `piqtree`, you can post a question [in the pi
 ## Reporting problems
 
 To report problems or potential bugs 🐛, please raise an issue on the [piqtree GitHub issues page](https://github.com/iqtree/piqtree/issues).
+
+## Citing piqtree
+
+Please cite our [preprint](https://www.biorxiv.org/content/10.1101/2025.07.13.664626v3).

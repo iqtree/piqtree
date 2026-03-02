@@ -71,7 +71,7 @@ jobs:
           CIBW_TEST_COMMAND: pytest {package}/tests
 
       - name: Upload Wheels
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: cibw-wheels-${{ matrix.platform_id }}
           path: ./wheelhouse/*.whl

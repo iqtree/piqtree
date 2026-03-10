@@ -33,7 +33,7 @@ jobs:
 
       - name: Set up QEMU for Linux ARM builds
         if: ${{runner.os == 'Linux' && endsWith(matrix.platform_id, '_aarch64')}}
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
         with:
           platforms: arm64
 

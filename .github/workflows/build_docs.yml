@@ -60,7 +60,7 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Upload Documentation Artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: piqtree-docs-html
           path: site

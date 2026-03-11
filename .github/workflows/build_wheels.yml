@@ -33,7 +33,7 @@ jobs:
 
       - name: Set up QEMU for Linux ARM builds
         if: ${{runner.os == 'Linux' && endsWith(matrix.platform_id, '_aarch64')}}
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
         with:
           platforms: arm64
       
@@ -56,7 +56,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Build Wheels
-        uses: pypa/cibuildwheel@v3.3.1
+        uses: pypa/cibuildwheel@v3.4.0
         env: # Can specify per os - e.g. CIBW_BEFORE_ALL_LINUX, CIBW_BEFORE_ALL_MACOS, CIBW_BEFORE_ALL_WINDOWS 
           CIBW_BEFORE_ALL_LINUX: ./build_tools/before_all_linux.sh
           CIBW_BEFORE_ALL_MACOS: ./build_tools/before_all_mac.sh
@@ -71,7 +71,7 @@ jobs:
           CIBW_TEST_COMMAND: pytest {package}/tests
 
       - name: Upload Wheels
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: cibw-wheels-${{ matrix.platform_id }}
           path: ./wheelhouse/*.whl

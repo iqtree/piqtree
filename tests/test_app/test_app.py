@@ -130,6 +130,29 @@ def test_piq_simulate_alignment(five_taxon_rooted_tree: PhyloNode) -> None:
     assert len(aln) == 1000
 
 
+@pytest.mark.parametrize(
+    ("app_name", "kwargs"),
+    [
+        ("piq_build_tree", {"model": "JC"}),
+        (
+            "piq_fit_tree",
+            {"tree": make_tree(tip_names=["a", "b", "c"]), "model": "JC"},
+        ),
+        ("piq_random_tree", {"tree_mode": piqtree.TreeGenMode.UNIFORM}),
+        ("piq_jc_distances", {}),
+        ("piq_nj_tree", {}),
+        ("piq_model_finder", {}),
+        ("piq_consensus_tree", {}),
+        ("piq_simulate_alignment", {"model": "JC"}),
+    ],
+)
+def test_app_citation_bib(app_name: str, kwargs: dict) -> None:
+    app = get_app(app_name, **kwargs)
+    bib = app.bib
+    assert "@article{piqtree," in bib
+    assert "McArthur" in bib
+
+
 def test_quick_tree_hook(four_otu: Alignment) -> None:
     tree = four_otu.quick_tree(use_hook="piqtree")
     assert tree.params["provenance"] == "piqtree"

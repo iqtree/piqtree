@@ -277,7 +277,7 @@ class LieModelInstance(SubstitutionModel):
         return "nucleotide"
 
     def iqtree_str(self) -> str:
-        prefix = self.pairing if self.pairing else ""
+        prefix = self.pairing or ""
         params = (
             f"{{{','.join(map(str, self.model_params))}}}" if self.model_params else ""
         )

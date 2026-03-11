@@ -19,12 +19,13 @@ from piqtree import (
     random_tree,
     simulate_alignment,
 )
+from piqtree._cite import cite_piqtree
 from piqtree.distribution import IndelDistribution
 from piqtree.iqtree import ModelFinderResult
 from piqtree.model import Model
 
 
-@composable.define_app
+@composable.define_app(cite=cite_piqtree)
 class piq_build_tree:
     @extend_docstring_from(build_tree)
     def __init__(
@@ -58,7 +59,7 @@ class piq_build_tree:
         return tree
 
 
-@composable.define_app
+@composable.define_app(cite=cite_piqtree)
 class piq_fit_tree:
     @extend_docstring_from(fit_tree)
     def __init__(
@@ -92,7 +93,7 @@ class piq_fit_tree:
         return tree
 
 
-@composable.define_app
+@composable.define_app(cite=cite_piqtree)
 @extend_docstring_from(random_tree)
 def piq_random_tree(
     num_taxa: int,
@@ -102,7 +103,7 @@ def piq_random_tree(
     return random_tree(num_taxa, tree_mode, rand_seed)
 
 
-@composable.define_app
+@composable.define_app(cite=cite_piqtree)
 class piq_jc_distances:
     @extend_docstring_from(jc_distances)
     def __init__(
@@ -123,7 +124,7 @@ class piq_jc_distances:
         return dists
 
 
-@composable.define_app
+@composable.define_app(cite=cite_piqtree)
 @extend_docstring_from(nj_tree)
 def piq_nj_tree(
     dists: DistanceMatrix,
@@ -136,7 +137,7 @@ def piq_nj_tree(
     return tree
 
 
-@composable.define_app
+@composable.define_app(cite=cite_piqtree)
 @extend_docstring_from(model_finder)
 def piq_model_finder(
     aln: Alignment,
@@ -144,7 +145,7 @@ def piq_model_finder(
     return model_finder(aln)
 
 
-@composable.define_app
+@composable.define_app(cite=cite_piqtree)
 @extend_docstring_from(consensus_tree)
 def piq_consensus_tree(
     trees: Iterable[PhyloNode],
@@ -154,7 +155,7 @@ def piq_consensus_tree(
     return consensus_tree(trees, min_support=min_support)
 
 
-@composable.define_app
+@composable.define_app(cite=cite_piqtree)
 @extend_docstring_from(simulate_alignment)
 def piq_simulate_alignment(
     tree: PhyloNode,

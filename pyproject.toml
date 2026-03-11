@@ -4,7 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "piqtree"
-dependencies = ["cogent3>=2025.12.10a2", "pyyaml", "requests"]
+dependencies = [
+    "citeable>=2026.3.11b0",
+    "cogent3>=2026.3.10a0",
+    "pyyaml",
+    "requests",
+]
 requires-python = ">=3.12"
 
 authors = [
@@ -12,7 +17,7 @@ authors = [
     { name = "Robert McArthur" },
     { name = "Bui Quang Minh " },
     { name = "Richard Morris" },
-    { name = "Thomas Wong" }
+    { name = "Thomas Wong" },
 ]
 description = "Python bindings for IQTree"
 readme = "README.md"
@@ -40,7 +45,7 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
 
-    "Typing :: Typed"
+    "Typing :: Typed",
 ]
 
 [project.urls]
@@ -56,10 +61,10 @@ dev = [
     "scriv",
     "piqtree[test]",
     "piqtree[lint]",
-    "piqtree[typing]"
+    "piqtree[typing]",
 ]
 test = ["pytest", "pytest-cov", "pytest-markdown-docs", "pytest-mock", "nox"]
-lint = ["ruff==0.14.14"]
+lint = ["ruff==0.15.5"]
 typing = ["mypy==1.19.1", "piqtree[stubs]", "piqtree[test]"]
 stubs = ["types-PyYAML", "types-requests"]
 extra = ["cogent3[extra]"]
@@ -73,7 +78,7 @@ doc = [
     "cogent3[extra]",
     "diverse-seq>=2025.7.10",
     "jupyter",
-    "ipywidgets"
+    "ipywidgets",
 ]
 
 [project.entry-points."cogent3.app"]
@@ -120,7 +125,7 @@ exclude = [
     "dist",
     "node_modules",
     "site-packages",
-    "venv"
+    "venv",
 ]
 
 # Same as Black.
@@ -135,12 +140,12 @@ target-version = "py312"
 # McCabe complexity (`C901`) by default.
 select = ["ALL"]
 ignore = [
-    "EXE002", # don't require shebang
-    "E501", # allow long lines where appropriate
+    "EXE002",  # don't require shebang
+    "E501",    # allow long lines where appropriate
     "PLC0415", # allow imports inside functions
     "PLR0913", # allow many arguments
     "PLR2004", # allow magic value comparisons
-    "D" # doc linting rules
+    "D",       # doc linting rules
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
@@ -152,36 +157,36 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
-    "S101", # asserts allowed in tests...
+    "S101",   # asserts allowed in tests...
     "INP001", # __init__.py files are not required...
-    "N802", # allow non snake_case function names for fixtures
-    "N803", # allow use of fixture constants
+    "N802",   # allow non snake_case function names for fixtures
+    "N803",   # allow use of fixture constants
     "SLF001", # private member access is useful for testing
     "FBT001", # allow bool pos args for parameterisation
-    "D" # don't require docstring linting
+    "D",      # don't require docstring linting
 ]
 "docs/**/*.py" = ["B018", "E402", "ERA001", "INP001", "D"]
 "src/piqtree/_app/__init__.py" = [
-    "N801" # apps follow function naming convention
+    "N801", # apps follow function naming convention
 ]
 "src/piqtree/__init__.py" = [
-    "E402", # handle DLLs before imports
+    "E402",   # handle DLLs before imports
     "PTH118", # os operations for DLL path
-    "PTH120" # os operations for DLL path
+    "PTH120", # os operations for DLL path
 ]
 "src/piqtree/model/_substitution_model.py" = [
-    "N815" # use IQ-TREE naming scheme
+    "N815", # use IQ-TREE naming scheme
 ]
 "setup.py" = [
     "S603", # allow subprocess invalidated input for brew install
     "S607", # allow subprocess with partial path
-    "D" # Don't expect docstrings for setup.py
+    "D",    # Don't expect docstrings for setup.py
 ]
 "noxfile.py" = [
-    "D" # Don't expect docstrings for noxfile
+    "D", # Don't expect docstrings for noxfile
 ]
 "rtd_get_docs.py" = [
-    "D" # Don't expect docstrings for rtd file.
+    "D", # Don't expect docstrings for rtd file.
 ]
 
 
@@ -221,7 +226,7 @@ categories = [
     "API",
     "DOC",
     "Deprecations",
-    "Discontinued"
+    "Discontinued",
 ]
 output_file = "changelog.md"
 version = "literal: src/piqtree/__init__.py: __version__"

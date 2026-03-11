@@ -64,3 +64,19 @@ print("Log-likelihood:", tree.params["lnL"])
 ## More
 
 For more examples ranging from using ModelFinder and AliSim, to making rapid neighbour-joining trees, or randomly generated trees be sure to check out the [documentation](https://piqtree.readthedocs.io/)!
+
+## Citation
+
+Please cite
+
+```bibtex
+@article{10.1093/molbev/msag061,
+  author    = {McArthur, Robert Neil and Wong, Thomas King-Fung and Lang, Yapeng and Morris, Richard Andrew and Caley, Katherine and Mallawaarachchi, Vijini and Minh, Bui Quang and Huttley, Gavin},
+  title     = {piqtree: A Python Package for Seamless Phylogenetic Inference with IQ-TREE},
+  journal   = {Molecular Biology and Evolution},
+  year      = {2026},
+  pages     = {msag061},
+  doi       = {10.1093/molbev/msag061},
+  url       = {https://doi.org/10.1093/molbev/msag061},
+}
+```

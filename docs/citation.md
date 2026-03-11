@@ -2,18 +2,17 @@
 
 Please cite piqtree as follows:
 
-Bui Quang Minh, Heiko A Schmidt, Olga Chernomor, Dominik Schrempf, Michael D Woodhams, Arndt von Haeseler, Robert Lanfear, IQ-TREE 2: New Models and Efficient Methods for Phylogenetic Inference in the Genomic Era, Molecular Biology and Evolution, Volume 37, Issue 5, May 2020, Pages 1530–1534, [10.1093/molbev/msaa015](https://doi.org/10.1093/molbev/msaa015)
+McArthur RN, Wong TK-F, Lang Y, Morris RA, Caley K, Mallawaarachchi V, Minh BQ, Huttley G, 2026. "piqtree: A Python Package for Seamless Phylogenetic Inference with IQ-TREE", Molecular Biology and Evolution, msag061, [10.1093/molbev/msag061](https://doi.org/10.1093/molbev/msag061).
 
 ```bibtex
-@article{10.1093/molbev/msaa015,
-    author = {Minh, Bui Quang and Schmidt, Heiko A and Chernomor, Olga and Schrempf, Dominik and Woodhams, Michael D and von Haeseler, Arndt and Lanfear, Robert},
-    title = "{IQ-TREE 2: New Models and Efficient Methods for Phylogenetic Inference in the Genomic Era}",
-    journal = {Molecular Biology and Evolution},
-    volume = {37},
-    number = {5},
-    pages = {1530-1534},
-    year = {2020},
-    month = {02},
+@article{piqtree,
+  author    = {McArthur, Robert Neil and Wong, Thomas King-Fung and Lang, Yapeng and Morris, Richard Andrew and Caley, Katherine and Mallawaarachchi, Vijini and Minh, Bui Quang and Huttley, Gavin},
+  title     = {piqtree: A Python Package for Seamless Phylogenetic Inference with IQ-TREE},
+  journal   = {Molecular Biology and Evolution},
+  year      = {2026},
+  pages     = {msag061},
+  doi       = {10.1093/molbev/msag061},
+  url       = {https://doi.org/10.1093/molbev/msag061},
 }
 ```
 

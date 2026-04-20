@@ -7,7 +7,7 @@ from typing import Any, cast
 import yaml
 from _piqtree import iq_model_finder
 from cogent3.core.alignment import Alignment
-from cogent3.util.misc import get_object_provenance
+from scinexus.misc import get_object_provenance
 
 from piqtree.iqtree._decorator import iqtree_func
 from piqtree.model import Model, make_model

@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "piqtree"
 dependencies = [
     "citeable>=2026.3.11b0",
-    "cogent3>=2026.3.10a0",
+    "cogent3>=2026.4.20a0",
     "pyyaml",
     "requests",
 ]
@@ -64,7 +64,7 @@ dev = [
     "piqtree[typing]",
 ]
 test = ["pytest", "pytest-cov", "pytest-markdown-docs", "pytest-mock", "nox"]
-lint = ["ruff==0.15.8"]
+lint = ["ruff==0.15.11"]
 typing = ["mypy==1.20.1", "piqtree[stubs]", "piqtree[test]"]
 stubs = ["types-PyYAML", "types-requests"]
 extra = ["cogent3[extra]"]

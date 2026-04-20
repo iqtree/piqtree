@@ -2,11 +2,11 @@
 
 from collections.abc import Iterable
 
-from cogent3.app import composable
 from cogent3.core.alignment import Alignment
 from cogent3.core.tree import PhyloNode
 from cogent3.evolve.fast_distance import DistanceMatrix
-from cogent3.util.misc import extend_docstring_from
+from scinexus import composable
+from scinexus.misc import extend_docstring_from
 
 from piqtree import (
     TreeGenMode,

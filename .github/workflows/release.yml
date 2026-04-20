@@ -44,7 +44,7 @@ jobs:
 
       - name: Install Boost
         if: runner.os == 'Windows'
-        uses: MarkusJx/install-boost@v2.5.1
+        uses: MarkusJx/install-boost@v2.6.0
         id: install-boost
         with:
           boost_version: 1.84.0
@@ -56,7 +56,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
     
       - name: Build Wheels
-        uses: pypa/cibuildwheel@v3.4.0
+        uses: pypa/cibuildwheel@v3.4.1
         env: # Can specify per os - e.g. CIBW_BEFORE_ALL_LINUX, CIBW_BEFORE_ALL_MACOS, CIBW_BEFORE_ALL_WINDOWS 
           CIBW_BEFORE_ALL_LINUX: ./build_tools/before_all_linux.sh
           CIBW_BEFORE_ALL_MACOS: ./build_tools/before_all_mac.sh

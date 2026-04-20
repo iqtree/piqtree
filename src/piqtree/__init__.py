@@ -12,7 +12,7 @@ def _add_dll_path() -> None:
 _add_dll_path()
 del _add_dll_path
 
-
+import scinexus
 from _piqtree import __iqtree_version__
 
 from piqtree._data import dataset_names, download_dataset
@@ -38,6 +38,8 @@ from piqtree.model import (
 )
 
 __version__ = "0.8.1"
+
+scinexus.set_parallel_backend("loky")
 
 __all__ = [
     "Model",

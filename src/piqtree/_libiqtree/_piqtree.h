@@ -38,6 +38,15 @@ typedef struct {
   char* errorStr;
 } DoubleArrayResult;
 
+typedef struct {
+  char* tree;
+  double* branch_lengths;
+  double* gradient;
+  double* hessian;
+  size_t n_branches;
+  char* errorStr;
+} HessianResult;
+
 #ifdef _MSC_VER
 #pragma pack(pop)
 #else
@@ -90,6 +99,21 @@ extern "C" StringResult fit_tree(StringArray& names,
                                  int rand_seed = 0,
                                  int num_thres = 1,
                                  const char* other_options = NULL);
+
+/*
+ * Fit the tree and compute the log-likelihood gradient and Hessian matrix
+ * (with respect to branch lengths) at the fitted point. Single (non-partition)
+ * model only. The branch_lengths/gradient/hessian arrays are in the MCMCTree
+ * branch ordering and share that order with the returned Newick tree string.
+ */
+extern "C" HessianResult fit_tree_hessian(StringArray& names,
+                                          StringArray& seqs,
+                                          const char* model,
+                                          const char* intree,
+                                          bool blfix = false,
+                                          int rand_seed = 0,
+                                          int num_thres = 1,
+                                          const char* other_options = NULL);
 
 /*
  * Perform phylogenetic analysis with ModelFinder

@@ -163,6 +163,61 @@ struct type_caster<DoubleArrayResult> {
     return result.release();
   }
 };
+
+template <>
+struct type_caster<HessianResult> {
+ public:
+  PYBIND11_TYPE_CASTER(HessianResult, _("HessianResult"));
+
+  bool load(handle src, bool) {
+    throw std::runtime_error("Unsupported operation");
+  }
+
+  // Returns a dict { 'tree': str, 'branch_lengths': ndarray(n,),
+  //                  'gradient': ndarray(n,), 'hessian': ndarray(n, n) }.
+  static handle cast(HessianResult src, return_value_policy, handle) {
+    // checkError raises if errorStr is non-empty; in that case we still need
+    // to release any payload pointers IQ-TREE may have allocated before the
+    // failure, to avoid leaking. checkError frees src.errorStr itself.
+    if (src.errorStr && std::strlen(src.errorStr) > 0) {
+      if (src.tree) iqtree_free(src.tree);
+      if (src.branch_lengths) iqtree_free(src.branch_lengths);
+      if (src.gradient) iqtree_free(src.gradient);
+      if (src.hessian) iqtree_free(src.hessian);
+      checkError(src.errorStr);  // throws
+    }
+    checkError(src.errorStr);
+
+    py::ssize_t n = static_cast<py::ssize_t>(src.n_branches);
+
+    auto branch_lengths = py::array_t<double>(n);
+    std::memcpy(branch_lengths.mutable_data(), src.branch_lengths,
+                static_cast<size_t>(n) * sizeof(double));
+    iqtree_free(src.branch_lengths);
+
+    auto gradient = py::array_t<double>(n);
+    std::memcpy(gradient.mutable_data(), src.gradient,
+                static_cast<size_t>(n) * sizeof(double));
+    iqtree_free(src.gradient);
+
+    auto hessian = py::array_t<double>({n, n});
+    std::memcpy(hessian.mutable_data(), src.hessian,
+                static_cast<size_t>(n) * static_cast<size_t>(n) * sizeof(double));
+    iqtree_free(src.hessian);
+
+    PyObject* py_tree = PyUnicode_FromString(src.tree ? src.tree : "");
+    if (!py_tree)
+      throw error_already_set();
+    iqtree_free(src.tree);
+
+    py::dict result;
+    result["tree"] = py::reinterpret_steal<py::object>(py_tree);
+    result["branch_lengths"] = branch_lengths;
+    result["gradient"] = gradient;
+    result["hessian"] = hessian;
+    return result.release();
+  }
+};
 }  // namespace detail
 }  // namespace PYBIND11_NAMESPACE
 
@@ -187,6 +242,11 @@ PYBIND11_MODULE(_piqtree, m) {
   m.def("iq_fit_tree", &fit_tree,
         "Perform phylogenetic analysis on the input alignment (in string "
         "format). With restriction to the input toplogy.");
+  m.def("iq_fit_tree_hessian", &fit_tree_hessian,
+        "Fit a tree and additionally return the log-likelihood gradient "
+        "(first derivatives w.r.t. branch lengths) and the full Hessian "
+        "matrix at the fitted point. Returns a dict with keys 'tree', "
+        "'branch_lengths', 'gradient', 'hessian'. Non-partitioned models only.");
   m.def("iq_model_finder", &modelfinder,
         "Find optimal model for an alignment.");
   m.def("iq_jc_distances", &build_distmatrix,

@@ -16,6 +16,7 @@ class Model:
         rate_model: str | RateModel | None = None,
         *,
         invariable_sites: bool | float = False,
+        mixture: str | None = None,
     ) -> None:
         """Construct Model class.
 
@@ -41,6 +42,7 @@ class Model:
             if rate_model is not None or invariable_sites
             else None
         )
+        self.mixture = mixture
 
     def __hash__(self) -> int:
         return hash(str(self))
@@ -62,10 +64,14 @@ class Model:
             The IQ-TREE representation of the model.
 
         """
-        iqtree_extra_args = (
-            x for x in (self.freq_type, self.rate_type) if x is not None
-        )
-        return "+".join(x.iqtree_str() for x in [self.submod_type, *iqtree_extra_args])
+        parts: list[str] = [self.submod_type.iqtree_str()]
+        if self.mixture is not None:
+            parts.append(self.mixture)
+        if self.freq_type is not None:
+            parts.append(self.freq_type.iqtree_str())
+        if self.rate_type is not None:
+            parts.append(self.rate_type.iqtree_str())
+        return "+".join(parts)
 
     @property
     def rate_model(self) -> RateModel | None:
@@ -126,6 +132,7 @@ def make_model(iqtree_str: str) -> Model:
     freq_type = None
     invariable_sites: float | bool | None = None
     rate_model = None
+    mixture: str | None = None
 
     for component in components.split("+"):
         if component.startswith("F"):
@@ -144,6 +151,11 @@ def make_model(iqtree_str: str) -> Model:
                 msg = f"Model {iqtree_str!r} contains multiple rate heterogeneity specifications."
                 raise ValueError(msg)
             rate_model = component
+        elif _is_mixture_component(component):
+            if mixture is not None:
+                msg = f"Model {iqtree_str!r} contains multiple mixture specifications."
+                raise ValueError(msg)
+            mixture = component
         else:
             msg = f"Model {iqtree_str!r} contains unexpected component."
             raise ValueError(msg)
@@ -151,7 +163,13 @@ def make_model(iqtree_str: str) -> Model:
     if invariable_sites is None:
         invariable_sites = False
 
-    return Model(sub_mod_str, freq_type, rate_model, invariable_sites=invariable_sites)
+    return Model(sub_mod_str, freq_type, rate_model,
+                 invariable_sites=invariable_sites, mixture=mixture)
+
+
+def _is_mixture_component(component: str) -> bool:
+    # CAT-Cxx profile mixtures: C10, C20, C30, C40, C50, C60.
+    return len(component) >= 2 and component[0] == "C" and component[1:].isdigit()
 
 
 def _parse_invariable_sites(component: str) -> bool | float:

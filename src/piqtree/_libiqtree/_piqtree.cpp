@@ -215,6 +215,7 @@ struct type_caster<HessianResult> {
     result["branch_lengths"] = branch_lengths;
     result["gradient"] = gradient;
     result["hessian"] = hessian;
+    result["log_likelihood"] = py::float_(src.log_likelihood);
     return result.release();
   }
 };

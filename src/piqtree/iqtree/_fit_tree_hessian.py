@@ -34,12 +34,15 @@ class HessianFit:
     hessian : numpy.ndarray
         2-D float64 array of shape ``(n_branches, n_branches)`` — the Hessian
         of the log-likelihood with respect to branch lengths.
+    log_likelihood : float
+        Log-likelihood at the fitted point.
     """
 
     tree: PhyloNode
     branch_lengths: np.ndarray
     gradient: np.ndarray
     hessian: np.ndarray
+    log_likelihood: float
 
 
 # Options forbidden because they'd conflict with what this function controls.
@@ -141,10 +144,13 @@ def fit_tree_hessian(
     _rename_iq_tree(fitted_tree, names)
     fitted_tree.name_unnamed_nodes()
     fitted_tree.params["model"] = str(model)
+    log_likelihood = float(cast("float", result["log_likelihood"]))
+    fitted_tree.params["lnL"] = log_likelihood
 
     return HessianFit(
         tree=fitted_tree,
         branch_lengths=cast("np.ndarray", result["branch_lengths"]),
         gradient=cast("np.ndarray", result["gradient"]),
         hessian=cast("np.ndarray", result["hessian"]),
+        log_likelihood=log_likelihood,
     )

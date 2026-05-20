@@ -44,6 +44,7 @@ typedef struct {
   double* gradient;
   double* hessian;
   size_t n_branches;
+  double log_likelihood;
   char* errorStr;
 } HessianResult;
 

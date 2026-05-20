@@ -116,6 +116,20 @@ extern "C" HessianResult fit_tree_hessian(StringArray& names,
                                           int num_thres = 1,
                                           const char* other_options = NULL);
 
+extern "C" void* hessian_session_create(StringArray& names,
+                                        StringArray& seqs,
+                                        const char* model,
+                                        const char* intree,
+                                        bool blfix,
+                                        int rand_seed,
+                                        int num_thres,
+                                        const char* other_options,
+                                        char** errorStr);
+
+extern "C" HessianResult hessian_session_eval(void* handle, DoubleArray& branch_lengths);
+
+extern "C" void hessian_session_destroy(void* handle);
+
 /*
  * Perform phylogenetic analysis with ModelFinder
  * on the input alignment (in string format)

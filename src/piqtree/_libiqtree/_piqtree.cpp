@@ -248,6 +248,27 @@ PYBIND11_MODULE(_piqtree, m) {
         "(first derivatives w.r.t. branch lengths) and the full Hessian "
         "matrix at the fitted point. Returns a dict with keys 'tree', "
         "'branch_lengths', 'gradient', 'hessian'. Non-partitioned models only.");
+  m.def("iq_hessian_session_create",
+        [](StringArray& names, StringArray& seqs, const char* model, const char* intree,
+           bool blfix, int rand_seed, int num_thres, const char* other_options) {
+            char* err = nullptr;
+            void* handle = hessian_session_create(names, seqs, model, intree, blfix, rand_seed, num_thres, other_options, &err);
+            if (err && std::strlen(err) > 0) {
+                std::string msg(err); iqtree_free(err);
+                throw std::runtime_error(msg);
+            }
+            if (err) iqtree_free(err);
+            if (!handle) throw std::runtime_error("hessian_session_create returned null handle");
+            return py::capsule(handle, "piqtree_hessian_session",
+                               [](void* p) { hessian_session_destroy(p); });
+        },
+        "Open a persistent Hessian session.");
+  m.def("iq_hessian_session_eval",
+        [](py::capsule& cap, DoubleArray& branch_lengths) {
+            void* handle = cap;
+            return hessian_session_eval(handle, branch_lengths);
+        },
+        "Recompute the Hessian at supplied branch lengths (empty array = use current).");
   m.def("iq_model_finder", &modelfinder,
         "Find optimal model for an alignment.");
   m.def("iq_jc_distances", &build_distmatrix,

@@ -4,6 +4,8 @@ Want to jump right in to using `piqtree`? This is the place to be! Here, you can
 
 - [Construct a maximum likelihood phylogenetic tree.](construct_ml_tree.md)
 - [Fit branch lengths to a tree topology from an alignment.](fit_tree_topology.md)
+- [Get branch-length derivatives and the Hessian matrix.](get_hessian_and_derivatives.md)
+- [Profile-mixture (Cxx) model support — May 2026 update.](260518_mixture_models_update.md)
 - [Simulate alignments with AliSim.](simulate_alignment.md)
 - [Use different kinds of substitution models.](using_substitution_models.md)
 - [Find the model of best fit with ModelFinder.](using_model_finder.md)

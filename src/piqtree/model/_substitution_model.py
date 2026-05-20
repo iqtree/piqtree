@@ -569,6 +569,17 @@ ALL_MODELS_CLASSES: tuple[type[SubstitutionModel], ...] = (
 )
 
 
+@dataclass(frozen=True)
+class _RawSubstitutionModel(SubstitutionModel):
+    """Verbatim wrapper for model strings IQ-TREE understands but piqtree
+    doesn't enumerate (e.g. Q-mixture specs like ``MIX{GTR+FO,HKY+FO}``)."""
+
+    raw: str
+
+    def iqtree_str(self) -> str:
+        return self.raw
+
+
 def get_substitution_model(name: str | SubstitutionModel) -> SubstitutionModel:
     """Return the substitution model enum for a given name.
 
@@ -585,6 +596,9 @@ def get_substitution_model(name: str | SubstitutionModel) -> SubstitutionModel:
     """
     if isinstance(name, SubstitutionModel):
         return name
+
+    if name.startswith("MIX{") and name.endswith("}"):
+        return _RawSubstitutionModel(name)
 
     norm_name = _normalise_prefix(name)
 

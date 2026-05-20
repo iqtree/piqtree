@@ -124,17 +124,19 @@ def make_model(iqtree_str: str) -> Model:
         The equivalent Model class.
 
     """
-    if "+" not in iqtree_str:
+    parts = _split_plus_outside_braces(iqtree_str)
+    if len(parts) == 1:
         return Model(iqtree_str)
 
-    sub_mod_str, components = iqtree_str.split("+", maxsplit=1)
+    sub_mod_str = parts[0]
+    components = parts[1:]
 
     freq_type = None
     invariable_sites: float | bool | None = None
     rate_model = None
     mixture: str | None = None
 
-    for component in components.split("+"):
+    for component in components:
         if component.startswith("F"):
             if freq_type is not None:
                 msg = f"Model {iqtree_str!r} contains multiple base frequency specifications."
@@ -168,8 +170,26 @@ def make_model(iqtree_str: str) -> Model:
 
 
 def _is_mixture_component(component: str) -> bool:
-    # CAT-Cxx profile mixtures: C10, C20, C30, C40, C50, C60.
+    # CAT-Cxx profile mixtures (C10..C60) or Q-mixture spec MIX{...}.
+    if component.startswith("MIX{") and component.endswith("}"):
+        return True
     return len(component) >= 2 and component[0] == "C" and component[1:].isdigit()
+
+
+def _split_plus_outside_braces(s: str) -> list[str]:
+    parts: list[str] = []
+    depth = 0
+    start = 0
+    for i, c in enumerate(s):
+        if c == "{":
+            depth += 1
+        elif c == "}":
+            depth -= 1
+        elif c == "+" and depth == 0:
+            parts.append(s[start:i])
+            start = i + 1
+    parts.append(s[start:])
+    return parts
 
 
 def _parse_invariable_sites(component: str) -> bool | float:

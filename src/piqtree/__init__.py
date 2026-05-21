@@ -16,13 +16,16 @@ from _piqtree import __iqtree_version__
 
 from piqtree._data import dataset_names, download_dataset
 from piqtree.iqtree import (
+    HessianAt,
     HessianFit,
+    IqtreeSession,
     ModelFinderResult,
     TreeGenMode,
     build_tree,
     consensus_tree,
     fit_tree,
     fit_tree_hessian,
+    iqtree_session_create,
     jc_distances,
     model_finder,
     nj_tree,
@@ -42,7 +45,9 @@ __version__ = "0.8.2"
 
 
 __all__ = [
+    "HessianAt",
     "HessianFit",
+    "IqtreeSession",
     "Model",
     "ModelFinderResult",
     "TreeGenMode",
@@ -56,6 +61,7 @@ __all__ = [
     "download_dataset",
     "fit_tree",
     "fit_tree_hessian",
+    "iqtree_session_create",
     "jc_distances",
     "make_model",
     "model_finder",

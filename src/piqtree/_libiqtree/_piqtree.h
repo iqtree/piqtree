@@ -128,6 +128,8 @@ extern "C" void* hessian_session_create(StringArray& names,
 
 extern "C" HessianResult hessian_session_eval(void* handle, DoubleArray& branch_lengths);
 
+extern "C" double hessian_session_score(void* handle, DoubleArray& branch_lengths, char** errorStr);
+
 extern "C" void hessian_session_destroy(void* handle);
 
 /*

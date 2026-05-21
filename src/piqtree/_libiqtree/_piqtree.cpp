@@ -269,6 +269,19 @@ PYBIND11_MODULE(_piqtree, m) {
             return hessian_session_eval(handle, branch_lengths);
         },
         "Recompute the Hessian at supplied branch lengths (empty array = use current).");
+  m.def("iq_hessian_session_score",
+        [](py::capsule& cap, DoubleArray& branch_lengths) {
+            void* handle = cap;
+            char* err = nullptr;
+            double lnL = hessian_session_score(handle, branch_lengths, &err);
+            if (err && std::strlen(err) > 0) {
+                std::string msg(err); iqtree_free(err);
+                throw std::runtime_error(msg);
+            }
+            if (err) iqtree_free(err);
+            return lnL;
+        },
+        "Log-likelihood at supplied branch lengths (no Hessian work).");
   m.def("iq_model_finder", &modelfinder,
         "Find optimal model for an alignment.");
   m.def("iq_jc_distances", &build_distmatrix,

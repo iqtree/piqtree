@@ -1,6 +1,7 @@
 """Python wrappers to tree searching functions in the IQ-TREE library."""
 
-from collections.abc import Iterable, Sequence
+import statistics
+from collections.abc import Callable, Iterable, Sequence
 from typing import Any, cast
 
 import numpy as np
@@ -289,10 +290,49 @@ def _all_same_taxa_set(trees: Iterable[PhyloNode]) -> bool:
     return all(taxa_set == set(tree.get_tip_names()) for tree in tree_it)
 
 
+_SUPPORT_AGGREGATES: dict[str, Callable[[Iterable[float]], float]] = {
+    "mean": statistics.mean,
+    "max": max,
+    "min": min,
+}
+
+
+def _transfer_support(
+    consensus: PhyloNode,
+    trees: Iterable[PhyloNode],
+    aggregate: Callable[[Iterable[float]], float],
+) -> None:
+    """Set each consensus clade's support from the input trees' support for the same split."""
+    taxa = frozenset(consensus.get_tip_names())
+    reference = min(taxa)
+
+    def split_key(node: PhyloNode) -> frozenset[str]:
+        side = frozenset(node.get_tip_names())
+        return taxa - side if reference in side else side
+
+    lookup: dict[frozenset[str], list[float]] = {}
+    for tree in trees:
+        for node in tree.postorder():
+            if node.is_tip() or node.is_root():
+                continue
+            support = getattr(node, "support", None)
+            if support is None:
+                continue
+            lookup.setdefault(split_key(node), []).append(support)
+
+    for node in consensus.postorder():
+        if node.is_tip() or node.is_root():
+            continue
+        values = lookup.get(split_key(node))
+        if values:
+            node.support = aggregate(values)
+
+
 def consensus_tree(
     trees: Iterable[PhyloNode],
     *,
     min_support: float = 0.5,
+    support_aggregate: str | None = "mean",
 ) -> PhyloNode:
     """Build a consensus tree, defaults to majority-rule consensus tree.
 
@@ -302,6 +342,9 @@ def consensus_tree(
     If min_support is 1.0, computes the strict consensus tree.
     If min_support is 0.0, computes the extended majority-rule consensus tree.
 
+    By default the input trees' own support values are transferred onto
+    matching consensus clades.
+
     Parameters
     ----------
     trees : Iterable[PhyloNode]
@@ -309,6 +352,10 @@ def consensus_tree(
     min_support : float, optional
         The minimum support for a clade to appear
         in the consensus tree, by default 0.5.
+    support_aggregate : str | None, optional
+        How to combine the input trees' support for a shared clade.
+        One of "mean" (default), "max", "min". If None, the consensus'
+        own clade-frequency support is kept and the input support ignored.
 
     Returns
     -------
@@ -320,10 +367,22 @@ def consensus_tree(
         msg = f"Only min support values in the range 0 <= value <= 1 are supported, got {min_support}"
         raise ValueError(msg)
 
+    if support_aggregate is not None and support_aggregate not in _SUPPORT_AGGREGATES:
+        allowed = ", ".join(sorted(_SUPPORT_AGGREGATES))
+        msg = f"support_aggregate must be one of {allowed} or None, got {support_aggregate!r}"
+        raise ValueError(msg)
+
+    trees = list(trees)
+
     if not _all_same_taxa_set(trees):
         msg = "Trees must be on same taxa set."
         raise ValueError(msg)
 
     newick_trees = [get_newick(tree) for tree in trees]
 
-    return make_tree(iq_consensus_tree(newick_trees, min_support))
+    consensus = make_tree(iq_consensus_tree(newick_trees, min_support))
+
+    if support_aggregate is not None:
+        _transfer_support(consensus, trees, _SUPPORT_AGGREGATES[support_aggregate])
+
+    return consensus

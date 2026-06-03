@@ -104,3 +104,73 @@ def test_bad_trees(trees: Iterable[PhyloNode]) -> None:
 def test_no_trees() -> None:
     with pytest.raises(IqTreeError):
         consensus_tree([])
+
+
+def _internal_supports(tree: PhyloNode) -> dict[frozenset, float]:
+    return {
+        frozenset(node.get_tip_names()): node.support
+        for node in tree.postorder()
+        if not node.is_tip() and not node.is_root()
+    }
+
+
+@pytest.mark.parametrize(
+    ("aggregate", "expected_ab", "expected_de"),
+    [
+        ("mean", 93.0, 79.0),
+        ("max", 95.0, 88.0),
+        ("min", 91.0, 70.0),
+    ],
+)
+def test_support_aggregate(
+    aggregate: str,
+    expected_ab: float,
+    expected_de: float,
+) -> None:
+    # inputs are rooted differently to the consensus, so matching is by bipartition
+    tree1 = make_tree("(((a:1,b:1)95:1,c:1)88:1,d:1,e:1);")
+    tree2 = make_tree("(((a:1,b:1)91:1,c:1)70:1,d:1,e:1);")
+
+    got = consensus_tree([tree1, tree2], support_aggregate=aggregate)
+    supports = _internal_supports(got)
+
+    assert supports[frozenset({"c", "d", "e"})] == expected_ab  # {a,b}|{c,d,e}
+    assert supports[frozenset({"d", "e"})] == expected_de  # {a,b,c}|{d,e}
+
+
+def test_support_aggregate_default_is_mean() -> None:
+    tree1 = make_tree("(((a:1,b:1)95:1,c:1)88:1,d:1,e:1);")
+    tree2 = make_tree("(((a:1,b:1)91:1,c:1)70:1,d:1,e:1);")
+
+    supports = _internal_supports(consensus_tree([tree1, tree2]))
+    assert supports[frozenset({"c", "d", "e"})] == 93.0
+    assert supports[frozenset({"d", "e"})] == 79.0
+
+
+def test_support_aggregate_none_keeps_clade_frequency() -> None:
+    tree1 = make_tree("(((a:1,b:1)95:1,c:1)88:1,d:1,e:1);")
+    tree2 = make_tree("(((a:1,b:1)91:1,c:1)70:1,d:1,e:1);")
+
+    got = consensus_tree([tree1, tree2], support_aggregate=None)
+    assert set(_internal_supports(got).values()) == {100.0}
+
+
+def test_support_aggregate_clade_absent_from_inputs() -> None:
+    # inputs have no support, so consensus keeps its clade-frequency value
+    tree1 = make_tree("(((a,b),c),d,e);")
+    tree2 = make_tree("(((a,b),c),d,e);")
+
+    got = consensus_tree([tree1, tree2], support_aggregate="mean")
+    assert set(_internal_supports(got).values()) == {100.0}
+
+
+@pytest.mark.parametrize("aggregate", ["median", "average", "MEAN", ""])
+def test_bad_support_aggregate(
+    five_trees: list[PhyloNode],
+    aggregate: str,
+) -> None:
+    with pytest.raises(
+        ValueError,
+        match=re.escape("support_aggregate must be one of"),
+    ):
+        consensus_tree(five_trees, support_aggregate=aggregate)

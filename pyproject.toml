@@ -55,7 +55,7 @@ Documentation = "https://piqtree.readthedocs.io"
 
 [project.optional-dependencies]
 dev = [
-    "cibuildwheel==3.4.1",
+    "cibuildwheel==4.0.0",
     "pybind11==3.0.4",
     "delvewheel==1.13.0",
     "scriv",
@@ -64,7 +64,7 @@ dev = [
     "piqtree[typing]",
 ]
 test = ["pytest", "pytest-cov", "pytest-markdown-docs", "pytest-mock", "nox"]
-lint = ["ruff==0.15.15"]
+lint = ["ruff==0.15.16"]
 typing = ["mypy==2.1.0", "piqtree[stubs]", "piqtree[test]"]
 stubs = ["types-PyYAML", "types-requests"]
 extra = ["cogent3[extra]"]

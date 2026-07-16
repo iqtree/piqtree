@@ -56,10 +56,11 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache-key: libiqtree-${{ matrix.os }}-${{ needs.build-iqtree.outputs.iqtree-sha }}
 
-      - name: Install llvm (macOS)
+      - name: Install llvm and trust coveralls (macOS)
         if: runner.os == 'macOS'
         run: |
           brew install llvm
+          brew trust coverallsapp/coveralls
 
       - name: Install llvm (Windows)
         if: runner.os == 'Windows'

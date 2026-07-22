@@ -18,6 +18,7 @@ elif [[ "$OSTYPE" == "msys"* || "$OSTYPE" == "cygwin"* ]]; then
     fi
 
     cmake -G "MinGW Makefiles" \
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
         -DCMAKE_C_COMPILER=clang \
         -DCMAKE_CXX_COMPILER=clang++ \
         -DCMAKE_C_FLAGS=--target=x86_64-pc-windows-gnu \

@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0", "pybind11==3.1.0", "delvewheel==1.13.0"]
+requires = ["setuptools>=61.0", "pybind11==3.1.0", "delvewheel==1.13.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -55,16 +55,16 @@ Documentation = "https://piqtree.readthedocs.io"
 
 [project.optional-dependencies]
 dev = [
-    "cibuildwheel==4.2.0",
+    "cibuildwheel==4.2.1",
     "pybind11==3.1.0",
-    "delvewheel==1.13.0",
+    "delvewheel==1.13.1",
     "scriv",
     "piqtree[test]",
     "piqtree[lint]",
     "piqtree[typing]"
 ]
 test = ["pytest", "pytest-cov", "pytest-markdown-docs", "pytest-mock", "nox"]
-lint = ["ruff==0.16.6"]
+lint = ["ruff==0.16.8"]
 typing = ["mypy==2.3.1", "piqtree[stubs]", "piqtree[test]"]
 stubs = ["types-PyYAML", "types-requests"]
 extra = ["cogent3[extra]"]

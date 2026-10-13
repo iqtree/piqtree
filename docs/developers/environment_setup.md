@@ -32,30 +32,53 @@ dependencies. Once installed, the IQ-TREE library can be built with `./build_too
 
 ## Installing `piqtree` for standard development
 
-After completing the above steps, in your preferred Python virtual environment run the following
-in the repository's directory:
+We use [`uv`](https://docs.astral.sh/uv/) to manage the development environment. See the
+[`uv` installation guide](https://docs.astral.sh/uv/getting-started/installation/) if you don't
+already have it.
+
+After completing the above steps, run the following in the repository's directory:
 
 ```bash
-pip install -e ".[dev]"
+uv sync
 ```
 
-This will install `piqtree` in editable mode, alongside testing, linting and other dependencies.
+This creates a virtual environment in `.venv` and installs `piqtree` in editable mode, alongside
+testing, linting and other dependencies (the `dev` dependency group). The exact versions are pinned
+by `uv.lock`. `uv` will download a suitable version of Python if needed.
+
+Commands can be run inside the environment with `uv run`, e.g. `uv run pytest`, or by activating
+it with `source .venv/bin/activate` (`.venv\Scripts\activate` on Windows).
+
+`piqtree`'s C++ extension is compiled when it is installed, so changes to it (or to the IQ-TREE
+library) require a rebuild. `uv sync` and `uv run` will rebuild it when any of the files listed under
+`cache-keys` in `pyproject.toml` have changed. Running commands directly from an activated environment
+does not check for changes, so run `uv sync` first. To force a rebuild, run:
+
+```bash
+uv sync --reinstall-package piqtree
+```
 
 ## Installing `piqtree` for documentation development
 
-To contribute to the documentation, we recommend running the following after the above
-steps in a separate virtual environment:
+To contribute to the documentation, also install the `doc` dependency group:
 
 ```bash
-pip install -e ".[doc]"
+uv sync --group doc
 ```
 
 This will install `piqtree` in editable mode, along with dependencies for building the documentation.
 
+## Managing dependencies
+
+Dependencies are declared in `pyproject.toml` and locked in `uv.lock`, which is committed to the repository.
+Use `uv add` and `uv remove` to change dependencies (e.g. `uv add --group test <package>` for a testing dependency),
+which update both files. If you edit `pyproject.toml` by hand, run `uv lock` and commit the updated `uv.lock`.
+The CI will fail if `uv.lock` is out of date.
+
 ## Running the tests
 
-To verify that installation has worked, run the following in the base directory of this repository using your chosen development environment.
+To verify that installation has worked, run the following in the base directory of this repository.
 
 ```bash
-pytest
+uv run pytest
 ```

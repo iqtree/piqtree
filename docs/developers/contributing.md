@@ -18,7 +18,7 @@ Thanks for participating!
 We use `ruff` to format the project's code. The formatter can be run in the terminal in the project's base directory:
 
 ```bash
-ruff format
+uv run ruff format
 ```
 
 ## Docstrings

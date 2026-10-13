@@ -10,11 +10,11 @@
                         "path": "zsh"
                     }
                 },
-                "python.defaultInterpreterPath": "/home/user/.conda/envs/piq-dev/bin/python",
+                "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
                 "C_Cpp.default.includePath": [
                     "${workspaceFolder}/**",
-                    "/home/user/.conda/envs/piq-dev/lib/python3.14/site-packages/pybind11/include/",
-                    "/home/user/.conda/envs/piq-dev/include/python3.14/"
+                    "${workspaceFolder}/.venv/lib/python3.14/site-packages/pybind11/include/",
+                    "/home/user/.python-include/"
                 ]
             },
             "extensions": [

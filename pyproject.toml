@@ -54,31 +54,33 @@ Documentation = "https://piqtree.readthedocs.io"
 
 
 [project.optional-dependencies]
+extra = ["cogent3[extra]"]
+
+[dependency-groups]
 dev = [
     "cibuildwheel==4.3.0",
     "pybind11==3.1.0",
     "delvewheel==1.13.1",
     "scriv",
-    "piqtree[test]",
-    "piqtree[lint]",
-    "piqtree[typing]"
+    { include-group = "test" },
+    { include-group = "lint" },
+    { include-group = "typing" }
 ]
-test = ["pytest", "pytest-cov", "pytest-markdown-docs", "pytest-mock", "nox"]
+test = ["pytest", "pytest-cov", "pytest-markdown-docs", "pytest-mock", "nox>=2025.2.9"]
 lint = ["ruff==0.16.10"]
-typing = ["mypy==2.4.0", "piqtree[stubs]", "piqtree[test]"]
+typing = ["mypy==2.4.0", { include-group = "stubs" }, { include-group = "test" }]
 stubs = ["types-PyYAML", "types-requests"]
-extra = ["cogent3[extra]"]
 doc = [
     "mkdocs",
     "mkdocstrings[python]",
     "mkdocs-jupyter",
     "pymdown-extensions",
     "jupytext",
-    "piqtree[test]",
     "cogent3[extra]",
     "diverse-seq>=2025.7.10",
     "jupyter",
-    "ipywidgets"
+    "ipywidgets",
+    { include-group = "test" }
 ]
 
 [project.entry-points."cogent3.app"]
@@ -96,6 +98,20 @@ quick_tree = "piqtree._app:piq_nj_tree"
 
 [tool.setuptools.dynamic]
 version = { attr = "piqtree.__version__" }
+
+[tool.uv]
+# The C++ extension is compiled at install time, so rebuild piqtree whenever
+# the extension source, the IQ-TREE library or the version changes.
+cache-keys = [
+    { file = "pyproject.toml" },
+    { file = "setup.py" },
+    { file = "src/piqtree/__init__.py" },
+    { file = "src/piqtree/_libiqtree/_piqtree.cpp" },
+    { file = "src/piqtree/_libiqtree/_piqtree.h" },
+    { file = "src/piqtree/_libiqtree/libiqtree.a" },
+    { file = "src/piqtree/_libiqtree/iqtree.lib" },
+    { file = "src/piqtree/_libiqtree/iqtree.dll" }
+]
 
 [tool.ruff]
 exclude = [

@@ -112,11 +112,11 @@ jobs:
       
       - name: Install Docs Dependencies
         run: |
-          pip install .[doc]
+          uv sync --locked --no-default-groups --no-editable --group doc
 
       - name: Build Documentation
         run: |
-          mkdocs build
+          uv run --no-sync mkdocs build
         working-directory: ${{ github.workspace }}
 
       - name: Upload Documentation Artifact

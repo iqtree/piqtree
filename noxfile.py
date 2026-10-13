@@ -7,14 +7,31 @@ import nox
 _py_versions = range(12, 15)
 _python_sessions = [f"3.{v}" for v in _py_versions]
 
+nox.options.default_venv_backend = "uv"
+# Always use uv-managed Python builds, rather than whatever interpreter happens
+# to be on the machine, so sessions run on the same builds locally and in CI.
+nox.options.download_python = "always"
+
+
+def _uv_sync(session: nox.Session, *args: str) -> None:
+    """Install piqtree and locked dependencies from uv.lock into the session venv."""
+    session.run_install(
+        "uv",
+        "sync",
+        "--locked",
+        "--no-default-groups",
+        f"--python={session.virtualenv.location}",
+        *args,
+        env={"UV_PROJECT_ENVIRONMENT": session.virtualenv.location},
+    )
+
 
 @nox.session(python=_python_sessions)
 def test(session: nox.Session) -> None:
     posargs = list(session.posargs)
     env = os.environ.copy()
 
-    install_spec = "-e.[test]"
-    session.install(install_spec)
+    _uv_sync(session, "--group", "test")
     session.run("pytest", *posargs, env=env)
 
 
@@ -23,8 +40,7 @@ def type_check(session: nox.Session) -> None:
     posargs = list(session.posargs)
     env = os.environ.copy()
 
-    install_spec = ".[typing]"
-    session.install(install_spec)
+    _uv_sync(session, "--no-editable", "--group", "typing")
     session.run("mypy", "src", "tests", *posargs, env=env)
 
 
@@ -33,8 +49,7 @@ def ruff(session: nox.Session) -> None:
     posargs = list(session.posargs)
     env = os.environ.copy()
 
-    install_spec = ".[lint]"
-    session.install(install_spec)
+    _uv_sync(session, "--no-editable", "--group", "lint")
     session.run("ruff", "check", *posargs, env=env)
 
 
@@ -49,8 +64,7 @@ def test_docs(session: nox.Session) -> None:
     posargs.extend(["--markdown-docs", *doc_md_files])
     env = os.environ.copy()
 
-    install_spec = ".[test]"
-    session.install(install_spec)
+    _uv_sync(session, "--no-editable", "--group", "test")
 
     with tempfile.TemporaryDirectory() as tmpdir:
         session.chdir(tmpdir)

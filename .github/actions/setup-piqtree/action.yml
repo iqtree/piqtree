@@ -1,8 +1,8 @@
 name: Setup piqtree
-description: "Setup Python and Fetch Static Library."
+description: "Setup uv and Fetch Static Library."
 inputs:
   python-version:
-    description: "Python version."
+    description: "Python version for uv to use (uv installs it if needed)."
     required: true
   cache-key:
     description: "Key for static library cache."
@@ -10,7 +10,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/setup-python@v7
+    - uses: astral-sh/setup-uv@v7
       with:
         python-version: ${{ inputs.python-version }}
 

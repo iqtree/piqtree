@@ -69,8 +69,7 @@ jobs:
           
       - name: Run Nox Testing
         run: |
-          pip install nox
-          nox -s test-${{ matrix.python-version }} -- --cov --cov-report=lcov:${{matrix.os}}-${{matrix.python-version}}.lcov --cov-report=term --cov-append --durations=20
+          uvx nox -s test-${{ matrix.python-version }} -- --cov --cov-report=lcov:${{matrix.os}}-${{matrix.python-version}}.lcov --cov-report=term --cov-append --durations=20
   
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@v2
@@ -113,8 +112,7 @@ jobs:
       
       - name: "Run Type Checking for ${{ matrix.python-version }}" 
         run: |
-          pip install nox
-          nox -s type_check-${{ matrix.python-version }}
+          uvx nox -s type_check-${{ matrix.python-version }}
 
   lint:
     name: Linting
@@ -138,8 +136,7 @@ jobs:
       
       - name: "Run Linting for ${{ matrix.python-version }}" 
         run: |
-          pip install nox
-          nox -s ruff-${{ matrix.python-version }}
+          uvx nox -s ruff-${{ matrix.python-version }}
 
   test-docs:
     name: Test Code Blocks in Docs
@@ -164,5 +161,4 @@ jobs:
           
       - name: Test Code Blocks in Docs
         run: |
-          pip install nox
-          nox -s test_docs-${{ matrix.python-version }}
+          uvx nox -s test_docs-${{ matrix.python-version }}

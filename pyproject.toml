@@ -66,7 +66,7 @@ dev = [
     { include-group = "typing" }
 ]
 test = ["pytest", "pytest-cov", "pytest-markdown-docs", "pytest-mock", "nox>=2025.2.9"]
-lint = ["ruff==0.16.10"]
+lint = ["ruff==0.17.0"]
 typing = ["mypy==2.4.0", "nanobind==3.1.0", { include-group = "stubs" }, { include-group = "test" }]
 stubs = ["types-PyYAML", "types-requests"]
 doc = [

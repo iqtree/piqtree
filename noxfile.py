@@ -4,7 +4,7 @@ from pathlib import Path
 
 import nox
 
-_py_versions = range(12, 15)
+_py_versions = range(13, 16)
 _python_sessions = [f"3.{v}" for v in _py_versions]
 
 nox.options.default_venv_backend = "uv"

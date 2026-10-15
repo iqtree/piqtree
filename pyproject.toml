@@ -10,7 +10,7 @@ dependencies = [
     "pyyaml",
     "requests"
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 
 authors = [
     { name = "Gavin Huttley" },
@@ -41,9 +41,9 @@ classifiers = [
 
     "Programming Language :: C++",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
 
     "Typing :: Typed"
 ]
@@ -99,8 +99,8 @@ quick_tree = "piqtree._app:piq_nj_tree"
 minimum-version = "build-system.requires"
 # Keep the CMake build between builds so rebuilds are incremental.
 build-dir = "build/{wheel_tag}"
-# Build abi3 wheels, which support all CPython versions from 3.12 onwards.
-wheel.py-api = "cp312"
+# Build abi3 wheels, which support all CPython versions from 3.13 onwards.
+wheel.py-api = "cp313"
 wheel.exclude = [
     "piqtree/_libiqtree/README.txt",
     "piqtree/_libiqtree/*.cpp",
@@ -183,7 +183,7 @@ exclude = [
 line-length = 88
 indent-width = 4
 
-target-version = "py312"
+target-version = "py313"
 
 [tool.ruff.lint]
 # Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.

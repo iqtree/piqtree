@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.21...4.2)
 project(${SKBUILD_PROJECT_NAME} LANGUAGES CXX)
 
 find_package(
-  Python 3.12 REQUIRED
+  Python 3.13 REQUIRED
   COMPONENTS Interpreter Development.Module ${SKBUILD_SABI_COMPONENT})
 find_package(nanobind CONFIG REQUIRED)
 
@@ -50,7 +50,7 @@ foreach(file IN LISTS IQTREE_FILES)
   endif()
 endforeach()
 
-# STABLE_ABI builds an abi3 extension, so one wheel supports Python >= 3.12.
+# STABLE_ABI builds an abi3 extension, so one wheel supports Python >= 3.13.
 nanobind_add_module(_piqtree STABLE_ABI NB_STATIC
                     src/piqtree/_libiqtree/_piqtree.cpp)
 target_link_libraries(_piqtree PRIVATE iqtree)

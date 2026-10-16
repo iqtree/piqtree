@@ -58,7 +58,7 @@ extra = ["cogent3[extra]"]
 
 [dependency-groups]
 dev = [
-    "cibuildwheel==4.3.0",
+    "cibuildwheel==4.3.1",
     "delvewheel==1.13.1",
     "scriv",
     { include-group = "test" },

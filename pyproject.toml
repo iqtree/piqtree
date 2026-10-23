@@ -5,10 +5,11 @@ build-backend = "scikit_build_core.build"
 [project]
 name = "piqtree"
 dependencies = [
-    "citeable>=2026.3.11b0",
-    "cogent3>=2026.4.20a0",
-    "pyyaml",
-    "requests"
+    "citeable>=2026.10.15",
+    "cogent3>=2026.10.22",
+    "pyyaml>=6.0.2",
+    "requests>=2.32",
+    "scinexus>=2026.10.12",
 ]
 requires-python = ">=3.13"
 
@@ -58,7 +59,7 @@ extra = ["cogent3[extra]"]
 
 [dependency-groups]
 dev = [
-    "cibuildwheel==4.3.1",
+    "cibuildwheel==4.3.2",
     "delvewheel==1.13.2",
     "scriv",
     { include-group = "test" },

@@ -9,7 +9,7 @@ dependencies = [
     "cogent3>=2026.10.22",
     "pyyaml>=6.0.2",
     "requests>=2.32",
-    "scinexus>=2026.10.12",
+    "scinexus>=2026.10.12"
 ]
 requires-python = ">=3.13"
 

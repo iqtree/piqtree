@@ -67,12 +67,14 @@ def check_branch_lengths(got: PhyloNode, expected: PhyloNode) -> None:
     expected_dists = expected.tip_to_tip_distances()
     # make sure the distance matrices have the same name order
     # so we can just compare entire numpy arrays
-    expected_dists = expected_dists.take_dists(got_dists.names)
+    ordered_dists = expected_dists.take_dists(got_dists.names)
+
+    assert ordered_dists is not None
     # Check that the keys of branch lengths are the same
-    assert set(got_dists.names) == set(expected_dists.names)
+    assert set(got_dists.names) == set(ordered_dists.names)
 
     # Check that the branch lengths are the same
-    np.testing.assert_allclose(got_dists.array, expected_dists.array, atol=1e-4)
+    np.testing.assert_allclose(got_dists.array, ordered_dists.array, atol=1e-4)
 
 
 @pytest.mark.parametrize(

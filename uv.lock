@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version >= '3.15' and sys_platform == 'win32'",
@@ -591,12 +591,12 @@ wheels = [
 
 [[package]]
 name = "cogent3"
-version = "2026.9.10"
+version = "2026.10.15"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "charset-normalizer" },
     { name = "citeable" },
-    { name = "numba", marker = "python_full_version < '3.15'" },
+    { name = "numba", marker = "python_full_version < '3.16'" },
     { name = "numpy" },
     { name = "scinexus", extra = ["loky"] },
     { name = "scipy" },
@@ -605,9 +605,9 @@ dependencies = [
     { name = "typeguard" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/39/83/3deceb17d63dbcc30457a7a26ad9c9f77cc5b129c3c0de5d6ecce05541a6/cogent3-2026.9.10.tar.gz", hash = "sha256:4d86b31ad6e00c7420cfd8fd5d5a716035ace8ac594c4de6289049ac4205d772", size = 17160020, upload-time = "2026-09-10T12:18:22.253Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c8/ef/419728f73ccbab7274ea2f5c9897bc406c0d599944cf5fe9c345957f7c5a/cogent3-2026.10.15.tar.gz", hash = "sha256:0a6b73d99267e8143feedcb622aa195b5f8b5251cd0a5770314ca82a468859ac", size = 17160445, upload-time = "2026-10-15T05:38:04.287Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/23/40/42405c2c05b597fca7f4e1fea8fd556ff63cdbe02e0b27da65f6c2e735ac/cogent3-2026.9.10-py3-none-any.whl", hash = "sha256:ef548a47460e2c68681101246ba393cd3e30f03ede9058d62ebd784c546c30a1", size = 695947, upload-time = "2026-09-10T12:18:20Z" },
+    { url = "https://files.pythonhosted.org/packages/88/b9/3382de11d844a42bfd8a49be007b612d18cf0dfa8aa9e7b0bbed4e0e2d08/cogent3-2026.10.15-py3-none-any.whl", hash = "sha256:aa3bae6ea305fbf86fd0d5fed6523bef446841989ddd5b6749e962643ec04d7d", size = 696275, upload-time = "2026-10-15T05:38:01.623Z" },
 ]
 
 [package.optional-dependencies]

@@ -13,7 +13,7 @@
                 "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
                 "C_Cpp.default.includePath": [
                     "${workspaceFolder}/**",
-                    "${workspaceFolder}/.venv/lib/python3.14/site-packages/nanobind/include/",
+                    "${workspaceFolder}/.venv/lib/python3.15/site-packages/nanobind/include/",
                     "/home/user/.python-include/"
                 ]
             },

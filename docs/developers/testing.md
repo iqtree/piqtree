@@ -45,4 +45,4 @@ environment from `uv.lock` for each supported Python version. To list the availa
 uv run nox -l
 ```
 
-A specific session can then be run with, e.g., `uv run nox -s test-3.14`.
+A specific session can then be run with, e.g., `uv run nox -s test-3.15`.

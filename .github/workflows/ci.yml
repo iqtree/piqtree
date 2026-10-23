@@ -97,7 +97,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.14"]
+        python-version: ["3.15"]
         os: [ubuntu-latest]
 
     steps:
@@ -121,7 +121,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.14"]
+        python-version: ["3.15"]
         os: [ubuntu-latest]
 
     steps:
@@ -145,7 +145,7 @@ jobs:
     
     strategy:
       matrix:
-        python-version: ["3.14"]
+        python-version: ["3.15"]
         os: [ubuntu-latest]
 
     steps:

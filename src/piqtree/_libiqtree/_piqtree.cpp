@@ -95,11 +95,20 @@ DoubleArrayOut unwrap(const DoubleArrayResult& result) {
  * Call an IQ-TREE function and convert its result for Python. IQ-TREE can
  * throw exceptions not derived from std::exception, which nanobind would raise
  * as a SystemError. These are raised as a RuntimeError like all other errors.
+ *
+ * IQ-TREE doesn't use the Python API, so the GIL is released while it runs to
+ * let other Python threads continue. IQ-TREE isn't re-entrant (it uses global
+ * state), so iqtree_func serialises calls with a lock.
  */
 template <typename Func>
 auto callIqtree(Func&& func) {
   try {
-    return unwrap(func());
+    auto result = [&] {
+      nb::gil_scoped_release release;
+      return func();
+    }();
+    // Converting the result to Python objects needs the GIL.
+    return unwrap(result);
   } catch (const std::exception&) {
     throw;
   } catch (...) {

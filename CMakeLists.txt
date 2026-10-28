@@ -50,9 +50,17 @@ foreach(file IN LISTS IQTREE_FILES)
   endif()
 endforeach()
 
-# STABLE_ABI builds an abi3 extension, so one wheel supports Python >= 3.13.
-nanobind_add_module(_piqtree STABLE_ABI NB_STATIC
-                    src/piqtree/_libiqtree/_piqtree.cpp)
+if(NB_FREE_THREADED)
+  # One abi3t wheel supports free-threaded Python >= 3.15. This needs nanobind's
+  # split mode, which loads nanobind from the nanobind-backend package.
+  nanobind_add_module(_piqtree STABLE_ABI FREE_THREADED
+                      BACKEND_MODULE nanobind_backend
+                      src/piqtree/_libiqtree/_piqtree.cpp)
+else()
+  # STABLE_ABI builds an abi3 extension, so one wheel supports Python >= 3.13.
+  nanobind_add_module(_piqtree STABLE_ABI NB_STATIC
+                      src/piqtree/_libiqtree/_piqtree.cpp)
+endif()
 target_link_libraries(_piqtree PRIVATE iqtree)
 
 # Only export the module's init function, rather than every symbol in the

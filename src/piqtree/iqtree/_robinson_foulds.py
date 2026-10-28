@@ -30,13 +30,11 @@ def robinson_foulds(trees: Sequence[PhyloNode]) -> np.ndarray:
         Pairwise Robinson-Foulds distances.
 
     """
+    newicks = [get_newick(tree) for tree in trees]
     pairwise_distances = np.zeros((len(trees), len(trees)))
     for i in range(1, len(trees)):
         for j in range(i):
-            rf = iq_robinson_fould(
-                tree1=get_newick(trees[i]),
-                tree2=get_newick(trees[j]),
-            )
+            rf = iq_robinson_fould(tree1=newicks[i], tree2=newicks[j])
             pairwise_distances[i, j] = rf
             pairwise_distances[j, i] = rf
     return pairwise_distances

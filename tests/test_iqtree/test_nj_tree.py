@@ -35,6 +35,18 @@ def test_nj_tree_allow_negative(all_otu: Alignment) -> None:
     )
 
 
+def test_nj_tree_does_not_modify_distances(five_otu: Alignment) -> None:
+    # The distance matrix's buffer is passed to IQ-TREE without copying, so
+    # IQ-TREE must only read it. A read-only buffer is accepted.
+    dists = jc_distances(five_otu)
+    expected = dists.array.copy()
+    dists.array.setflags(write=False)
+
+    nj_tree(dists)
+
+    np.testing.assert_array_equal(dists.array, expected)
+
+
 def test_nj_tree_nan(four_otu: Alignment) -> None:
     dists = jc_distances(four_otu)
     dists[1, 0] = dists[0, 1] = np.nan

@@ -29,11 +29,10 @@ def _dists_to_distmatrix(
         Pairwise distance matrix.
 
     """
-    dist_dict = {}
-    for i in range(1, len(distances)):
-        for j in range(i):
-            dist_dict[(names[i], names[j])] = distances[i, j]
-    return DistanceMatrix(dist_dict)
+    order = sorted(range(len(names)), key=names.__getitem__)
+    lower = np.tril(distances, -1)
+    symmetric = (lower + lower.T)[np.ix_(order, order)]
+    return DistanceMatrix.from_array_names(symmetric, [names[i] for i in order])
 
 
 def jc_distances(
@@ -62,7 +61,7 @@ def jc_distances(
     names = aln.names
     seqs = [str(seq) for seq in aln.iter_seqs(names)]
 
-    distances = np.array(
+    distances = np.asarray(
         iq_jc_distances(names=names, seqs=seqs, num_threads=num_threads),
     ).reshape(
         (len(names), len(names)),

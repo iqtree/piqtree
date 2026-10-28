@@ -116,12 +116,19 @@ field = "version"
 input = "src/piqtree/__init__.py"
 
 [tool.cibuildwheel]
-# Free-threaded Python can't use abi3 wheels.
-skip = "cp3??t-*"
+# Free-threaded Python gets an abi3t wheel instead (3.15+, see the override
+# below). Skipped until numba has cp315t wheels. To enable, remove "cp315t-*"
+# and add nanobind-backend to the dependencies.
+skip = ["cp313t-*", "cp314t-*", "cp315t-*"]
 # The abi3 wheel built for the oldest Python is reused for (and tested on) the
 # newer versions.
 test-groups = ["test"]
 test-command = "pytest {package}/tests"
+
+[[tool.cibuildwheel.overrides]]
+select = "cp3??t-*"
+inherit.config-settings = "append"
+config-settings = { "wheel.py-api" = "cp315t" }
 
 [tool.cibuildwheel.linux]
 before-all = "./build_tools/before_all_linux.sh"

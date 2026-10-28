@@ -4,14 +4,13 @@ import dataclasses
 from collections.abc import Iterable
 from typing import Any, cast
 
-import yaml
 from cogent3.core.alignment import Alignment
 from scinexus.misc import get_object_provenance
 
 from piqtree._piqtree import iq_model_finder
 from piqtree.iqtree._decorator import iqtree_func
 from piqtree.model import Model, make_model
-from piqtree.util import process_rand_seed_nonzero, validate_other_options
+from piqtree.util import load_yaml, process_rand_seed_nonzero, validate_other_options
 
 iq_model_finder = iqtree_func(iq_model_finder, hide_files=True)
 
@@ -190,7 +189,7 @@ def model_finder(
     names = aln.names
     seqs = [str(seq) for seq in aln.iter_seqs(names)]
 
-    raw = yaml.safe_load(
+    raw = load_yaml(
         iq_model_finder(
             names=names,
             seqs=seqs,

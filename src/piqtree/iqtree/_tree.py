@@ -5,7 +5,6 @@ from collections.abc import Callable, Iterable, Sequence
 from typing import Any, cast
 
 import numpy as np
-import yaml
 from cogent3 import make_tree
 from cogent3.core.alignment import Alignment
 from cogent3.core.tree import PhyloNode
@@ -16,7 +15,12 @@ from piqtree.exceptions import ParseIqTreeError
 from piqtree.iqtree._decorator import iqtree_func
 from piqtree.iqtree._parse_tree_parameters import parse_model_parameters
 from piqtree.model import Model, make_model
-from piqtree.util import get_newick, process_rand_seed_nonzero, validate_other_options
+from piqtree.util import (
+    get_newick,
+    load_yaml,
+    process_rand_seed_nonzero,
+    validate_other_options,
+)
 
 iq_build_tree = iqtree_func(iq_build_tree, hide_files=True)
 iq_fit_tree = iqtree_func(iq_fit_tree, hide_files=True)
@@ -146,7 +150,7 @@ def build_tree(
     names = aln.names
     seqs = [str(seq) for seq in aln.iter_seqs(names)]
 
-    yaml_result = yaml.safe_load(
+    yaml_result = load_yaml(
         iq_build_tree(
             names=names,
             seqs=seqs,
@@ -222,7 +226,7 @@ def fit_tree(
     seqs = [str(seq) for seq in aln.iter_seqs(names)]
     newick = get_newick(tree)
 
-    yaml_result = yaml.safe_load(
+    yaml_result = load_yaml(
         iq_fit_tree(
             names=names,
             seqs=seqs,

@@ -2,16 +2,18 @@
 #include <nanobind/nanobind.h>
 #include <nanobind/ndarray.h>
 #include <nanobind/stl/string.h>
+#include <nanobind/stl/string_view.h>
 #include <nanobind/stl/vector.h>
 #include <cstring>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace nb = nanobind;
 using namespace nb::literals;
 
-using StringList = std::vector<std::string>;
+using StringList = std::vector<std::string_view>;
 using DoubleArrayIn =
     nb::ndarray<const double, nb::ndim<1>, nb::c_contig, nb::device::cpu>;
 using DoubleArrayOut = nb::ndarray<nb::numpy, double, nb::ndim<1>>;
@@ -27,15 +29,15 @@ void checkError(char* errorStr) {
 }
 
 /*
- * Arguments passed to IQ-TREE. These keep the converted Python values alive
- * for the duration of the call.
+ * Arguments passed to IQ-TREE. These point into the Python objects, which the
+ * converted arguments keep alive for the duration of the call.
  */
 class StringArrayArg {
  public:
   explicit StringArrayArg(const StringList& strings) {
     cStrs.reserve(strings.size());
     for (const auto& str : strings) {
-      cStrs.push_back(str.c_str());
+      cStrs.push_back(str.data());
     }
     array.strings = cStrs.data();
     array.length = cStrs.size();

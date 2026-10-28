@@ -272,7 +272,10 @@ def nj_tree(
 
     newick_tree = iq_nj_tree(
         names=list(map(str, pairwise_distances.keys())),
-        distances=np.array(pairwise_distances, dtype=np.float64).flatten(),
+        distances=np.ascontiguousarray(
+            pairwise_distances.array,
+            dtype=np.float64,
+        ).ravel(),
     )
 
     tree = make_tree(newick_tree)

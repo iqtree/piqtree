@@ -50,16 +50,14 @@ class StringArrayArg {
 
 class DoubleArrayArg {
  public:
-  explicit DoubleArrayArg(const DoubleArrayIn& arr)
-      : doubles(arr.data(), arr.data() + arr.size()) {
-    array.doubles = doubles.data();
-    array.length = doubles.size();
+  explicit DoubleArrayArg(const DoubleArrayIn& arr) {
+    array.doubles = const_cast<double*>(arr.data());
+    array.length = arr.size();
   }
 
   DoubleArray& get() { return array; }
 
  private:
-  std::vector<double> doubles;
   DoubleArray array;
 };
 

@@ -1,6 +1,5 @@
 from typing import cast
 
-import yaml
 from cogent3 import make_aligned_seqs
 from cogent3.core.alignment import Alignment
 from cogent3.core.tree import PhyloNode
@@ -10,7 +9,7 @@ from piqtree.distribution import IndelDistribution
 from piqtree.exceptions import ParseIqTreeError
 from piqtree.iqtree._decorator import iqtree_func
 from piqtree.model import LieModel, Model, make_model
-from piqtree.util import get_newick, make_rand_seed
+from piqtree.util import get_newick, load_yaml, make_rand_seed
 
 iq_simulate_alignment = iqtree_func(iq_simulate_alignment, hide_files=True)
 
@@ -89,7 +88,7 @@ def simulate_alignment(
 
     newick_tree = get_newick(tree)
 
-    yaml_result = yaml.safe_load(
+    yaml_result = load_yaml(
         iq_simulate_alignment(
             tree=newick_tree,
             subst_model=str(model),

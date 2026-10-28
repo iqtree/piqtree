@@ -1,7 +1,18 @@
 import secrets
 from collections.abc import Iterable
+from typing import Any
 
+import yaml
 from cogent3.core.tree import PhyloNode
+
+# libyaml's parser is much faster for IQ-TREE's (sometimes large) output, but
+# PyYAML may have been built without it.
+_YamlLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
+
+def load_yaml(text: str) -> Any:  # noqa: ANN401
+    """Parse YAML output from IQ-TREE, equivalent to yaml.safe_load."""
+    return yaml.load(text, Loader=_YamlLoader)  # noqa: S506
 
 
 def validate_other_options(other_options: str, banned_options: Iterable[str]) -> None:

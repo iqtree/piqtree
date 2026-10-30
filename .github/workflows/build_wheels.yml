@@ -49,7 +49,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Build Wheels
-        uses: pypa/cibuildwheel@v4.3.2
+        uses: pypa/cibuildwheel@v4.3.5
         env:
           CIBW_BUILD: "*${{matrix.platform_id}}"
           CIBW_ENVIRONMENT_WINDOWS: Boost_INCLUDE_DIR='${{ steps.install-boost.outputs.BOOST_ROOT }}/include' Boost_LIBRARY_DIRS='${{ steps.install-boost.outputs.BOOST_ROOT }}/lib'

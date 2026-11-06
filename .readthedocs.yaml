@@ -9,7 +9,7 @@ version: 2
 build:
   os: ubuntu-lts-latest
   tools:
-    python: "3.15"
+    python: "3.14"
   commands:
     # Install the required dependencies
     - pip install requests

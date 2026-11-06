@@ -172,7 +172,7 @@ def model_finder(
     """
     validate_other_options(other_options, INVALID_MODEL_FINDER_PARAMS)
 
-    source = cast("str", aln.info.source)
+    source = cast("str", getattr(aln, "source", None))
 
     rand_seed = process_rand_seed_nonzero(rand_seed)
 

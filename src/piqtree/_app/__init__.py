@@ -97,7 +97,7 @@ class piq_fit_tree:
 @extend_docstring_from(random_tree)
 def piq_random_tree(
     num_taxa: int,
-    tree_mode: TreeGenMode,
+    tree_mode: TreeGenMode | str,
     rand_seed: int | None = None,
 ) -> PhyloNode:
     return random_tree(num_taxa, tree_mode, rand_seed)

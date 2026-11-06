@@ -42,6 +42,9 @@ class Model:
             else None
         )
 
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, Model) and str(self) == str(other)
+
     def __hash__(self) -> int:
         return hash(str(self))
 

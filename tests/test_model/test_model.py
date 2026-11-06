@@ -193,6 +193,42 @@ def test_model_repr() -> None:
     assert repr(model) == "Model(submod_type=NQ.mammal, freq_type=FQ, rate_type=None)"
 
 
+@pytest.mark.parametrize(
+    "iqtree_str",
+    ["GTR", "GTR+FO+G4", "HKY+I{0.2}+R3", "MK6.6+FO+R3", "NQ.mammal+FQ"],
+)
+def test_model_eq(iqtree_str: str) -> None:
+    model = make_model(iqtree_str)
+    other = make_model(iqtree_str)
+    assert model is not other
+    assert model == other
+    assert hash(model) == hash(other)
+    assert other in {model: None}
+
+
+def test_model_eq_matches_constructor() -> None:
+    assert make_model("GTR+FO+G4") == Model(
+        StandardDnaModel.GTR,
+        FreqType.FO,
+        DiscreteGammaModel(4),
+    )
+
+
+@pytest.mark.parametrize(
+    ("iqtree_str", "other_str"),
+    [("GTR", "HKY"), ("GTR+FO", "GTR+FQ"), ("GTR+G4", "GTR+G8"), ("GTR", "GTR+I")],
+)
+def test_model_not_eq(iqtree_str: str, other_str: str) -> None:
+    assert make_model(iqtree_str) != make_model(other_str)
+
+
+def test_model_not_eq_other_types() -> None:
+    model = make_model("GTR")
+    # Equality is only defined between models, not with their string form.
+    assert model != "GTR"
+    assert model != None  # noqa: E711
+
+
 def test_bad_sub_model() -> None:
     with pytest.raises(
         ValueError,

@@ -88,6 +88,7 @@ def test_piq_model_finder(five_otu: Alignment) -> None:
     app = get_app("piq_model_finder")
     got = app(five_otu)
     assert isinstance(got, ModelFinderResult)
+    assert got.source == five_otu.source
 
 
 def test_piq_model_finder_result_roundtrip(five_otu: Alignment) -> None:
@@ -97,6 +98,7 @@ def test_piq_model_finder_result_roundtrip(five_otu: Alignment) -> None:
     inflated = ModelFinderResult.from_rich_dict(rd)
     assert isinstance(inflated, ModelFinderResult)
     assert str(got.best_aicc) == str(inflated.best_aicc)
+    assert inflated.source == got.source
 
 
 def tree_equal(tree1: PhyloNode, tree2: PhyloNode) -> bool:

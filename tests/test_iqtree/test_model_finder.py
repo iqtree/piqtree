@@ -60,6 +60,12 @@ def test_model_finder(five_otu: Alignment) -> None:
     assert str(result1.best_bic) == str(result2.best_bic)
 
 
+def test_model_finder_source(five_otu: Alignment) -> None:
+    assert five_otu.source is not None
+    result = model_finder(five_otu, rand_seed=1, model_set={"JC"})
+    assert result.source == five_otu.source
+
+
 def test_model_finder_restricted_submod(five_otu: Alignment) -> None:
     result = model_finder(five_otu, rand_seed=1, model_set={"HKY", "TIM"})
     assert str(result.best_aic).startswith(("HKY", "TIM"))

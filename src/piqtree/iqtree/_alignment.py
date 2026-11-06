@@ -40,33 +40,34 @@ def simulate_alignment(
 
     Parameters
     ----------
-    tree: list[cogent3.PhyloNode]
-        A tree to simulate an alignment over.
-    model: str
-        The substitution model's specification.
-    length: int
-        The length of the alignment (by default 1000).
-        Alignment may be longer when indel model is used due to insertion events.
+    tree : PhyloNode
+        The tree to simulate an alignment over.
+    model : Model | str
+        The substitution model with base frequencies and rate heterogeneity.
+    length : int, optional
+        The length of the alignment, by default 1000.
+        The alignment may be longer when an indel model is used, due to
+        insertion events.
     rand_seed : int | None, optional
         The random seed - None means no seed is used, by default None.
-    insertion_rate: float | None, optional
-        The insertion rate relative to substitution rate (by default 0.0).
-    deletion_rate: float | None, optional
-        The deletion rate relative to substitution rate (by default 0.0).
-    insertion_size_distribution: str | None, optional
-        The insertion size distribution (by default the Zipfian
-        distribution with a=1.7 and maximum size 100).
-    deletion_size_distribution: str | None, optional
-        The deletion size distribution (by default the Zipfian
-        distribution with a=1.7 and maximum size 100).
-    root_seq: str | None, optional
-        The root sequence (by default None).
-    num_threads: int | None, optional
+    insertion_rate : float, optional
+        The insertion rate relative to the substitution rate, by default 0.0.
+    deletion_rate : float, optional
+        The deletion rate relative to the substitution rate, by default 0.0.
+    insertion_size_distribution : IndelDistribution | str, optional
+        The insertion size distribution, by default the Zipfian
+        distribution with a=1.7 and maximum size 100.
+    deletion_size_distribution : IndelDistribution | str, optional
+        The deletion size distribution, by default the Zipfian
+        distribution with a=1.7 and maximum size 100.
+    root_seq : str | None, optional
+        The root sequence, by default None (a random root sequence).
+    num_threads : int | None, optional
         Number of threads for IQ-TREE to use, by default None (single-threaded).
 
     Returns
     -------
-    c3_types.AlignedSeqsType
+    Alignment
         The simulated alignment.
 
     """

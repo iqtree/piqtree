@@ -71,10 +71,19 @@ def download_dataset(
         return outpath
 
     response = requests.get(url, stream=True, timeout=20)
+    response.raise_for_status()
+
+    # Download to a temporary file first so that a failed or interrupted
+    # download doesn't leave a file that later calls would treat as complete.
+    partial_path = outpath.with_name(f"{outpath.name}.part")
     block_size = 4096
-    with outpath.open("wb") as out:
-        for data in response.iter_content(block_size):
-            out.write(data)
+    try:
+        with partial_path.open("wb") as out:
+            for data in response.iter_content(block_size):
+                out.write(data)
+        partial_path.replace(outpath)
+    finally:
+        partial_path.unlink(missing_ok=True)
 
     if inflate_zip and outpath.suffix == ".zip":
         outpath = _inflate_zip(outpath, dest_dir)

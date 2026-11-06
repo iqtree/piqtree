@@ -1,3 +1,6 @@
+import re
+from collections.abc import Callable
+
 import pytest
 
 from piqtree import TreeGenMode, random_tree
@@ -37,3 +40,23 @@ def test_invalid_taxa(
 ) -> None:
     with pytest.raises(IqTreeError):
         _ = random_tree(num_taxa, tree_mode, rand_seed=1)
+
+
+@pytest.mark.parametrize("tree_mode", list(TreeGenMode))
+@pytest.mark.parametrize("transform", [str.upper, str.lower])
+def test_random_tree_str_mode(
+    tree_mode: TreeGenMode,
+    transform: Callable[[str], str],
+) -> None:
+    expected = random_tree(10, tree_mode, rand_seed=1)
+    got = random_tree(10, transform(tree_mode.name), rand_seed=1)
+    assert str(got) == str(expected)
+
+
+@pytest.mark.parametrize("tree_mode", ["YULE", "", "BIRTH-DEATH"])
+def test_random_tree_bad_str_mode(tree_mode: str) -> None:
+    with pytest.raises(
+        ValueError,
+        match=re.escape(f"Unknown tree generation mode {tree_mode!r}"),
+    ):
+        _ = random_tree(10, tree_mode, rand_seed=1)

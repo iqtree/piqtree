@@ -158,3 +158,9 @@ def test_app_citation_bib(app_name: str, kwargs: dict) -> None:
 def test_quick_tree_hook(four_otu: Alignment) -> None:
     tree = four_otu.quick_tree(use_hook="piqtree")
     assert tree.params["provenance"] == "piqtree"
+
+
+def test_piq_random_tree_str_mode() -> None:
+    app = get_app("piq_random_tree", tree_mode="balanced", rand_seed=1)
+    tree = app(8)
+    assert len(tree.tips()) == 8

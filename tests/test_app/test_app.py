@@ -123,6 +123,28 @@ def test_piq_consesus_tree(five_trees: list[PhyloNode]) -> None:
     assert tree_equal(got_0_3, expected_0_3)
 
 
+@pytest.mark.parametrize(
+    ("aggregate", "expected"),
+    [("mean", {93.0, 79.0}), ("max", {95.0, 88.0}), (None, {100.0})],
+)
+def test_piq_consensus_tree_support_aggregate(
+    aggregate: str | None,
+    expected: set[float],
+) -> None:
+    trees = [
+        make_tree("(((a:1,b:1)95:1,c:1)88:1,d:1,e:1);"),
+        make_tree("(((a:1,b:1)91:1,c:1)70:1,d:1,e:1);"),
+    ]
+    app = get_app("piq_consensus_tree", support_aggregate=aggregate)
+    got = app(trees)
+    supports = {
+        node.support
+        for node in got.postorder()
+        if not node.is_tip() and not node.is_root()
+    }
+    assert supports == expected
+
+
 def test_piq_simulate_alignment(five_taxon_rooted_tree: PhyloNode) -> None:
     app = get_app("piq_simulate_alignment", model="JC")
     aln = app(five_taxon_rooted_tree)

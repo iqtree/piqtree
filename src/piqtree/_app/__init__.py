@@ -151,8 +151,13 @@ def piq_consensus_tree(
     trees: Iterable[PhyloNode],
     *,
     min_support: float = 0.5,
+    support_aggregate: str | None = "mean",
 ) -> PhyloNode:
-    return consensus_tree(trees, min_support=min_support)
+    return consensus_tree(
+        trees,
+        min_support=min_support,
+        support_aggregate=support_aggregate,
+    )
 
 
 @composable.define_app(cite=cite_piqtree)

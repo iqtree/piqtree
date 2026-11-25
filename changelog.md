@@ -1,4 +1,40 @@
 
+<a id='changelog-0.8.4'></a>
+# Changes in release "0.8.4"
+
+## Contributors
+
+- @rmcar17 - migration from pybind11 to nanobind, ARM Linux and Python 3.15 support, performance and thread-safety improvements, and bug fixes.
+
+## ENH
+
+- nanobind is now used instead of pybind11 to build abi3 compatible wheels.
+- Add support for ARM Linux.
+- Add support for Python 3.15.
+- `jc_distances` is much faster for alignments with many sequences.
+- `robinson_foulds` is faster.
+- IQ-TREE's output is parsed with libyaml when PyYAML provides it, so large outputs (such as from `simulate_alignment`) are processed faster.
+- Less memory is used when passing alignments and distance matrices to IQ-TREE.
+- Other Python threads can now run while IQ-TREE is running.
+- `random_tree` and the `piq_random_tree` app now accept the tree generation mode as a string (case-insensitive), e.g. `"YULE_HARDING"`, as well as a `TreeGenMode`.
+- The `piq_consensus_tree` app now supports the `support_aggregate` argument.
+- `Model` objects with the same specification now compare equal, so they can be used to look up results such as `ModelFinderResult.model_stats`.
+
+## BUG
+
+- piqtree functions can now be called from multiple threads at once.
+- `ModelFinderResult.source` is now set to the alignment's source, instead of always being `None`.
+- `download_dataset` now raises an error when a download fails, and no longer leaves a partial file behind which later calls would treat as complete.
+- Windows wheels no longer contain duplicate copies of IQ-TREE's DLLs or bundle Windows system DLLs.
+
+## DOC
+
+- Corrected the parameter and return types in the `simulate_alignment` docstring.
+
+## Discontinued
+
+- Drop support for Python 3.12.
+
 <a id='changelog-0.8.0'></a>
 # Changes in release "0.8.0"
 
